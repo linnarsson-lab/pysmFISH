@@ -1,5 +1,6 @@
 LICENSE
 MANIFEST.in
+README.md
 Run_dots_counting.py
 add_coords_to_experimental_metadata.py
 apply_stitching.py

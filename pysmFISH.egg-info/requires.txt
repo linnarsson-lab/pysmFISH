@@ -9,6 +9,5 @@ loompy
 ruamel.yaml
 h5py
 dask
-dask.distributed
-itertools
+distributed
 mpi4py
