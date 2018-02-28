@@ -8,7 +8,7 @@ Installation
 Requirements
 ------------
 
-To run pysmFISH you will need python >=3.5 (we have no plans to support python<3.5).
+To run pysmFISH you will need python >=3.6 (we have no plans to support python<3.6).
 We recommend using `anaconda <https://www.continuum.io/downloads>`_ and the ``conda`` command to install dependencies (of course you can use ``pip`` but be aware its dependency-managing might be less robust).
 Feel free to use ``pip`` if some libraries are not available on the conda channels you are using. 
 
@@ -16,7 +16,7 @@ Run the following command to make sure you have all the dependencies correctly i
 
 ::
 
-    conda install numpy scipy scikit-image scikit-learn matplotlib nd2reader==2.1.3 sympy loompy ruamel.yaml codecs h5py dask dask.distributed mpi4py
+    conda install numpy scipy scikit-image scikit-learn matplotlib nd2reader==2.1.3 sympy loompy ruamel.yaml h5py dask dask.distributed mpi4py
 
 .. _pypi:
 
