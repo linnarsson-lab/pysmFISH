@@ -1,0 +1,13 @@
+Metadata-Version: 1.2
+Name: pysmFISH
+Version: 0.0.1
+Summary: Analysis of large spatial transcriptomics data (osmFISH).
+Home-page: https://linnarssonlab.org/osmFISH/
+Author: Simone Codeluppi
+Author-email: simone.codeluppi@gmail.com
+License: MIT
+Description-Content-Type: UNKNOWN
+Description: UNKNOWN
+Keywords: spatial transcriptomics,singlecell,bioinformatics,transcriptomics
+Platform: UNKNOWN
+Requires-Python: >3.6

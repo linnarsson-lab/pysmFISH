@@ -1,0 +1,9 @@
+include add_coords_to_experimental_metadata.py
+include apply_stitching.py
+include dots_coords_correction.py
+include preprocessing_script.py
+include process_standalone_experiment.py
+include reference_registration.py
+include Run_dots_counting.py
+include staining_segmentation.py
+include LICENSE
