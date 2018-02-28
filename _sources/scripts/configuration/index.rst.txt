@@ -16,7 +16,7 @@ Configuration scripts
     seg_ref
 
 
-: `Experimental_metadata.yaml <configuration_files/Experimental_metadata.yaml>`_
+: `Experimental_metadata.yaml </configuration_files/Experimental_metadata.yaml>`_
 
 **Download a template of the configuration files:**
 
