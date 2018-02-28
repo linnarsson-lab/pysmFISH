@@ -21,3 +21,10 @@ install:
   - cd pysmFISH; pip install .;cd ..
   - git clone https://github.com/sphinx-doc/sphinx.git
   - cd sphinx; pip install .;cd ..
+
+script:
+  # Build documentation
+  - cd doc
+  - make html
+  - cd ..
+  # Additionally we could run some tests and.or the following commented code
