@@ -16,6 +16,8 @@ Configuration scripts
     seg_ref
 
 
+: `Experimental_metadata.yaml <configuration_files/Experimental_metadata.yaml>`_
+
 **Download a template of the configuration files:**
 
 :download:`Experimental_metadata.yaml <doc/source/scripts/configuration/download_templates/Experimental_metadata.yaml>`
