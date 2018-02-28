@@ -23,8 +23,7 @@ install:
   - cd sphinx; pip install .;cd ..
 
 script:
-  # Build documentation
-  - cd doc
-  - make html
+  # change directory
+  - cd pysmFISH
   - cd ..
   # Additionally we could run some tests and.or the following commented code
