@@ -9,27 +9,18 @@ Configuration files
 Experimental metadata
 ---------------------
 
-`Experimental metadata:<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Experimental_metadata.yaml>`_
+`Experimental metadata <https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Experimental_metadata.yaml>`_
 
 
 Filtering and raw counting
 --------------------------
 
-`Filtering and raw counting:<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Filtering_raw_counting.config.yaml>`_
+`Filtering and raw counting <https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Filtering_raw_counting.config.yaml>`_
 
 
 Staining segmentation
 ---------------------
 
-`Staining segmentation:<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Staining_segmentation.config.yamll>`_
+`Staining segmentation <https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Staining_segmentation.config.yaml>`_
 
-
-
-**Download a template of the configuration files:**
-
-:download:`Experimental_metadata.yaml <doc/source/scripts/configuration/download_templates/Experimental_metadata.yaml>`
-
-:download:`Filtering_raw_counting.config.yaml <doc/source/scripts/configuration/download_templates/Filtering_raw_counting.config.yaml>`
-
-:download:`Staining_segmentation.config.yaml <doc/source/scripts/configuration/download_templates/Staining_segmentation.config.yaml>`
 
