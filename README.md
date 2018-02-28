@@ -1,4 +1,4 @@
-# pysmFISH
+# pysmFISH        [![Build Status](https://travis-ci.org/linnarsson-lab/pysmFISH.svg?branch=master)](https://travis-ci.org/linnarsson-lab/pysmFISH)
 
 pysmFISH is a library for the analysis of single molecule fluorescence hybridization (smFISH) experiments.
 
