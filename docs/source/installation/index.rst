@@ -1,0 +1,71 @@
+.. _Installation:
+
+Installation
+=============
+
+.. _require:
+
+Requirements
+------------
+
+To run pysmFISH you will need python >=3.5 (we have no plans to support python<3.5).
+We recommend using `anaconda <https://www.continuum.io/downloads>`_ and the ``conda`` command to install dependencies (of course you can use ``pip`` but be aware its dependency-managing might be less robust).
+Feel free to use ``pip`` if some libraries are not available on the conda channels you are using. 
+
+Run the following command to make sure you have all the dependencies correctly installed:
+
+::
+
+    conda install numpy scipy scikit-image scikit-learn matplotlib nd2reader==2.1.3 sympy loompy ruamel.yaml codecs h5py dask dask.distributed mpi4py
+
+.. _pypi:
+
+Install using PyPI
+------------------
+
+Every new stable version of ``pysmFISH`` gets immediately released on PyPI, so running the following command will install on your system the cutting-edge version:
+
+::
+
+    pip install pysmFISH
+
+.. tip::
+    `pysmFISH` |version| is an alpha release and it is updated often. If you installed with pip make sure you run ``pip install -U --no-deps pysmFISH`` now and then.
+
+You can test whether the installation was successful by running ``pysmFISH --help``.
+
+To get started with ``pysmFISH`` you can follow :ref:`our guide <tutorial>`. 
+
+
+.. _fromsource:
+
+Install from source
+-------------------
+
+If you plan to explore and make changes to the source code, or you have requested some bug-fix that is temporarily available only on the github ``dev`` branch, then you need to install ``pysmFISH`` directly from source.
+
+
+First of all, make sure all the dependencies are installed, and that `git` is installed on your system. 
+Then, run the following commands to complete the installation:
+
+::
+
+    git clone XXXXXXXXXXXXXX
+    cd pysmFISH.py
+    pip install -e .  # note the trailing dot
+
+You can test whether the installation was successful by running ``pysmFISH --help``.
+
+.. tip::
+    `pysmFISH` |version| is an alpha release, we recommend pulling in the latest bufixes and feature improvements often. Note that adding the ``-e`` flag to the pip command installs the software in `development` mode, when a package is installed this way each change to the source immediatelly reflects to changes in the installed library. This means that you can simply use ``git pull`` to update your installation.
+
+To get started with ``pysmFISH`` you can follow :ref:`our guide <tutorial>`. 
+
+
+.. _conda:
+
+Install using conda
+-------------------
+
+.. note::
+   This installation method is not currently available. Our plan is make it available asap.
