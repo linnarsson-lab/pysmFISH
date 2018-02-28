@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>counting &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../index.html"/>
+        <link rel="up" title="API" href="index.html"/>
+        <link rel="next" title="dots_calling" href="dots_calling_ref.html"/>
+        <link rel="prev" title="filtering" href="filtering_ref.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="filtering_ref.html">filtering</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">counting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dots_calling_ref.html">dots_calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dots_coords_calculations_ref.html">dots_coords_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hdf5_utils_ref.html">hdf5_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="io_ref.html">io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_based_segmentation_ref.html">object_based_segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils_ref.html">utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stitching/index.html">Stitching API</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">API</a> &raquo;</li>
+        
+      <li>counting</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/API/counting_ref.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysmFISH.counting">
+<span id="counting"></span><h1>counting<a class="headerlink" href="#module-pysmFISH.counting" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pysmFISH.counting.filtering_and_counting">
+<code class="descclassname">pysmFISH.counting.</code><code class="descname">filtering_and_counting</code><span class="sig-paren">(</span><em>fpath_img_to_filter</em>, <em>filtered_png_img_gene_dirs</em>, <em>filtered_img_gene_dirs</em>, <em>counting_gene_dirs</em>, <em>illumination_correction=False</em>, <em>plane_keep=None</em>, <em>min_distance=5</em>, <em>stringency=0</em>, <em>skip_genes_counting=None</em>, <em>skip_tags_counting=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysmFISH/counting.html#filtering_and_counting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.counting.filtering_and_counting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function used to clean the images and to count the smFISH dots.
+It is designed to process in parallel all the tmp file images
+stored as numpy arrays after conversion from the microscope format.</p>
+<dl class="docutils">
+<dt>fpath_img_to_filter: str </dt>
+<dd>path to the file to process</dd>
+<dt>filtered_png_img_gene_dirs: list </dt>
+<dd>list of the paths of the directories where the filtered images as are
+saved as pngs.</dd>
+<dt>filtered_img_gene_dirs: list </dt>
+<dd>list of the paths of the directories where the filtered images are saved 
+as .npy.</dd>
+<dt>counting_gene_dirs: list </dt>
+<dd>list of the paths of the directories where the countings of the filtered
+images are saved.</dd>
+<dt>illumination_correction: bool </dt>
+<dd>if True the illumination correction is run on the dataset.</dd>
+<dt>plane_keep: list </dt>
+<dd>start and end point of the z-planes to keep. Default None
+keep all the planes (ex. [2,-3]).</dd>
+<dt>min_distance: int </dt>
+<dd>minimum distance between dots.</dd>
+<dt>stringency: int </dt>
+<dd>stringency use to select the threshold used for counting.</dd>
+<dt>skip_genes_counting: list </dt>
+<dd>list of the genes to skip for counting count.</dd>
+<dt>skip_tags_counting: list </dt>
+<dd>list of the tags inside the genes/stainings name to avoid to count.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.counting.filtering_and_counting_experiment">
+<code class="descclassname">pysmFISH.counting.</code><code class="descname">filtering_and_counting_experiment</code><span class="sig-paren">(</span><em>fpath_img_to_filter</em>, <em>filtered_dir_path</em>, <em>counting_dir_path</em>, <em>exp_name</em>, <em>add_slash</em>, <em>plane_keep=None</em>, <em>min_distance=5</em>, <em>stringency=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysmFISH/counting.html#filtering_and_counting_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.counting.filtering_and_counting_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to filter and count dots in the images generated from a small
+experiment.</p>
+<dl class="docutils">
+<dt>fpath_img_to_filter: str </dt>
+<dd>path to the file to process.</dd>
+<dt>filtered_dir_path: list </dt>
+<dd>list of the paths of the directories where the filtered images are saved.</dd>
+<dt>counting_dir_path: list </dt>
+<dd>list of the paths of the directories where the counting of filtered 
+images are stored.</dd>
+<dt>exp_name: str </dt>
+<dd>name of the experiment to process.</dd>
+<dt>plane_keep: list </dt>
+<dd>start and end point of the z-planes to keep. Default None
+keep all the planes (ex. [2,-3]).</dd>
+<dt>min_distance: int </dt>
+<dd>minimum distance between dots.</dd>
+<dt>stringency: int </dt>
+<dd>stringency use to select the threshold used for counting.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.counting.filtering_and_counting_ill_correction">
+<code class="descclassname">pysmFISH.counting.</code><code class="descname">filtering_and_counting_ill_correction</code><span class="sig-paren">(</span><em>fpath_img_to_filter</em>, <em>illumination_function</em>, <em>filtered_png_img_gene_dirs</em>, <em>filtered_img_gene_dirs</em>, <em>counting_gene_dirs</em>, <em>illumination_correction=False</em>, <em>plane_keep=None</em>, <em>min_distance=5</em>, <em>stringency=0</em>, <em>skip_genes_counting=None</em>, <em>skip_tags_counting=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysmFISH/counting.html#filtering_and_counting_ill_correction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.counting.filtering_and_counting_ill_correction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function used to clean the images and to count the smFISH dots.
+Designed to work in parallel processing all the tmp file images
+stored as numpy arrays after conversion from the microscope format.</p>
+<dl class="docutils">
+<dt>fpath_img_to_filter: str </dt>
+<dd>path to the file to process.</dd>
+<dt>illumination_function: np.array float64 </dt>
+<dd>illumination function.</dd>
+<dt>filtered_png_img_gene_dirs: list </dt>
+<dd>list of the paths of the directories where the filtered images as are
+saved as pngs.</dd>
+<dt>filtered_img_gene_dirs: list </dt>
+<dd>list of the paths of the directories where the filtered images are saved 
+as .npy.</dd>
+<dt>counting_gene_dirs: list </dt>
+<dd>list of the paths of the directories where the countings of the filtered
+images are saved.</dd>
+<dt>illumination_correction: bool </dt>
+<dd>if True the illumination correction is run on the dataset.</dd>
+<dt>plane_keep: list </dt>
+<dd>start and end point of the z-planes to keep. Default None
+keep all the planes (ex. [2,-3]).</dd>
+<dt>min_distance: int </dt>
+<dd>minimum distance between dots.</dd>
+<dt>stringency: int </dt>
+<dd>stringency use to select the threshold used for counting.</dd>
+<dt>skip_genes_counting: list </dt>
+<dd>list of the genes to skip for counting count.</dd>
+<dt>skip_tags_counting: list </dt>
+<dd>list of the tags inside the genes/stainings name to avoid to count.</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="dots_calling_ref.html" class="btn btn-neutral float-right" title="dots_calling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="filtering_ref.html" class="btn btn-neutral" title="filtering" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

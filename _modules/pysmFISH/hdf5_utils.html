@@ -1,0 +1,459 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysmFISH.hdf5_utils &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../API/index.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pysmFISH.hdf5_utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysmFISH.hdf5_utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Functions that handle hdf5 files</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">loompy</span>
+
+
+<div class="viewcode-block" id="hdf5_create_preprocessing_file"><a class="viewcode-back" href="../../API/hdf5_utils_ref.html#pysmFISH.hdf5_utils.hdf5_create_preprocessing_file">[docs]</a><span class="k">def</span> <span class="nf">hdf5_create_preprocessing_file</span><span class="p">(</span><span class="n">hybridizations_infos</span><span class="p">,</span><span class="n">processing_hyb</span><span class="p">,</span><span class="n">hybridization</span><span class="p">,</span>
+                                   <span class="n">analysis_name</span><span class="p">,</span> <span class="n">hyb_dir</span><span class="p">,</span><span class="n">converted_positions</span><span class="p">,</span>
+                                   <span class="n">image_properties</span><span class="p">):</span>
+    
+    <span class="sd">&quot;&quot;&quot; </span>
+
+<span class="sd">    Create the hdf5 file that will contain the preprocessed images</span>
+<span class="sd">    for one hybridization.</span>
+<span class="sd">    The preprocessing .hdf5 file must have a .ppf.hdf5 extension</span>
+<span class="sd">    The file will be created for serial writing of the hdf5 file.</span>
+<span class="sd">    After creation the file is closed.</span>
+<span class="sd">    Remember that the &#39;lzf&#39; compression do not accept extra items</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    hybridizations_infos: dict </span>
+<span class="sd">        Parsed Hybridizations metadata</span>
+<span class="sd">    processing_hyb: str</span>
+<span class="sd">        Hybridization to process. The function will create an hdf5 file for the </span>
+<span class="sd">        hybridization only</span>
+<span class="sd">    hybridization: str </span>
+<span class="sd">        Hybridization name</span>
+<span class="sd">    analysis_name: str </span>
+<span class="sd">        Analysis name</span>
+<span class="sd">    hyb_dir: str </span>
+<span class="sd">        Path of the dir where to save the file</span>
+<span class="sd">    converted_positions: dict </span>
+<span class="sd">        Parsed positions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">compression</span> <span class="o">=</span> <span class="s1">&#39;lzf&#39;</span>
+    <span class="n">preprocessing_file_name</span><span class="o">=</span> <span class="n">analysis_name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;.ppf.hdf5&#39;</span>
+    <span class="n">preprocessing_file</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">hyb_dir</span><span class="o">+</span><span class="n">preprocessing_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span><span class="n">libver</span><span class="o">=</span><span class="s1">&#39;latest&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># ImagesInfo</span>
+    <span class="n">Hyb_cols_num_px</span><span class="o">=</span><span class="n">image_properties</span><span class="p">[</span><span class="s1">&#39;HybImageSize&#39;</span><span class="p">][</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span>
+    <span class="n">Hyb_rows_num_px</span><span class="o">=</span><span class="n">image_properties</span><span class="p">[</span><span class="s1">&#39;HybImageSize&#39;</span><span class="p">][</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
+
+    <span class="n">Strip_cols_num_px</span><span class="o">=</span><span class="n">image_properties</span><span class="p">[</span><span class="s1">&#39;StripImageSize&#39;</span><span class="p">][</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span>
+    <span class="n">Strip_rows_num_px</span><span class="o">=</span><span class="n">image_properties</span><span class="p">[</span><span class="s1">&#39;StripImageSize&#39;</span><span class="p">][</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Create the groups and the subgroups</span>
+
+    <span class="c1"># List of the XY positions</span>
+    <span class="n">Positions_list</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">hybridizations_infos</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">gen_grp</span><span class="o">=</span><span class="n">preprocessing_file</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">gene</span><span class="p">)</span>
+            <span class="n">Fd_group</span><span class="o">=</span><span class="n">gen_grp</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;FilteredData&#39;</span><span class="p">)</span>
+            <span class="n">preprocessing_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="k">if</span> <span class="s1">&#39;Hyb&#39;</span> <span class="ow">in</span> <span class="n">hybridization</span><span class="p">:</span>
+
+                <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">Positions_list</span><span class="p">:</span>
+                    <span class="n">Fd_group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">,</span> \
+                        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">Hyb_rows_num_px</span><span class="p">,</span><span class="n">Hyb_cols_num_px</span><span class="p">),</span>\
+                        <span class="n">compression</span><span class="o">=</span><span class="n">compression</span><span class="p">,</span>\
+                        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">Hyb_rows_num_px</span><span class="p">,</span><span class="n">Hyb_cols_num_px</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">Positions_list</span><span class="p">:</span>
+                    <span class="n">Fd_group</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">,</span>\
+                        <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">Strip_rows_num_px</span><span class="p">,</span><span class="n">Strip_cols_num_px</span><span class="p">),</span>\
+                        <span class="n">compression</span><span class="o">=</span><span class="n">compression</span><span class="p">,</span>\
+                        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="n">Hyb_rows_num_px</span><span class="p">,</span><span class="n">Hyb_cols_num_px</span><span class="p">))</span>
+
+    <span class="n">preprocessing_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">preprocessing_file_path</span><span class="o">=</span><span class="n">hyb_dir</span> <span class="o">+</span> <span class="n">preprocessing_file_name</span>
+    </div>
+    <span class="k">return</span> <span class="n">preprocessing_file_path</span>
+
+
+
+
+<div class="viewcode-block" id="create_loompy_raw_counting"><a class="viewcode-back" href="../../API/hdf5_utils_ref.html#pysmFISH.hdf5_utils.create_loompy_raw_counting">[docs]</a><span class="k">def</span> <span class="nf">create_loompy_raw_counting</span><span class="p">(</span><span class="n">hybridizations_infos</span><span class="p">,</span><span class="n">converted_positions</span><span class="p">,</span>
+                        <span class="n">hybridization</span><span class="p">,</span><span class="n">flt_rawcnt_config</span><span class="p">,</span><span class="n">hyb_dir</span><span class="p">,</span>
+                        <span class="n">processing_hyb</span><span class="p">,</span><span class="n">counting_gene_dirs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function used to write the counting results in a loom file</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    </span>
+<span class="sd">    hybridizations_infos: dict </span>
+<span class="sd">        Parsed information on the experiment.</span>
+<span class="sd">    converted_positions: dict </span>
+<span class="sd">        coords of the images for all hybridization.</span>
+<span class="sd">    hybridization: str </span>
+<span class="sd">        hybridization processed (ex. Hybridization2) </span>
+<span class="sd">    flt_rawcnt_config: dict</span>
+<span class="sd">        Parsed filtering a raw counting configuration file </span>
+<span class="sd">        (Filtering_raw_counting.config.yaml)</span>
+<span class="sd">    counting_gene_dirs: list </span>
+<span class="sd">        List of the directories containing the counts</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Loompy matrix column attributes</span>
+    <span class="n">pos_att</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="c1"># Create dictionaries to store the data that have one array for each image</span>
+    <span class="c1"># position</span>
+
+    <span class="n">counting_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">selected_peaks_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">thr_array_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">peaks_coords_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">total_peaks_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">selected_peaks_int_dict</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+
+
+    <span class="n">gene_idx_pos</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">gene_idx_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">gene_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">hybridizations_infos</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">gene_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">gene_list</span> <span class="k">if</span> <span class="n">gene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">flt_rawcnt_config</span><span class="p">[</span><span class="s1">&#39;skip_genes_counting&#39;</span><span class="p">]</span> <span class="p">]</span>
+    <span class="n">gene_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">flt_rawcnt_config</span><span class="p">[</span><span class="s1">&#39;skip_tags_counting&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">gene_list</span> <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gene</span><span class="p">]</span>
+
+    <span class="c1"># Create matrices for loompy layers</span>
+    <span class="n">total_counts_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_list</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())])</span>
+    <span class="n">selected_thr_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_list</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())])</span>
+    <span class="n">calculated_thr_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_list</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())])</span>
+    <span class="n">thr_idx_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_list</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())])</span>
+    <span class="n">stringency_mat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">gene_list</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())])</span>
+
+    <span class="n">array_positions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+    <span class="k">if</span> <span class="n">gene_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">gene_list</span><span class="p">:</span>
+            <span class="n">gene_idx_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gene</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">hybridization</span><span class="p">)</span>
+            <span class="n">counting_gene_dir</span> <span class="o">=</span> <span class="p">[</span><span class="n">fdir</span> <span class="k">for</span> <span class="n">fdir</span> <span class="ow">in</span> <span class="n">counting_gene_dirs</span> <span class="k">if</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">fdir</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">counting_files_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">counting_gene_dir</span><span class="o">+</span><span class="s1">&#39;*.pkl&#39;</span><span class="p">)</span>
+
+            <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span> <span class="o">=</span><span class="n">OrderedDict</span><span class="p">()</span>
+
+            <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;selected_peaks&#39;</span><span class="p">]</span> <span class="o">=</span><span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;thr_array&#39;</span><span class="p">]</span> <span class="o">=</span><span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;peaks_coords&#39;</span><span class="p">]</span> <span class="o">=</span><span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;total_peaks&#39;</span><span class="p">]</span> <span class="o">=</span><span class="n">OrderedDict</span><span class="p">()</span>
+            <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;selected_peaks_int&#39;</span><span class="p">]</span> <span class="o">=</span><span class="n">OrderedDict</span><span class="p">()</span>
+
+
+
+            <span class="c1"># Process the files according to sorted position</span>
+            <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">array_positions</span><span class="p">:</span>
+                <span class="n">counting_file</span> <span class="o">=</span> <span class="p">[</span><span class="n">cf</span> <span class="k">for</span> <span class="n">cf</span> <span class="ow">in</span> <span class="n">counting_files_list</span> <span class="k">if</span> <span class="s1">&#39;pos_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="ow">in</span> <span class="n">cf</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">countings</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">counting_file</span><span class="p">,</span><span class="s1">&#39;rb&#39;</span><span class="p">))</span>
+                <span class="c1"># pos = np.int(counting_file.split(&#39;/&#39;)[-1].split(&#39;_&#39;)[-1].split(&#39;.&#39;)[0])</span>
+
+                <span class="c1"># loompy layers construction</span>
+                <span class="n">selected_thr_mat</span><span class="p">[</span><span class="n">gene_idx_pos</span><span class="p">,</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;selected_thr&#39;</span><span class="p">]</span>
+                <span class="n">calculated_thr_mat</span><span class="p">[</span><span class="n">gene_idx_pos</span><span class="p">,</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;calculated_thr&#39;</span><span class="p">]</span>
+                <span class="n">thr_idx_mat</span><span class="p">[</span><span class="n">gene_idx_pos</span><span class="p">,</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;thr_idx&#39;</span><span class="p">]</span>
+                <span class="n">stringency_mat</span><span class="p">[</span><span class="n">gene_idx_pos</span><span class="p">,</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;stringency&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">countings</span><span class="p">[</span><span class="s1">&#39;selected_peaks&#39;</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">total_counts_mat</span><span class="p">[</span><span class="n">gene_idx_pos</span><span class="p">,</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">countings</span><span class="p">[</span><span class="s1">&#39;selected_peaks&#39;</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">total_counts_mat</span><span class="p">[</span><span class="n">gene_idx_pos</span><span class="p">,</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+                <span class="c1"># Dictionaries construction</span>
+
+                <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;selected_peaks&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;selected_peaks&#39;</span><span class="p">]</span>
+                <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;thr_array&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;thr_array&#39;</span><span class="p">]</span>
+                <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;peaks_coords&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;peaks_coords&#39;</span><span class="p">]</span>
+                <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;total_peaks&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;total_peaks&#39;</span><span class="p">]</span>
+                <span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;selected_peaks_int&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">countings</span><span class="p">[</span><span class="s1">&#39;selected_peaks_int&#39;</span><span class="p">]</span>
+
+
+
+            <span class="n">gene_idx_pos</span> <span class="o">+=</span><span class="mi">1</span>
+
+    <span class="c1"># Create loompy file</span>
+    <span class="n">loom_fname</span> <span class="o">=</span> <span class="n">hyb_dir</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_raw_counting.loom&#39;</span>
+    <span class="n">loom_hdl</span> <span class="o">=</span> <span class="n">loompy</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">loom_fname</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="n">total_counts_mat</span><span class="p">,</span><span class="n">row_attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;genes&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">gene_idx_list</span><span class="p">)},</span><span class="n">col_attrs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;image_pos&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pos_att</span><span class="p">)})</span>
+    <span class="n">loom_hdl</span><span class="o">.</span><span class="n">set_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;selected_thr&#39;</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="n">selected_thr_mat</span><span class="p">)</span>
+    <span class="n">loom_hdl</span><span class="o">.</span><span class="n">set_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;calculated_thr&#39;</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="n">calculated_thr_mat</span><span class="p">)</span>
+    <span class="n">loom_hdl</span><span class="o">.</span><span class="n">set_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;thr_idx&#39;</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="n">thr_idx_mat</span><span class="p">)</span>
+    <span class="n">loom_hdl</span><span class="o">.</span><span class="n">set_layer</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;stringency&#39;</span><span class="p">,</span><span class="n">matrix</span><span class="o">=</span><span class="n">stringency_mat</span><span class="p">)</span>
+    <span class="n">loom_hdl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>    
+
+    <span class="c1"># Add extra data to the loom file</span>
+    <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">loom_fname</span><span class="p">,</span><span class="s1">&#39;r+&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">loom_hdl</span><span class="p">:</span>
+        <span class="n">counting_arrays_grp</span> <span class="o">=</span> <span class="n">loom_hdl</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;counting_arrays&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">counting_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">gene_grp</span> <span class="o">=</span> <span class="n">counting_arrays_grp</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="n">gene</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">hybridization</span><span class="p">)</span>
+            <span class="n">selected_peaks_grp</span> <span class="o">=</span> <span class="n">gene_grp</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;selected_peaks&#39;</span><span class="p">)</span>
+            <span class="n">thr_array_grp</span> <span class="o">=</span> <span class="n">gene_grp</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;thr_array&#39;</span><span class="p">)</span>
+            <span class="n">peaks_coords_grp</span> <span class="o">=</span> <span class="n">gene_grp</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;peaks_coords&#39;</span><span class="p">)</span>
+            <span class="n">total_peaks_grp</span> <span class="o">=</span> <span class="n">gene_grp</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;total_peaks&#39;</span><span class="p">)</span>
+            <span class="n">selected_peaks_int_grp</span> <span class="o">=</span> <span class="n">gene_grp</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="s1">&#39;selected_peaks_int&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">array_positions</span><span class="p">:</span>
+                <span class="n">selected_peaks_grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;selected_peaks&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">])</span>
+                <span class="n">thr_array_grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="n">data</span><span class="o">=</span><span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;thr_array&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">])</span>
+                <span class="n">total_peaks_grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="n">data</span><span class="o">=</span><span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;total_peaks&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">])</span>
+                <span class="n">selected_peaks_int_grp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">),</span><span class="n">data</span><span class="o">=</span><span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;selected_peaks_int&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">])</span>
+                <span class="n">pos_sbgrp</span> <span class="o">=</span> <span class="n">peaks_coords_grp</span><span class="o">.</span><span class="n">create_group</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;peaks_coords&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">peaks</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">counting_dict</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;peaks_coords&#39;</span><span class="p">][</span><span class="n">pos</span><span class="p">]):</span>
+                        <span class="n">pos_sbgrp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span><span class="n">data</span><span class="o">=</span><span class="n">peaks</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span></div>
+                    <span class="n">pos_sbgrp</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span><span class="n">data</span><span class="o">=</span><span class="n">peaks</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

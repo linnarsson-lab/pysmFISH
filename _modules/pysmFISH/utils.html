@@ -1,0 +1,891 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysmFISH.utils &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../API/index.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>pysmFISH.utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysmFISH.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Collection of utility functions.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">from</span> <span class="nn">logging.handlers</span> <span class="k">import</span> <span class="n">RotatingFileHandler</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+<span class="kn">import</span> <span class="nn">ruamel.yaml</span>
+<span class="kn">import</span> <span class="nn">codecs</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">OrderedDict</span>
+<span class="kn">import</span> <span class="nn">nd2reader</span> <span class="k">as</span> <span class="nn">nd2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">img_as_float</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+
+
+<span class="c1">##################################Logging###############################</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The following lines will be executed when this file is imported, this code</span>
+<span class="sd">initializes a logger, but does not use the logger. To print the output from</span>
+<span class="sd">the logger run the function init_file_logger and/or init_console_logger, to save</span>
+<span class="sd">output to a file or send the output to the stderr stream respectively.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Redirect warnings to logger</span>
+<span class="n">logging</span><span class="o">.</span><span class="n">captureWarnings</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Create logger</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="init_file_logger"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.init_file_logger">[docs]</a><span class="k">def</span> <span class="nf">init_file_logger</span><span class="p">(</span><span class="n">log_path</span><span class="p">,</span> <span class="n">maxBytes</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">backupCount</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Send the logging output to a file.</span>
+
+<span class="sd">    The logs are placed in a directory called &quot;logs&quot;, if this directory</span>
+<span class="sd">    is not found at the location denoted by log_path, it will be made.</span>
+<span class="sd">    On each run of the program a new log file will be produced.</span>
+<span class="sd">    max_bytes and backup_count are passed to RotatingFileHandler</span>
+<span class="sd">    directly. So a new file will be produced when the filesize</span>
+<span class="sd">    reaches max_bytes. If either of max_bytes or backup_count is zero,</span>
+<span class="sd">    rollover never occurs and everything will be logged in one file.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    log_path: str </span>
+<span class="sd">        Full path to the directory where the log directory is/should go.</span>
+<span class="sd">    maxBytes: int </span>
+<span class="sd">        Maximum size in bytes of a single log file, a new log file will be </span>
+<span class="sd">        started when this size is reached. If zero, all logging will be </span>
+<span class="sd">        written to one file. (Default: 0)</span>
+<span class="sd">    backup_count: int </span>
+<span class="sd">        The maxinum number of logging file that will be produced. If zero, </span>
+<span class="sd">        all logging will be written to one file. (Default: 0)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">formatter_file</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> - </span><span class="si">%(levelname)s</span><span class="s1"> - </span><span class="si">%(name)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">log_path</span> <span class="o">+=</span> <span class="s1">&#39;_logs/&#39;</span>
+    <span class="c1"># To print the logging to a file</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">log_path</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">log_path</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">log_path</span><span class="p">,</span> <span class="mo">0o777</span><span class="p">)</span>
+
+    <span class="n">date_tag</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%y%m</span><span class="si">%d</span><span class="s2">_%H_%M_%S&quot;</span><span class="p">)</span>
+    <span class="n">fh</span> <span class="o">=</span> <span class="n">RotatingFileHandler</span><span class="p">(</span><span class="n">log_path</span> <span class="o">+</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">-smFISH_Analysis.log&#39;</span> <span class="o">%</span> <span class="n">date_tag</span><span class="p">,</span>
+                            <span class="n">mode</span> <span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">maxBytes</span><span class="o">=</span><span class="n">maxBytes</span><span class="p">,</span>
+                            <span class="n">backupCount</span><span class="o">=</span><span class="n">backupCount</span><span class="p">)</span>
+
+    <span class="c1"># Set logger properties</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">fh</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter_file</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created file logger&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="init_console_logger"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.init_console_logger">[docs]</a><span class="k">def</span> <span class="nf">init_console_logger</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Send the logging output to the stderr stream.</span>
+<span class="sd">    After running this function the logging message will typically end up</span>
+<span class="sd">    in your console output.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">formatter_con</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%(name)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">ch</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+    <span class="n">ch</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter_con</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">ch</span><span class="p">)</span></div>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Created console logger&quot;</span><span class="p">)</span>
+
+<span class="c1">########################################################################</span>
+
+<div class="viewcode-block" id="experimental_metadata_parser"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.experimental_metadata_parser">[docs]</a><span class="k">def</span> <span class="nf">experimental_metadata_parser</span><span class="p">(</span><span class="n">hyb_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the yaml file containing all the metadata of the experiment</span>
+
+<span class="sd">    The file must be located inside the experimental folder.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    hyb_dir: str</span>
+<span class="sd">        Path to the .yaml file containing the metadata of the experiment</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    experiment_infos: dict </span>
+<span class="sd">        Dictionary with the information on the experiment.</span>
+<span class="sd">    HybridizationInfos: dict </span>
+<span class="sd">        Dictionary with the information on the hybridization.</span>
+<span class="sd">    converted_positions: dict </span>
+<span class="sd">        Dictionary with the coords of the images for all hybridization. </span>
+<span class="sd">        The coords are a list of floats</span>
+<span class="sd">    microscope_parameters: dict </span>
+<span class="sd">        Dictionary with the microscope parameters for all hybridization</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">metadata_file_name</span> <span class="o">=</span> <span class="n">hyb_dir</span><span class="o">+</span><span class="s1">&#39;Experimental_metadata.yaml&#39;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing metadata from file: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">metadata_file_name</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">docs</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+
+    <span class="n">experiment_infos</span> <span class="o">=</span> <span class="n">docs</span><span class="p">[</span><span class="s1">&#39;ExperimentInfos&#39;</span><span class="p">]</span>
+
+    <span class="n">image_properties</span> <span class="o">=</span> <span class="n">docs</span><span class="p">[</span><span class="s1">&#39;ImageProperties&#39;</span><span class="p">]</span>
+    <span class="n">hybridizations_infos</span> <span class="o">=</span> <span class="n">docs</span><span class="p">[</span><span class="s1">&#39;HybridizationsInfos&#39;</span><span class="p">]</span>
+    <span class="n">Positions</span> <span class="o">=</span> <span class="n">docs</span><span class="p">[</span><span class="s1">&#39;TilesPositions&#39;</span><span class="p">]</span>
+    <span class="n">microscope_parameters</span> <span class="o">=</span> <span class="n">docs</span><span class="p">[</span><span class="s1">&#39;MicroscopeParameters&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Dictionary that will contain the coords after been coverted to float</span>
+    <span class="n">converted_positions</span><span class="o">=</span><span class="p">{}</span>
+    <span class="c1"># Convert the positions from list of string to list of floats</span>
+    <span class="k">for</span> <span class="n">hyb</span><span class="p">,</span> <span class="n">coords_dict</span> <span class="ow">in</span> <span class="n">Positions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">sub_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">pos</span><span class="p">,</span> <span class="n">coords</span> <span class="ow">in</span> <span class="n">coords_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">coords</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">coords</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)]</span>
+            <span class="n">sub_dict</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span> <span class="o">=</span> <span class="n">coords</span>
+        <span class="n">converted_positions</span><span class="p">[</span><span class="n">hyb</span><span class="p">]</span> <span class="o">=</span> <span class="n">sub_dict</span>
+
+    <span class="k">return</span> <span class="n">experiment_infos</span><span class="p">,</span><span class="n">image_properties</span><span class="p">,</span> <span class="n">hybridizations_infos</span><span class="p">,</span>\</div>
+           <span class="n">converted_positions</span><span class="p">,</span> <span class="n">microscope_parameters</span>
+
+
+
+<div class="viewcode-block" id="filtering_raw_counting_config_parser"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.filtering_raw_counting_config_parser">[docs]</a><span class="k">def</span> <span class="nf">filtering_raw_counting_config_parser</span><span class="p">(</span><span class="n">hyb_dir</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse the yaml file containing all configurations for running the analysis</span>
+
+<span class="sd">    The file must be located inside the experimental folder.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    hyb_dir: str </span>
+<span class="sd">        Path to the .yaml file containing the metadata of the experiment</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    config_parameters: dict </span>
+<span class="sd">        Dictionary with all the configuration parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">configuration_file_name</span> <span class="o">=</span> <span class="n">hyb_dir</span><span class="o">+</span><span class="s1">&#39;Filtering_raw_counting.config.yaml&#39;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing metadata from file: </span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">configuration_file_name</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">configuration_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">config_parameters</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">config_parameters</span>
+
+
+<div class="viewcode-block" id="general_yaml_parser"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.general_yaml_parser">[docs]</a><span class="k">def</span> <span class="nf">general_yaml_parser</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parse a general yaml file and return the dictionary with all the </span>
+<span class="sd">    content</span>
+
+<span class="sd">    The file must be located inside the experimental folder.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    file_path: str </span>
+<span class="sd">        Path to the .yaml file containing the metadata of the experiment</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    parameters: dict </span>
+<span class="sd">        Dictionary with all the configuration parameters</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Parsing metadata from file: </span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_path</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">parameters</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">yaml</span><span class="o">.</span><span class="n">YAMLError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">parameters</span>
+
+
+<div class="viewcode-block" id="determine_os"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.determine_os">[docs]</a><span class="k">def</span> <span class="nf">determine_os</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function check if the system is running windows.</span>
+<span class="sd">    and return the correct slash type to use</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    os_windows: bool </span>
+<span class="sd">        True if the os is windows.</span>
+<span class="sd">    add_slash: str </span>
+<span class="sd">        &#39;\&#39; for windows or &#39;/&#39; for any other system</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="s1">&#39;Windows&#39;</span> <span class="ow">in</span> <span class="n">platform</span><span class="o">.</span><span class="n">platform</span><span class="p">():</span>
+        <span class="n">os_windows</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">add_slash</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">os_windows</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">add_slash</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span>
+
+    <span class="k">if</span> <span class="n">os_windows</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;OS: Windows&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;OS: Linux based&#39;</span><span class="p">)</span>
+        </div>
+    <span class="k">return</span> <span class="n">os_windows</span><span class="p">,</span> <span class="n">add_slash</span>
+
+
+
+<div class="viewcode-block" id="check_trailing_slash"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.check_trailing_slash">[docs]</a><span class="k">def</span> <span class="nf">check_trailing_slash</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">os_windows</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function check if there is a trailing slash at the end of a </span>
+<span class="sd">    directory path and add it if missing</span>
+
+<span class="sd">    Paramenters:</span>
+<span class="sd">    ------------</span>
+
+<span class="sd">    dir_path= str </span>
+<span class="sd">        Path to the directory</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    dir_path= str </span>
+<span class="sd">        Path to the directory</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Checking the trailing slash &#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">os_windows</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dir_path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;trailing slash present&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;missing trailer slash, added now&#39;</span><span class="p">)</span>
+            <span class="n">dir_path</span><span class="o">=</span><span class="n">dir_path</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">dir_path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;/&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;trailing slash present&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;missing trailer slash, added now&#39;</span><span class="p">)</span>
+            <span class="n">dir_path</span><span class="o">=</span><span class="n">dir_path</span><span class="o">+</span><span class="s1">&#39;/&#39;</span></div>
+    <span class="k">return</span> <span class="n">dir_path</span>
+
+
+<div class="viewcode-block" id="create_subdirectory_tree"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.create_subdirectory_tree">[docs]</a><span class="k">def</span> <span class="nf">create_subdirectory_tree</span><span class="p">(</span><span class="n">hyb_dir</span><span class="p">,</span><span class="n">hybridization</span><span class="p">,</span><span class="n">hybridizations_infos</span><span class="p">,</span><span class="n">processing_hyb</span><span class="p">,</span><span class="n">suffix</span><span class="p">,</span><span class="n">add_slash</span><span class="p">,</span>
+                                <span class="n">skip_tags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">skip_genes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">analysis_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function that creates the directory tree where to save the</span>
+<span class="sd">    temporary data.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    hyb_dir: str</span>
+<span class="sd">        Path of the hyb to process</span>
+<span class="sd">    hybridization: str </span>
+<span class="sd">        Name of the hybridization to process (ex. Hybridization2)</span>
+<span class="sd">    hybridizations_infos: dict </span>
+<span class="sd">        Dictionary containing the hybridizations info parsed from the </span>
+<span class="sd">        Experimental_metadata.yaml file</span>
+<span class="sd">    processing_hyb: str </span>
+<span class="sd">        Name of the processing experiment (ex. EXP-17-BP3597_hyb2)</span>
+<span class="sd">    suffix: str </span>
+<span class="sd">        Suffix to add to the folder with useful description (ex. tmp)</span>
+<span class="sd">    add_slash: str </span>
+<span class="sd">        &#39;\\&#39; for win and &#39;/&#39; for linux</span>
+<span class="sd">    skip_tags: list </span>
+<span class="sd">        tags that won&#39;t be processed (ex. _IF)</span>
+<span class="sd">    skip_genes list</span>
+<span class="sd">         list of genes to skip</span>
+<span class="sd">    analysis_name: str </span>
+<span class="sd">        Name of the analysis run</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    ---------</span>
+
+<span class="sd">    sufx_dir_path: str</span>
+<span class="sd">        Path of the sufx directory of the processed hybridization</span>
+<span class="sd">    sufx_gene_dirs: list </span>
+<span class="sd">        List of the paths of the sufx directory for the genes to process</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create </span><span class="si">{}</span><span class="s1"> directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+
+    <span class="n">gene_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">hybridizations_infos</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="c1"># logger.debug(&#39;gene list: {}&#39;.format(gene_list))</span>
+    <span class="n">sufx_gene_dirs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">analysis_name</span><span class="p">:</span> 
+        <span class="c1"># Create sufx directory</span>
+        <span class="n">sufx_dir_path</span> <span class="o">=</span> <span class="n">hyb_dir</span><span class="o">+</span><span class="n">analysis_name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="n">add_slash</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;create </span><span class="si">{}</span><span class="s1"> directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Create sufx directory</span>
+        <span class="n">sufx_dir_path</span> <span class="o">=</span> <span class="n">hyb_dir</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="n">add_slash</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">sufx_dir_path</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">sufx_dir_path</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">sufx_dir_path</span><span class="p">,</span><span class="mo">0o777</span><span class="p">)</span>
+    
+    
+    <span class="k">if</span> <span class="n">skip_genes</span><span class="p">:</span>
+        <span class="n">gene_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">gene_list</span> <span class="k">if</span> <span class="n">gene</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">skip_genes</span><span class="p">]</span>
+        
+    <span class="k">if</span> <span class="n">skip_tags</span><span class="p">:</span>
+        <span class="n">gene_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">gene</span> <span class="k">for</span> <span class="n">tag</span> <span class="ow">in</span> <span class="n">skip_tags</span> <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">gene_list</span> <span class="k">if</span> <span class="n">tag</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">gene</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">gene_list</span><span class="p">:</span>         
+        <span class="k">if</span> <span class="n">analysis_name</span><span class="p">:</span>
+            <span class="n">sufx_gene_dir_path</span> <span class="o">=</span> <span class="n">sufx_dir_path</span><span class="o">+</span><span class="n">analysis_name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span> <span class="n">gene</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="n">add_slash</span>
+            <span class="n">sufx_gene_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sufx_gene_dir_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sufx_gene_dir_path</span> <span class="o">=</span> <span class="n">sufx_dir_path</span> <span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span> <span class="n">gene</span> <span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="n">add_slash</span>
+            <span class="n">sufx_gene_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sufx_gene_dir_path</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">sufx_gene_dir_path</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">sufx_gene_dir_path</span><span class="p">)</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">sufx_gene_dir_path</span><span class="p">,</span><span class="mo">0o777</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">sufx_dir_path</span><span class="p">,</span> <span class="n">sufx_gene_dirs</span>
+
+
+<div class="viewcode-block" id="identify_nodes"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.identify_nodes">[docs]</a><span class="k">def</span> <span class="nf">identify_nodes</span><span class="p">(</span><span class="n">client</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function used to determine the address of the nodes in order to </span>
+<span class="sd">    better split the work</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    client: dask.obj </span>
+<span class="sd">        Dask.distributed client.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    node_addresses: OrderedDict</span>
+<span class="sd">        Ordered dictionary. The keys are the addresses of the nodes and the </span>
+<span class="sd">        items are the full addresses of teh workers of a specific node.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Determine the tcp addresses of the workers&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Gather the addresse of all the instantiated workers</span>
+    <span class="n">client_infos</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">scheduler_info</span><span class="p">()</span>
+    <span class="n">workers_addresses</span> <span class="o">=</span> <span class="n">client_infos</span><span class="p">[</span><span class="s1">&#39;workers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    
+    <span class="c1"># Isolate the tcp address of the nodes</span>
+    <span class="n">nodes_addresses</span> <span class="o">=</span> <span class="n">OrderedDict</span><span class="p">()</span>
+    <span class="n">nodes_comparison_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">address</span> <span class="ow">in</span> <span class="n">workers_addresses</span><span class="p">:</span>
+        <span class="n">address_split</span> <span class="o">=</span> <span class="n">address</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+        <span class="n">node_address</span> <span class="o">=</span> <span class="n">address_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;//&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">final_digits</span> <span class="o">=</span> <span class="n">address_split</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>   
+        <span class="k">if</span> <span class="n">node_address</span> <span class="ow">in</span> <span class="n">nodes_comparison_list</span><span class="p">:</span>
+            <span class="n">nodes_addresses</span><span class="p">[</span><span class="s1">&#39;tcp://&#39;</span><span class="o">+</span><span class="n">node_address</span><span class="p">][</span><span class="n">final_digits</span><span class="p">]</span><span class="o">=</span><span class="n">address</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nodes_comparison_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">node_address</span><span class="p">)</span>
+            <span class="n">nodes_addresses</span><span class="p">[</span><span class="s1">&#39;tcp://&#39;</span><span class="o">+</span><span class="n">node_address</span><span class="p">]</span><span class="o">=</span><span class="p">{}</span>
+            <span class="n">nodes_addresses</span><span class="p">[</span><span class="s1">&#39;tcp://&#39;</span><span class="o">+</span><span class="n">node_address</span><span class="p">][</span><span class="n">final_digits</span><span class="p">]</span><span class="o">=</span><span class="n">address</span>
+    </div>
+    <span class="k">return</span> <span class="n">nodes_addresses</span>
+
+
+<div class="viewcode-block" id="combine_gene_pos"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.combine_gene_pos">[docs]</a><span class="k">def</span> <span class="nf">combine_gene_pos</span><span class="p">(</span><span class="n">hybridizations_infos</span><span class="p">,</span><span class="n">converted_positions</span><span class="p">,</span><span class="n">hybridization</span><span class="p">):</span>
+  
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gather info about the imaging at each hybridization.</span>
+
+<span class="sd">    This function creates a dictionary where for each hybridization</span>
+<span class="sd">    are shown the genes and number of positions imaged for each</span>
+<span class="sd">    gene. This function will be useful to created distribution lists</span>
+<span class="sd">    for running parallel processing of the datasets.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    hybridizations_infos: dict</span>
+<span class="sd">        Dictionary with parsed Hybridizations metadata</span>
+<span class="sd">    converted_positions: dict </span>
+<span class="sd">        Dictionary with the coords of the images for all hybridization. </span>
+<span class="sd">        The coords are a list of floats</span>
+<span class="sd">    hybridization: str</span>
+<span class="sd">        Selected hybridization to process</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    genes_and_positions: dict </span>
+<span class="sd">        Dictionary where for each hybridization, the genes and number of </span>
+<span class="sd">        positions imaged for each gene are showed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">genes_and_positions</span><span class="o">=</span><span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">gene</span> <span class="ow">in</span> <span class="n">hybridizations_infos</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">genes_and_positions</span><span class="p">[</span><span class="n">gene</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">converted_positions</span><span class="p">[</span><span class="n">hybridization</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    </div>
+    <span class="k">return</span> <span class="n">genes_and_positions</span>
+
+
+<div class="viewcode-block" id="partial_image_mean"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.partial_image_mean">[docs]</a><span class="k">def</span> <span class="nf">partial_image_mean</span><span class="p">(</span><span class="n">img_paths</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function used to calculate the mean of a set of images. It runs on a</span>
+<span class="sd">    worker and help parallel image processing</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    img_paths: list </span>
+<span class="sd">        List of paths to the images saved as *.npy</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    ImgMean: np.array </span>
+<span class="sd">        Array storing the calculated image mean</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ImgMean</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">for</span> <span class="n">img_path</span> <span class="ow">in</span> <span class="n">img_paths</span><span class="p">:</span>
+        <span class="n">img_stack</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+        <span class="n">img_stack</span> <span class="o">=</span> <span class="n">img_as_float</span><span class="p">(</span><span class="n">img_stack</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ImgMean</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ImgMean</span> <span class="o">=</span> <span class="n">img_stack</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ImgMean</span> <span class="o">=</span> <span class="p">(</span><span class="n">ImgMean</span> <span class="o">+</span> <span class="n">img_stack</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span></div>
+    <span class="k">return</span> <span class="n">ImgMean</span>
+
+<div class="viewcode-block" id="list_chunking"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.list_chunking">[docs]</a><span class="k">def</span> <span class="nf">list_chunking</span><span class="p">(</span><span class="n">list_to_chunk</span><span class="p">,</span><span class="n">num_chunks</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper function used to chunk a list in a number of sublists equal to</span>
+<span class="sd">    num_chunks</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    list_to_chunk: list </span>
+<span class="sd">        List to be chunked</span>
+<span class="sd">    num_chunks: int </span>
+<span class="sd">        Number of sublists to obtain</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    chunked_list: list </span>
+<span class="sd">        List containing the chunked lists</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">list_to_chunk</span><span class="p">)</span><span class="o">/</span><span class="n">num_chunks</span><span class="p">)</span>
+    <span class="n">chunked_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">list_to_chunk</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="n">size</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span>  <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_to_chunk</span><span class="p">),</span> <span class="n">size</span><span class="p">)]</span>
+    <span class="c1"># if (len(list_to_chunk) - size*num_chunks)&gt;0:</span>
+    <span class="c1">#     chunked_list[-2].append(chunked_list[-1])</span>
+    <span class="c1">#     del chunked_list[-1]</span></div>
+    <span class="k">return</span> <span class="n">chunked_list</span>
+
+
+<div class="viewcode-block" id="create_single_directory"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.create_single_directory">[docs]</a><span class="k">def</span> <span class="nf">create_single_directory</span><span class="p">(</span><span class="n">hyb_dir</span><span class="p">,</span><span class="n">gene</span><span class="p">,</span><span class="n">hybridization</span><span class="p">,</span><span class="n">processing_hyb</span><span class="p">,</span><span class="n">suffix</span><span class="p">,</span><span class="n">add_slash</span><span class="p">,</span>
+                                <span class="n">analysis_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function used to create a subdirectory</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    </span>
+<span class="sd">    hyb_dir: str  </span>
+<span class="sd">        Path to the directory of the hybridization currently processed.</span>
+<span class="sd">    gene: str </span>
+<span class="sd">        Gene name to be included in the directory.</span>
+<span class="sd">    processing_hyb: str </span>
+<span class="sd">        Name of the hybridization processed (ex. &#39;EXP-17-BP3597_hyb2&#39;).</span>
+<span class="sd">    suffix: str </span>
+<span class="sd">        Extra info to add to the directory name (ex. blended).</span>
+<span class="sd">    add_slash: str </span>
+<span class="sd">        Slash added according to the os.</span>
+<span class="sd">    analysis_name: str </span>
+<span class="sd">        Name of the analysis associated to the folder</span>
+<span class="sd">    </span>
+<span class="sd">    Return</span>
+<span class="sd">    ---------</span>
+
+<span class="sd">    sufx_dir_path: str </span>
+<span class="sd">        Path to the created directory</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;create </span><span class="si">{}</span><span class="s1"> directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+   
+    <span class="n">sufx_gene_dirs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">analysis_name</span><span class="p">:</span> 
+        <span class="c1"># Create sufx directory</span>
+        <span class="n">sufx_dir_path</span> <span class="o">=</span> <span class="n">hyb_dir</span><span class="o">+</span><span class="n">analysis_name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">gene</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="n">add_slash</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;create </span><span class="si">{}</span><span class="s1"> directory&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">suffix</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Create sufx directory</span>
+        <span class="n">sufx_dir_path</span> <span class="o">=</span> <span class="n">hyb_dir</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">gene</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">suffix</span><span class="o">+</span><span class="n">add_slash</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">stat</span><span class="p">(</span><span class="n">sufx_dir_path</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">sufx_dir_path</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chmod</span><span class="p">(</span><span class="n">sufx_dir_path</span><span class="p">,</span><span class="mo">0o777</span><span class="p">)</span>
+    </div>
+    <span class="k">return</span> <span class="n">sufx_dir_path</span>
+
+
+<div class="viewcode-block" id="add_coords_to_yaml"><a class="viewcode-back" href="../../API/utils_ref.html#pysmFISH.utils.add_coords_to_yaml">[docs]</a><span class="k">def</span> <span class="nf">add_coords_to_yaml</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">hyb_nr</span><span class="p">,</span> <span class="n">hyb_key</span> <span class="o">=</span><span class="s1">&#39;Hyb&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Read tile number and coordinates and add them to the yaml file.</span>
+<span class="sd">    Read the tile number and microscope coordinates for each tile from</span>
+<span class="sd">    the microscope file called &quot;coord_file_name&quot; in &quot;folder&quot;.</span>
+<span class="sd">    Then insert them in dictionary &quot;TilesPositions&quot; in the yaml</span>
+<span class="sd">    metadata file called Experimental_metadata.yaml.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    folder: str</span>
+<span class="sd">        Exact path to the folder, including trailing &quot;/&quot;</span>
+<span class="sd">    hyb_nr: int</span>
+<span class="sd">        Hybridization number denoting for which hybridization we should read </span>
+<span class="sd">        and insert the coordinates</span>
+<span class="sd">    hyb_key: str </span>
+<span class="sd">        Possible values &#39;Hyb&#39; or &#39;Strip&#39;. To add coordinates for stripping </span>
+<span class="sd">        if necessary.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Key word to look for in the name of the coordinate file</span>
+    <span class="n">name_key</span>    <span class="o">=</span> <span class="s1">&#39;Coords&#39;</span>
+    <span class="n">hyb_key_filename</span>     <span class="o">=</span> <span class="n">hyb_key</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">hyb_nr</span><span class="p">)</span>
+    <span class="c1"># Find the right file using &quot;name_key&quot; and hyb key</span>
+    <span class="n">coord_file_name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">folder</span> <span class="o">+</span> <span class="s1">&#39;*.txt&#39;</span><span class="p">)</span>
+                           <span class="k">if</span> <span class="p">(</span><span class="n">name_key</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="ow">and</span>
+                           <span class="p">(</span><span class="n">hyb_key_filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">name</span><span class="p">)))</span>
+                           <span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reading coordinates from file: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coord_file_name</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">coord_file_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Coordinate file not found in folder </span><span class="si">{}</span><span class="s2">, &quot;</span>
+                      <span class="o">+</span> <span class="s2">&quot;looking for txt-file including </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2"> in &quot;</span>
+                      <span class="o">+</span> <span class="s2">&quot;its name.&quot;</span>
+                      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span> <span class="n">name_key</span><span class="p">,</span> <span class="n">hyb_key_filename</span><span class="p">))</span>
+
+    <span class="c1"># Load the yaml file with a special roundtrip loader, to change</span>
+    <span class="c1"># it while keeping all comments and indentation</span>
+    <span class="n">metadata_file_name</span><span class="o">=</span> <span class="n">folder</span> <span class="o">+</span> <span class="s1">&#39;Experimental_metadata.yaml&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+        <span class="n">meta_data</span> <span class="o">=</span> <span class="n">ruamel</span><span class="o">.</span><span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">stream</span><span class="p">,</span>
+                                     <span class="n">ruamel</span><span class="o">.</span><span class="n">yaml</span><span class="o">.</span><span class="n">RoundTripLoader</span><span class="p">)</span>
+    <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Put coordinates from microscope file in TilesPositions</span>
+    <span class="k">if</span> <span class="n">hyb_key</span> <span class="o">==</span> <span class="s1">&#39;Hyb&#39;</span><span class="p">:</span>
+        <span class="n">cur_positions</span> <span class="o">=</span> <span class="n">meta_data</span><span class="p">[</span><span class="s1">&#39;TilesPositions&#39;</span><span class="p">][</span><span class="s1">&#39;Hybridization&#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">hyb_nr</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="n">hyb_key</span> <span class="o">==</span> <span class="s1">&#39;Strip&#39;</span><span class="p">:</span>
+        <span class="n">cur_positions</span> <span class="o">=</span> <span class="n">meta_data</span><span class="p">[</span><span class="s1">&#39;TilesPositions&#39;</span><span class="p">][</span><span class="s1">&#39;Stripping&#39;</span>
+                                                    <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">hyb_nr</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;hyb_key not recognized, possible values are: &quot;</span>
+                       <span class="o">+</span> <span class="s2">&quot;&#39;Hyb&#39; or &#39;Strip&#39;. Current value is: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                       <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">hyb_key</span><span class="p">))</span>
+
+    <span class="c1"># Open the coordinate file</span>
+    <span class="k">with</span> <span class="n">codecs</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">coord_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;utf-16&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">coord_file</span><span class="p">:</span>
+        <span class="c1"># Use all lines starting with &quot;#&quot;, assume these contain, index,</span>
+        <span class="c1"># x and y coordinates</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">coord_file</span><span class="p">:</span>
+            <span class="c1"># Use all lines starting with &quot;#&quot;, that do not contain info</span>
+            <span class="c1"># about &quot;DAPI&quot;, assume these contain, index, x and y</span>
+            <span class="c1"># coordinates</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;#&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                <span class="c1"># Replace the commas with dots, in case Windows</span>
+                <span class="c1"># forced their Swedish commas on everything.</span>
+                <span class="c1"># Clean up and split the line:</span>
+                <span class="n">replace_dict</span> <span class="o">=</span> <span class="p">{</span><span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">):</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">):</span> <span class="nb">ord</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)}</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">replace_dict</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Line read from coord file: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">line</span><span class="p">))</span>
+
+                <span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span>
+                <span class="c1"># Append the data we want to use:</span>
+                <span class="n">index</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="n">x_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">y_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">z_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+
+                <span class="n">cur_positions</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x_value</span><span class="p">)</span> \
+                                       <span class="o">+</span> <span class="n">sep</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">y_value</span><span class="p">)</span> \
+                                       <span class="o">+</span> <span class="n">sep</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">z_value</span><span class="p">)</span>
+            <span class="c1"># Get out of the loop after we got to &quot;Spectral Loop&quot;,</span>
+            <span class="c1"># because we are not interested in the info that comes</span>
+            <span class="c1"># after that.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s2">&quot;Spectral Loop:&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">):</span>
+                <span class="k">break</span>
+    <span class="n">coord_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Place everything back into the file.</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">ruamel</span><span class="o">.</span><span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">meta_data</span><span class="p">,</span> <span class="n">stream</span><span class="p">,</span>
+                             <span class="n">Dumper</span><span class="o">=</span><span class="n">ruamel</span><span class="o">.</span><span class="n">yaml</span><span class="o">.</span><span class="n">RoundTripDumper</span><span class="p">,</span>
+                             <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                             <span class="n">canonical</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+    <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

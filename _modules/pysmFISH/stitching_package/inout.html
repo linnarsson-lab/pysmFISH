@@ -1,0 +1,818 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysmFISH.stitching_package.inout &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../API/index.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pysmFISH.stitching_package.inout</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysmFISH.stitching_package.inout</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Module containing functions written for the in and output of tile microcope images</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">io</span>
+
+<span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="c1"># import visvis as vv</span>
+<span class="c1"># plt_available = True</span>
+<span class="n">plt_available</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="kn">import</span> <span class="nn">glob</span> <span class="k">as</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pickle</span> <span class="k">as</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<div class="viewcode-block" id="extract_hdf5_refs"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.extract_hdf5_refs">[docs]</a><span class="k">def</span> <span class="nf">extract_hdf5_refs</span><span class="p">(</span><span class="n">hdf5_group</span><span class="p">,</span> <span class="n">image_inds</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make a list of the dataset is hdf5_group.</span>
+
+<span class="sd">    When image_inds is not empty this function returns only the</span>
+<span class="sd">    data sets corresponding to the numbers in image_inds.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    hdf5_group: pointer</span>
+<span class="sd">        HDF5 group reference. Reference to the group</span>
+<span class="sd">        from which we should extract the dataset names.</span>
+<span class="sd">        The data sets are expected to be numbered.</span>
+<span class="sd">    image_inds: iterable</span>
+<span class="sd">        Iterable containing ints. Should contain the</span>
+<span class="sd">        names of the datasets that will be selected. This</span>
+<span class="sd">        list could also contain strings, as long as it&#39;s</span>
+<span class="sd">        contents reflect a subset of dataset names.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    tile_refs: list</span>
+<span class="sd">        List of strings. The references to the data sets.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get logger</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="c1"># Get the full human readable reference to hdf5_group.</span>
+    <span class="n">group_root_name</span> <span class="o">=</span> <span class="n">hdf5_group</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
+    <span class="k">if</span> <span class="n">image_inds</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="c1"># If image_inds is given match image_inds to the data sets</span>
+        <span class="n">tile_refs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">im_nr</span> <span class="ow">in</span> <span class="n">image_inds</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;Trying the find image nr </span><span class="si">{}</span><span class="s2"> in hdf5 file&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">im_nr</span><span class="p">))</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">found_tile</span> <span class="o">=</span> <span class="n">hdf5_group</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">im_nr</span><span class="p">)]</span>
+                <span class="n">cur_ref</span> <span class="o">=</span> <span class="n">group_root_name</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im_nr</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+                <span class="n">cur_ref</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Appending reference: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cur_ref</span><span class="p">))</span>
+            <span class="n">tile_refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_ref</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tile_refs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If no image_inds are given, return all data set references</span>
+        <span class="c1"># in alphabetical order (relies on hdf5 alphabetical return</span>
+        <span class="c1"># of keys)</span>
+        <span class="n">tile_refs</span> <span class="o">=</span> <span class="p">[</span><span class="n">group_root_name</span> <span class="o">+</span> <span class="n">tile_name</span> <span class="k">for</span> <span class="n">tile_name</span> <span class="ow">in</span>
+                     <span class="n">hdf5_group</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Got all refs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tile_refs</span><span class="p">))</span></div>
+        <span class="k">return</span> <span class="n">tile_refs</span>
+
+
+<div class="viewcode-block" id="get_image_names"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.get_image_names">[docs]</a><span class="k">def</span> <span class="nf">get_image_names</span><span class="p">(</span><span class="n">hdf5_file</span><span class="p">,</span> <span class="n">image_list</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([]),</span>
+                    <span class="n">hyb_nr</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gene</span><span class="o">=</span><span class="s1">&#39;Nuclei&#39;</span><span class="p">,</span> <span class="n">pre_proc_level</span><span class="o">=</span><span class="s1">&#39;FilteredData&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Get the references to the tiles from the hdf5 file.</span>
+
+<span class="sd">    If no matching data set was found, None will be used</span>
+<span class="sd">    instead of a string reference.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    hdf5_file: pointer</span>
+<span class="sd">        HDF5 file handle. The file containing the tiles.</span>
+<span class="sd">    image_list: iterable</span>
+<span class="sd">        Iterable containing ints. Should contain the</span>
+<span class="sd">        names of the data sets that will be selected. This</span>
+<span class="sd">        list could also contain strings, as long as it&#39;s</span>
+<span class="sd">        contents reflect a subset of dataset names.</span>
+<span class="sd">    hyb_nr: int</span>
+<span class="sd">        The number of the hybridization where the</span>
+<span class="sd">        data sets can be found. This will be used to</span>
+<span class="sd">        navigate tile_file and find the correct tiles.</span>
+<span class="sd">        (Default: 1)</span>
+<span class="sd">    gene: str</span>
+<span class="sd">        The name of the gene where the data sets can be found.</span>
+<span class="sd">        This will be used to navigate tile_file and find the</span>
+<span class="sd">        correct tiles. (Default: &#39;Nuclei&#39;)</span>
+<span class="sd">    pre_proc_level: str</span>
+<span class="sd">        The name of the pre processing group</span>
+<span class="sd">        where the data sets can be found.</span>
+<span class="sd">        This will be used to navigate tile_file and find the</span>
+<span class="sd">        correct tiles. (Default: &#39;Filtered&#39;)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#logger = logging.getLogger(__name__)</span>
+    <span class="c1">#logger.info(&quot;Getting image references from hdf5 file...&quot;)</span>
+    <span class="c1"># Get the right group</span>
+    <span class="n">cur_group</span> <span class="o">=</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="n">pre_proc_level</span><span class="p">]</span></div>
+    <span class="k">return</span> <span class="n">extract_hdf5_refs</span><span class="p">(</span><span class="n">cur_group</span><span class="p">,</span> <span class="n">image_list</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="load_tile"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.load_tile">[docs]</a><span class="k">def</span> <span class="nf">load_tile</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">hdf5_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load a tile into memory as 2D image.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    file_name: str </span>
+<span class="sd">        Hdf5 reference to tile data set.</span>
+<span class="sd">    hdf5_file: pointer</span>
+<span class="sd">        HDF5 file handle. Opened HDF5 file containing the</span>
+<span class="sd">        tile.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    : np.array </span>
+<span class="sd">            The tile as 2D image. Or an empty array when the file_name is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#logger = logging.getLogger(__name__)</span>
+    <span class="c1">#logger.info(&quot;Loading image from: {}&quot;.format(file_name))</span>
+    <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Flatten the image</span>
+        <span class="c1"># Flattening also causes the image to be copied from the</span>
+        <span class="c1"># hdf5-file into working memory as numpy array. It is</span>
+        <span class="c1"># important to have the image as a numpy array rather than a</span>
+        <span class="c1"># hdf5 dataset, because we want to do fancy slicing, which</span>
+        <span class="c1"># is not possible on a dataset.</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">hdf5_file</span><span class="p">[</span><span class="n">file_name</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+
+<div class="viewcode-block" id="load_tile_3D"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.load_tile_3D">[docs]</a><span class="k">def</span> <span class="nf">load_tile_3D</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">hdf5_file</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load a tile into memory as 3D image.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    file_name: str</span>
+<span class="sd">        Hdf5 reference to tile data set.</span>
+<span class="sd">    hdf5_file: pointer</span>
+<span class="sd">        HDF5 file handle. Opened HDF5 file containing the tile.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    : np.array</span>
+<span class="sd">        The tile as 3D image. Or an empty array when the file_name is None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Loading image from: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Copy the image from the hdf5-file into working memory as</span>
+            <span class="c1"># numpy array. It is important to have the image as a numpy</span>
+            <span class="c1"># array rather than a hdf5 dataset, because we want to do</span>
+            <span class="c1"># fancy slicing, which is not possible on a dataset.</span>
+            <span class="k">return</span> <span class="n">hdf5_file</span><span class="p">[</span><span class="n">file_name</span><span class="p">][()]</span>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([])</span>
+
+
+<div class="viewcode-block" id="save_image"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.save_image">[docs]</a><span class="k">def</span> <span class="nf">save_image</span><span class="p">(</span><span class="n">im_file</span><span class="p">,</span> <span class="n">hyb_nr</span><span class="p">,</span> <span class="n">gene</span><span class="p">,</span> <span class="n">pre_proc_level</span><span class="p">,</span> <span class="n">image_name</span><span class="p">,</span>
+               <span class="n">save_file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save hdf5 file as a tiff image</span>
+
+<span class="sd">    Save the data found in im_file_name[hyb_nr][gene][pre_proc_level][</span>
+<span class="sd">    image_name] as an image in a tiff-file called save_file_name.</span>
+<span class="sd">    im_file should be an hdf5-file and image_name should be a</span>
+<span class="sd">    variable in that file.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    im_file: pointer</span>
+<span class="sd">        HDF5 file handle. Opened HDF5 file containing the image to be saved.</span>
+<span class="sd">    hyb_nr: int </span>
+<span class="sd">        Number of the current hybridization.</span>
+<span class="sd">    gene: str </span>
+<span class="sd">        The name of the gene where the</span>
+<span class="sd">        image to be saved can be found.</span>
+<span class="sd">        This will be used to navigate im_file and find the</span>
+<span class="sd">        correct image.</span>
+<span class="sd">    pre_proc_level: str</span>
+<span class="sd">        The name of the pre processing group</span>
+<span class="sd">        where the image to be saved can be found.</span>
+<span class="sd">        This will be used to navigate im_file and find the</span>
+<span class="sd">        correct image.</span>
+<span class="sd">    image_name: str</span>
+<span class="sd">        The name of the dataset containing the image to be saved.</span>
+<span class="sd">    save_file_name: str</span>
+<span class="sd">        The name of the image file that is going to be generated, should be given without</span>
+<span class="sd">        extension.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Saving image as: </span><span class="si">{}</span><span class="s2">.tif&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">save_file_name</span><span class="p">))</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">use_plugin</span><span class="p">(</span><span class="s1">&#39;tifffile&#39;</span><span class="p">)</span>
+    <span class="c1">#image_group = im_file[&#39;Hybridization&#39; + str(hyb_nr)][gene][</span>
+    <span class="c1">#    pre_proc_level]</span>
+    <span class="n">image_group</span> <span class="o">=</span> <span class="n">im_file</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="n">pre_proc_level</span><span class="p">]</span>
+
+    <span class="n">io</span><span class="o">.</span><span class="n">imsave</span><span class="p">(</span><span class="n">save_file_name</span> <span class="o">+</span> <span class="s2">&quot;.tif&quot;</span><span class="p">,</span> <span class="n">image_group</span><span class="p">[</span><span class="n">image_name</span><span class="p">],</span></div>
+              <span class="n">plugin</span><span class="o">=</span><span class="s2">&quot;tifffile&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="save_to_file"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.save_to_file">[docs]</a><span class="k">def</span> <span class="nf">save_to_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Save pickled stitching info to file_name</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    file_name: str</span>
+<span class="sd">        The name of the file where the data will be saved. Should be given without extension.</span>
+<span class="sd">    </span>
+<span class="sd">    **kwarg</span>
+<span class="sd">        All keyword argument values will be</span>
+<span class="sd">        gathered in a dictionary, with the variable name</span>
+<span class="sd">        as their key in the dictionary. This dictionary will</span>
+<span class="sd">        then be saved in the pickled file.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Add extension</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Saving data to: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span>
+    <span class="c1"># Make a dictionary</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Saving data: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+    <span class="c1"># Write to file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span></div>
+        <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="load_stitching_coord"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.load_stitching_coord">[docs]</a><span class="k">def</span> <span class="nf">load_stitching_coord</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Load pickled variables</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    file_name: str</span>
+<span class="sd">        The name of a pickled data file. Should be given without extension.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    : dict  </span>
+<span class="sd">        Unpickled data found in &lt;file_name&gt;&#39;.pkl&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">file_name</span> <span class="o">+</span> <span class="s1">&#39;.pkl&#39;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Loading data from: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">file_name</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="free_hdf5_space"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.free_hdf5_space">[docs]</a><span class="k">def</span> <span class="nf">free_hdf5_space</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Clean up the hdf5 file after deleting a dataset</span>
+
+<span class="sd">    After deleting a data set from an hdf5-file, the disk space taken</span>
+<span class="sd">    up by that data is not freed. Flushing the hfd5-file may help to</span>
+<span class="sd">    keep the file smaller after deleting several data sets.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    f: pointer</span>
+<span class="sd">        HDF5 file handle. The opened file that needs flushing.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Flushing hdf5 file to clean up after delete operations&quot;</span><span class="p">)</span>
+    <span class="n">before_flush</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">get_filesize</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="n">after_flush</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">get_filesize</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+        <span class="s2">&quot;Size in bytes before flush: </span><span class="si">{}</span><span class="s2"> after flush: </span><span class="si">{}</span><span class="s2"> space freed: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span></div>
+            <span class="n">before_flush</span><span class="p">,</span> <span class="n">after_flush</span><span class="p">,</span> <span class="n">before_flush</span> <span class="o">-</span> <span class="n">after_flush</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="read_IJ_corners"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.read_IJ_corners">[docs]</a><span class="k">def</span> <span class="nf">read_IJ_corners</span><span class="p">(</span><span class="n">folder</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Read Preibisch corners</span>
+
+<span class="sd">    Read previously determined global corners from the Preibisch</span>
+<span class="sd">    imageJ plugin data. This code starts reading below the line:</span>
+<span class="sd">    &#39;# Define the image coordinates&#39; and the file should not contain</span>
+<span class="sd">    empty lines after this line.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    folder: str  Exact path to the folder, including trailing &quot;/&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    compare_corners: list</span>
+<span class="sd">        List, each element is a list containing the</span>
+<span class="sd">        tile_ind and a numpy arrray with the</span>
+<span class="sd">        corresponding corner&#39;s y and x coordinates.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="c1"># Key word to look for in the name of the  file with the previously calculated corners</span>
+    <span class="n">name_key</span> <span class="o">=</span> <span class="s1">&#39;TileConfiguration&#39;</span>
+    <span class="c1"># Find the file, using the key word</span>
+    <span class="n">coord_file_name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">folder</span> <span class="o">+</span> <span class="s1">&#39;*.txt&#39;</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">name_key</span> <span class="ow">in</span> <span class="n">name</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+        <span class="s2">&quot;Reading corners from folder: </span><span class="si">{}</span><span class="s2"> and file: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">folder</span><span class="p">,</span>
+                                                              <span class="n">coord_file_name</span><span class="p">))</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">coord_file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">coord_file</span><span class="p">:</span>
+        <span class="n">coord_reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">coord_file</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+        <span class="n">start_reading</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Init corner list</span>
+        <span class="n">compare_corners</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">coord_reader</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">start_reading</span><span class="p">:</span>
+                <span class="c1"># Take the last number found in the string as number of the tile</span>
+                <span class="n">tile_nr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;\d+&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+                <span class="c1"># Convert corner coordinates</span>
+                <span class="n">corner</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">line</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+                <span class="c1"># Append the data we want to use:</span>
+                <span class="n">compare_corners</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">tile_nr</span><span class="p">,</span> <span class="n">corner</span><span class="p">])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tile_nr</span><span class="p">,</span> <span class="n">corner</span><span class="p">))</span>
+            <span class="c1"># Read from &#39;# Define the image coordinates&#39; till the end</span>
+            <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="p">[</span><span class="s1">&#39;# Define the image coordinates&#39;</span><span class="p">]:</span>
+                <span class="c1"># Found starting line</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;starting to read&#39;</span><span class="p">)</span>
+                <span class="n">start_reading</span> <span class="o">=</span> <span class="kc">True</span></div>
+    <span class="k">return</span> <span class="n">compare_corners</span>
+
+
+<span class="c1">######################## Plotting ######################################</span>
+<div class="viewcode-block" id="display_tiles"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.display_tiles">[docs]</a><span class="k">def</span> <span class="nf">display_tiles</span><span class="p">(</span><span class="n">tiles</span><span class="p">,</span> <span class="n">tile_set</span><span class="p">,</span> <span class="n">fig_nr</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                  <span class="n">maximize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">main_title</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rgb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot tiles in subplots</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of tiles</span>
+<span class="sd">    tile_set: np.array</span>
+<span class="sd">        Tiles organization</span>
+<span class="sd">    fig_nr: int     </span>
+<span class="sd">        number of the figure window.</span>
+<span class="sd">    block: bool</span>
+<span class="sd">        Block causes the program to stop running after plotting the figure,</span>
+<span class="sd">        until the figure window is closed.</span>
+<span class="sd">    maximize: bool </span>
+<span class="sd">        Maximize plots the figure full screen.</span>
+<span class="sd">    main_title: str</span>
+<span class="sd">        Main title adds a title text in the figure.</span>
+<span class="sd">    rgb: bool</span>
+<span class="sd">        define the color standard used</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">plt_available</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Plotting tiles&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_nr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tiles</span><span class="p">)):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">rgb</span><span class="p">):</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="s1">&#39;gray&#39;</span><span class="p">,</span>
+                           <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="s1">&#39;gray&#39;</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">maximize</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;Matplotlib backend: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()))</span>
+            <span class="n">figManager</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_current_fig_manager</span><span class="p">()</span>
+            <span class="n">figManager</span><span class="o">.</span><span class="n">window</span><span class="o">.</span><span class="n">showMaximized</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">main_title</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">main_title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="plot_stitched_coordinates"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.plot_stitched_coordinates">[docs]</a><span class="k">def</span> <span class="nf">plot_stitched_coordinates</span><span class="p">(</span><span class="n">corner_list</span><span class="p">,</span> <span class="n">image_list</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                              <span class="n">name</span><span class="o">=</span><span class="s1">&#39;stitched_coordinates&#39;</span><span class="p">,</span>
+                              <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">invert_yaxis</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot top-left coordinates with their tile numbers</span>
+
+<span class="sd">    Coordinates are assumed to be in pixels.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    corner_list : list</span>
+<span class="sd">        List with as many elements as there are tiles. Each element contains</span>
+<span class="sd">        the tile index (as int) and y and x coordinate of the top left corner</span>
+<span class="sd">        (as a numpy array)</span>
+<span class="sd">    image_list: list</span>
+<span class="sd">        The list of the numbers of the tiles as they are found in the file names,</span>
+<span class="sd">        but reordered to match the order of corner_list.</span>
+<span class="sd">    block: bool</span>
+<span class="sd">        Plot blocks the running program untill the plotting window is closed if true</span>
+<span class="sd">        (default: True)</span>
+<span class="sd">    name: str </span>
+<span class="sd">        Name of the plotting window (default: &quot;coordinates&quot;)</span>
+<span class="sd">    file_name: str</span>
+<span class="sd">        Name of the file the image should be saved to.</span>
+<span class="sd">        The name should list the complete absolute map.</span>
+<span class="sd">        Default/None causes the image to not be saved. (Default: None)</span>
+<span class="sd">    invert_yaxis: bool</span>
+<span class="sd">        Invert the y-axis when plotting. (default: True)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">plt_available</span><span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">corner_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">image_list</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">corner_list</span><span class="p">))]</span>
+        <span class="n">corners</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">corner</span> <span class="ow">in</span> <span class="n">corner_list</span><span class="p">])</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">corners</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">corners</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+        <span class="c1"># plt.setp(plt.gca(), &#39;ylim&#39;, reversed(plt.getp(plt.gca(), &#39;ylim&#39;)))</span>
+        <span class="c1"># bboxes = []</span>
+        <span class="c1"># ax = plt.gca()</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">corners</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">corners</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]):</span>
+            <span class="n">annotation</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+                <span class="n">label</span><span class="p">,</span>
+                <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+            <span class="c1"># plt.draw()</span>
+            <span class="c1"># fig.canvas.draw()</span>
+            <span class="c1"># bbox = annotation.get_window_extent()</span>
+            <span class="c1"># the figure transform goes from relative coords-&gt;pixels and we</span>
+            <span class="c1"># want the inverse of that</span>
+            <span class="c1"># bbox_data = bbox.transformed(ax.transData.inverted())</span>
+            <span class="c1"># bboxes.append(bbox_data)</span>
+        <span class="c1"># Title and axes labels</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span>
+            <span class="s1">&#39;Labels represent: &lt;tile index&gt;/&lt;image number as it appears in file name&gt;&#39;</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="mf">1.08</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;top-left position (pxls)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;top-left position (pxls)&#39;</span><span class="p">)</span>
+
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">()</span>  <span class="c1"># return the current ylim</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">ymin</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">))</span>  <span class="c1"># set the ylim to ymin, ymax</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">()</span>  <span class="c1"># return the current ylim</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">xmin</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">))</span>  <span class="c1"># set the ylim to ymin, ymax</span>
+
+        <span class="c1"># bbox = mtransforms.Bbox.union(bboxes)</span>
+        <span class="c1"># ax.update_datalim(bbox.corners())</span>
+        <span class="c1"># ax.autoscale_view()</span>
+
+        <span class="k">if</span> <span class="n">invert_yaxis</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s1">&#39;ylim&#39;</span><span class="p">,</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">getp</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span> <span class="s1">&#39;ylim&#39;</span><span class="p">)))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="c1"># Make sure the labels are within the axes</span>
+        <span class="c1"># plt.draw()</span>
+        <span class="c1"># bboxes = []</span>
+        <span class="c1"># for bbox in bboxes:</span>
+        <span class="c1"># bbox = annotation.get_window_extent()</span>
+        <span class="c1"># the figure transform goes from relative coords-&gt;pixels and we</span>
+        <span class="c1"># want the inverse of that</span>
+        <span class="c1"># bbox_data = bbox.transformed(ax.transData.inverted())</span>
+        <span class="c1"># bboxes.append(bbox_data)</span>
+
+
+
+        <span class="c1"># Save and/or display</span>
+        <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file_name</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="plot_coordinates"><a class="viewcode-back" href="../../../API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.plot_coordinates">[docs]</a><span class="k">def</span> <span class="nf">plot_coordinates</span><span class="p">(</span><span class="n">micData</span><span class="p">,</span> <span class="n">ind_coord_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;coordinates&quot;</span><span class="p">,</span>
+                     <span class="n">file_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">invert_yaxis</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot top-left coordinates with their tile numbers</span>
+
+<span class="sd">    Coordinates are assumed to be in pixels.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    </span>
+<span class="sd">    micData: object</span>
+<span class="sd">        MicroscopeData object. Containing the coordinates to be plotted.</span>
+<span class="sd">    block: bool</span>
+<span class="sd">        Plot blocks the running program untill the plotting window is closed if true</span>
+<span class="sd">        (default: True)</span>
+<span class="sd">    name: str</span>
+<span class="sd">        Name of the plotting window (default: &quot;coordinates&quot;)</span>
+<span class="sd">    file_name: str</span>
+<span class="sd">        Name of the file the image should be saved to.</span>
+<span class="sd">        The name should list the complete absolute map.</span>
+<span class="sd">        Default/None causes the image to not be saved. (Default: None)</span>
+<span class="sd">    invert_yaxis: bool</span>
+<span class="sd">        Invert the y-axis when plotting. (default: True)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">plt_available</span><span class="p">:</span>
+        <span class="c1"># Define labels</span>
+        <span class="k">if</span> <span class="n">ind_coord_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">nr</span><span class="p">)</span> <span class="k">for</span> <span class="n">nr</span> <span class="ow">in</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_nr</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">ind_coord_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+                <span class="n">ind_coord_list</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ind_coord_list</span><span class="p">))]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">micData</span><span class="o">.</span><span class="n">x_coords</span><span class="p">,</span> <span class="n">micData</span><span class="o">.</span><span class="n">y_coords</span><span class="p">,</span> <span class="s1">&#39;o--&#39;</span><span class="p">)</span>
+        <span class="c1"># Add annotations</span>
+        <span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">micData</span><span class="o">.</span><span class="n">x_coords</span><span class="p">,</span>
+                               <span class="n">micData</span><span class="o">.</span><span class="n">y_coords</span><span class="p">):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+                <span class="n">label</span><span class="p">,</span>
+                <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">xytext</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                <span class="n">textcoords</span><span class="o">=</span><span class="s1">&#39;offset points&#39;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+        <span class="c1"># Axes labels</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;top-left position (pxls)&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;top-left position (pxls)&#39;</span><span class="p">)</span>
+        <span class="c1"># Enlarge axes so the annotation will fit within the axis better</span>
+        <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">()</span>  <span class="c1"># return the current ylim</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">ymin</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">))</span>  <span class="c1"># set the ylim to ymin, ymax</span>
+        <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">()</span>  <span class="c1"># return the current ylim</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">xmin</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">+</span> <span class="mi">1000</span><span class="p">))</span>  <span class="c1"># set the ylim to ymin, ymax</span>
+
+        <span class="k">if</span> <span class="n">invert_yaxis</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">setp</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s1">&#39;ylim&#39;</span><span class="p">,</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">getp</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span> <span class="s1">&#39;ylim&#39;</span><span class="p">)))</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">tick_top</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s1">&#39;top&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Save and/or display</span>
+        <span class="k">if</span> <span class="n">file_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">file_name</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="n">block</span><span class="o">=</span><span class="n">block</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">plot_3D</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">plt_available</span><span class="p">:</span>
+        <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Plotting tiles in 3D&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Shape pic: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="s1">&#39;test final img&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">image</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+        <span class="n">np_image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">vv</span><span class="o">.</span><span class="n">use</span><span class="p">()</span>
+        <span class="n">vv</span><span class="o">.</span><span class="n">volshow</span><span class="p">(</span><span class="n">np_image</span><span class="p">,</span> <span class="n">renderStyle</span><span class="o">=</span><span class="s1">&#39;mip&#39;</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">vv</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">camera</span><span class="o">.</span><span class="n">fov</span> <span class="o">=</span> <span class="mi">45</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">daspectAuto</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">a</span><span class="o">.</span><span class="n">daspect</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">Run</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
