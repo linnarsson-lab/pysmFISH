@@ -13,8 +13,7 @@ install:
   - conda install --yes python=3.6 numpy scipy scikit-image scikit-learn matplotlib sympy h5py mpi4py
   - pip install loompy
   - pip install ruamel.yaml
-  - pip install dask
-  - pip install dask.distributed
+  - pip install dask distributed --upgrade
   - pip install nd2reader==2.1.3
   - git clone https://github.com/linnarsson-lab/pysmFISH.git
   - cd pysmFISH; pip install .;cd ..
