@@ -1,22 +1,29 @@
 .. _configuration:
 
-Configuration scripts
+Configuration files
 =====================
 
 
 **Description of the configurations files:**
 
-.. toctree::
-    exp_met_ref
+Experimental metadata
+---------------------
 
-.. toctree::
-    filt_config_ref
-
-.. toctree::
-    seg_ref
+Experimental metadata:`<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Experimental_metadata.yaml>`_
 
 
-: `Experimental_metadata.yaml </configuration_files/Experimental_metadata.yaml>`_
+Filtering and raw counting
+--------------------------
+
+Filtering and raw counting:`<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Filtering_raw_counting.config.yaml>`_
+
+
+Staining segmentation
+---------------------
+
+Staining segmentation:`<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Staining_segmentation.config.yamll>`_
+
+
 
 **Download a template of the configuration files:**
 
