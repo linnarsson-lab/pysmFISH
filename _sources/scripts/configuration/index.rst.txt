@@ -9,19 +9,19 @@ Configuration files
 Experimental metadata
 ---------------------
 
-Experimental metadata:`<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Experimental_metadata.yaml>`_
+`Experimental metadata:<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Experimental_metadata.yaml>`_
 
 
 Filtering and raw counting
 --------------------------
 
-Filtering and raw counting:`<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Filtering_raw_counting.config.yaml>`_
+`Filtering and raw counting:<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Filtering_raw_counting.config.yaml>`_
 
 
 Staining segmentation
 ---------------------
 
-Staining segmentation:`<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Staining_segmentation.config.yamll>`_
+`Staining segmentation:<https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Staining_segmentation.config.yamll>`_
 
 
 
