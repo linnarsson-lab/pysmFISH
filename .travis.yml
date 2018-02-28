@@ -17,6 +17,6 @@ install:
   - pip install dask.distributed
   - pip install nd2reader==2.1.3
   - git clone https://github.com/linnarsson-lab/pysmFISH.git
-  - cd velocyto.py; pip install .;cd ..
+  - cd pysmFISH; pip install .;cd ..
   - git clone https://github.com/sphinx-doc/sphinx.git
   - cd sphinx; pip install .;cd ..
