@@ -2,5 +2,3 @@
 
 Notebooks
 =========
-
-Testa di cane

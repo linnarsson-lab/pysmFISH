@@ -44,7 +44,7 @@ Content
     notebooks/index
 
 .. toctree::
-    licence/index
+    license/index
 
 
 .. toctree::
