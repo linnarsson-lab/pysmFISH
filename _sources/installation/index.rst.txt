@@ -16,7 +16,7 @@ Run the following command to make sure you have all the dependencies correctly i
 
 ::
 
-    conda install numpy scipy scikit-image scikit-learn matplotlib nd2reader==2.1.3 sympy loompy ruamel.yaml h5py dask dask.distributed mpi4py
+    conda install conda install numpy scipy scikit-image scikit-learn matplotlib sympy h5py mpi4py
 
 .. _pypi:
 
