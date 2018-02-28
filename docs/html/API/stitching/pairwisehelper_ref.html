@@ -1,0 +1,459 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pairwisehelper &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../index.html"/>
+        <link rel="up" title="Stitching API" href="index.html"/>
+        <link rel="next" title="pairwisesingle" href="pairwisesingle_ref.html"/>
+        <link rel="prev" title="MicroscopeData" href="MicroscopeData_ref.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../filtering_ref.html">filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../counting_ref.html">counting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_calling_ref.html">dots_calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_coords_calculations_ref.html">dots_coords_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hdf5_utils_ref.html">hdf5_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io_ref.html">io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_based_segmentation_ref.html">object_based_segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils_ref.html">utils</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Stitching API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="GlobalOptimization_ref.html">Global Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hdf5preparation_ref.html">hdf5preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hybregistration_ref.html">hybregistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inout_ref.html">inout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MicroscopeData_ref.html">MicroscopeData</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pairwisehelper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisesingle_ref.html">pairwisesingle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stitching_ref.html">stitching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tilejoining_ref.html">tilejoining</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">API</a> &raquo;</li>
+        
+          <li><a href="index.html">Stitching API</a> &raquo;</li>
+        
+      <li>pairwisehelper</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/API/stitching/pairwisehelper_ref.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysmFISH.stitching_package.pairwisehelper">
+<span id="pairwisehelper"></span><h1>pairwisehelper<a class="headerlink" href="#module-pysmFISH.stitching_package.pairwisehelper" title="Permalink to this headline">¶</a></h1>
+<p>Helper functions for the class pairwise alignment
+Creates its own logger object when imported.</p>
+<p>Functions:</p>
+<dl class="function">
+<dt id="pysmFISH.stitching_package.pairwisehelper.calc_translated_pics">
+<code class="descclassname">pysmFISH.stitching_package.pairwisehelper.</code><code class="descname">calc_translated_pics</code><span class="sig-paren">(</span><em>trans</em>, <em>overlap1</em>, <em>overlap2</em>, <em>round_size=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/pairwisehelper.html#calc_translated_pics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.pairwisehelper.calc_translated_pics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate wich part of 2 pictures overlap after translation.</p>
+<p>Translates overlap2 and returns the parts of overlap1 and
+overlap2 that overlap after translation. Parts that do not
+overlap are cropped. The alternative would be to fill the parts
+that do not overlap with zeros, but this seems to mess up the
+covariance calculation more than cropping the pictures.
+Here, one problem is that we may crop unnecessarily much
+because the cropping is done on the overlap and not on the whole
+tile.</p>
+<dl class="docutils">
+<dt>trans: np.array</dt>
+<dd>1 by 2 np-array with y and x translation.</dd>
+<dt>overlap1: np.array</dt>
+<dd>Image</dd>
+<dt>overlap2: np.array</dt>
+<dd>Image that is supposed to overlap with overlap1</dd>
+<dt>round_size: bool</dt>
+<dd>If True the final image sizes will be
+rounded to the nearest integer before warping the
+images. (Default: False)</dd>
+</dl>
+<dl class="docutils">
+<dt>shifted_a: np.array</dt>
+<dd>Overlap a shifted and cropped to the same size as shifted_b</dd>
+<dt>shifted_b: np.array</dt>
+<dd>Overlap b shifted and cropped to the same size as shifted_a</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.pairwisehelper.calc_translated_pics_3D">
+<code class="descclassname">pysmFISH.stitching_package.pairwisehelper.</code><code class="descname">calc_translated_pics_3D</code><span class="sig-paren">(</span><em>trans</em>, <em>overlap1</em>, <em>overlap2</em>, <em>round_size=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/pairwisehelper.html#calc_translated_pics_3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.pairwisehelper.calc_translated_pics_3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate wich part of two 3D pictures overlap after translation.</p>
+<p>Translates overlap2 and returns the parts of overlap1 and
+overlap2 that overlap after translation.
+This function works in 3D but does not translate in z.
+Parts that do not overlap are cropped. The alternative would be to
+fill the parts that do not overlap with zeros, but this seems to
+mess up the covariance calculation more than cropping the pictures.
+Here, one problem is that we may crop unnecessarily much
+because the cropping is done on the overlap and not on the whole
+tile.</p>
+<dl class="docutils">
+<dt>trans: np.array</dt>
+<dd>1 by 2 np-array with y and x translation.</dd>
+<dt>overlap1: np.array</dt>
+<dd>Image</dd>
+<dt>overlap2: np.array</dt>
+<dd>Image that is supposed to overlap with overlap1</dd>
+<dt>round_size: bool</dt>
+<dd>If True the final image sizes will be
+rounded to the nearest integer before warping the
+images. (Default: False)</dd>
+</dl>
+<dl class="docutils">
+<dt>shifted_a: np.array</dt>
+<dd>Overlap a shifted and cropped to the same size as shifted_b</dd>
+<dt>shifted_b: np.array</dt>
+<dd>Overlap b shifted and cropped to the same size as shifted_a</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.pairwisehelper.calculate_PCM">
+<code class="descclassname">pysmFISH.stitching_package.pairwisehelper.</code><code class="descname">calculate_PCM</code><span class="sig-paren">(</span><em>pic_a</em>, <em>pic_b</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/pairwisehelper.html#calculate_PCM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.pairwisehelper.calculate_PCM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the phase correlation matrix of pic_a and pic_b.</p>
+<dl class="docutils">
+<dt>pic_a: np.array</dt>
+<dd>First picture</dd>
+<dt>pic_b: np.array</dt>
+<dd>Second picture</dd>
+</dl>
+<dl class="docutils">
+<dt>r: np.array</dt>
+<dd>Normalized PCM matrix</dd>
+</dl>
+<blockquote>
+<div>pic_a and pic_b should have the same size</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.pairwisehelper.calculate_PCM_method2">
+<code class="descclassname">pysmFISH.stitching_package.pairwisehelper.</code><code class="descname">calculate_PCM_method2</code><span class="sig-paren">(</span><em>pic_a</em>, <em>pic_b</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/pairwisehelper.html#calculate_PCM_method2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.pairwisehelper.calculate_PCM_method2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the phase correlation matrix of pic_a and pic_b.</p>
+<p>Method 2 differs from calculate_PCM in that it calculates the PCM
+per, layer in the image therefore this function is only applicable
+to 3D images/complete z-stacks.
+In fact it is only used when in pairwisesingle.py if method ==
+‘calculate per layer’.</p>
+<dl class="docutils">
+<dt>pic_a: np.array</dt>
+<dd>First picture</dd>
+<dt>pic_b: np.array</dt>
+<dd>Second picture</dd>
+</dl>
+<dl class="docutils">
+<dt>r: np.array</dt>
+<dd>Normalized PCM matrix</dd>
+</dl>
+<blockquote>
+<div>pic_a and pic_b should have the same size</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.pairwisehelper.display_overlap">
+<code class="descclassname">pysmFISH.stitching_package.pairwisehelper.</code><code class="descname">display_overlap</code><span class="sig-paren">(</span><em>overlap1</em>, <em>overlap2</em>, <em>best_trans</em>, <em>best_cov</em>, <em>plot_order</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/pairwisehelper.html#display_overlap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.pairwisehelper.display_overlap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot two pictures and show how they overlap.</p>
+<p>This function will only plot when allow_plot is True and in inout
+matplotlib is imported and plot_available is True.</p>
+<dl class="docutils">
+<dt>overlap1: np.array</dt>
+<dd>2d np-array representing an image</dd>
+<dt>overlap2: np.array</dt>
+<dd>2d np-array representing an image</dd>
+<dt>best_trans: np.array</dt>
+<dd>1 by 2 np array with an y and x value for the best transition</dd>
+<dt>best_cov: float</dt>
+<dd>Number indicating the goodness of the overlap between the two pictures</dd>
+<dt>plot_order: list</dt>
+<dd>The order in wich subplots should be placed if when plotting overlap1 
+and 2 and overlap rgb</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.pairwisehelper.get_overlapping_region">
+<code class="descclassname">pysmFISH.stitching_package.pairwisehelper.</code><code class="descname">get_overlapping_region</code><span class="sig-paren">(</span><em>tile_1</em>, <em>tile_2</em>, <em>overlap_ind_x</em>, <em>overlap_ind_y</em>, <em>direction</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/pairwisehelper.html#get_overlapping_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.pairwisehelper.get_overlapping_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the overlap indexes calculate the overlap in direction.</p>
+<dl class="docutils">
+<dt>tile_1: np.array</dt>
+<dd>2D or 3D numpy array representing an image.</dd>
+<dt>tile_2: np.array</dt>
+<dd>2D or 3D numpy array representing an image.</dd>
+<dt>overlap_ind_x: int</dt>
+<dd>The difference in pixels between the tile corners in the x/column direction.</dd>
+<dt>overlap_ind_y: int</dt>
+<dd>The difference in pixels between the tile corners in the y/row direction.</dd>
+<dt>direction: str</dt>
+<dd>Valid values: ‘left’ or ‘top’. Denotes if
+the two tiles neighbour on the right and left or
+at the bottom and top.</dd>
+</dl>
+<dl class="docutils">
+<dt>overlap_1: np.array</dt>
+<dd>2D or 3D numpy arrays. The parts of each image that overlap.</dd>
+<dt>overlap_2: np.array</dt>
+<dd>2D or 3D numpy arrays. The parts of each image that overlap.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.pairwisehelper.xcov_nd">
+<code class="descclassname">pysmFISH.stitching_package.pairwisehelper.</code><code class="descname">xcov_nd</code><span class="sig-paren">(</span><em>pic_1</em>, <em>pic_2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/pairwisehelper.html#xcov_nd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.pairwisehelper.xcov_nd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the normalized cross covariance of pic_1 and pic_2.</p>
+<dl class="docutils">
+<dt>pic_1: np.array</dt>
+<dd>Numpy array representing a gray value picture, same size as pic_2</dd>
+<dt>pic_2: np.array </dt>
+<dd>Numpy array representing a gray value picture, same size as pic_1</dd>
+</dl>
+<dl class="docutils">
+<dt>: float</dt>
+<dd>The normalized crosscovariance of pic_1 and pic_2 (coVar / (stDev1 * stDev2))</dd>
+<dt>monocolor: bool   </dt>
+<dd>True if the one or both of the pictures contained only one color.</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pairwisesingle_ref.html" class="btn btn-neutral float-right" title="pairwisesingle" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="MicroscopeData_ref.html" class="btn btn-neutral" title="MicroscopeData" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

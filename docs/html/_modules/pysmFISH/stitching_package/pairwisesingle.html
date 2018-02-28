@@ -1,0 +1,1197 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysmFISH.stitching_package.pairwisesingle &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../API/index.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pysmFISH.stitching_package.pairwisesingle</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysmFISH.stitching_package.pairwisesingle</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;High level helper functions that deal with the alignment of</span>
+<span class="sd">a single pair of neighbours, written for use by the class pairwise</span>
+<span class="sd">alignment.</span>
+<span class="sd">Creates its own logger object when imported.</span>
+
+<span class="sd">Functions:</span>
+<span class="sd">align_single_pair       -- Determine the ideal alignment between two</span>
+<span class="sd">                        neighbouring tiles</span>
+<span class="sd">refine_single_pair      -- Determine the ideal alignment between two</span>
+<span class="sd">                        neighbouring tiles, with the use of an old</span>
+<span class="sd">                        alignment.</span>
+<span class="sd">determine_overlap       -- Determine the overlap between two</span>
+<span class="sd">                        neighbouring tiles</span>
+<span class="sd">calculate_pos_shifts    -- Calulate possible shifts, given two</span>
+<span class="sd">                        overlapping images.</span>
+<span class="sd">find_best_trans         -- Find the best translation using the cross</span>
+<span class="sd">                        covariance.</span>
+<span class="sd">find_best_trans_corr    -- Find the best translation using the cross</span>
+<span class="sd">                        correlation.</span>
+<span class="sd">perform_upsampling      -- Perform upsampling for subpixel precision in</span>
+<span class="sd">                        the shift</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">img_as_float</span>
+<span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">inout</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">pairwisehelper</span> <span class="k">as</span> <span class="n">ph</span>
+
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="c1"># The method used for the 3D alignment.</span>
+<span class="c1"># Options are: &#39;compress pic&#39;, &#39;use whole pic&#39; and &#39;calculate per layer&#39;.</span>
+<span class="c1"># We have been using &#39;compress pic&#39;, which  is the most accurate and</span>
+<span class="c1"># fastest method.</span>
+<span class="c1"># Therefore  &#39;use whole pic&#39; and &#39;calculate per layer&#39; have not been</span>
+<span class="c1"># extensively tested.</span>
+<span class="n">method</span> <span class="o">=</span> <span class="s1">&#39;compress pic&#39;</span>
+
+
+<span class="c1">#######################Second level functions#######################</span>
+<div class="viewcode-block" id="align_single_pair"><a class="viewcode-back" href="../../../API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.align_single_pair">[docs]</a><span class="k">def</span> <span class="nf">align_single_pair</span><span class="p">(</span><span class="n">tiles</span><span class="p">,</span> <span class="n">tile_file</span><span class="p">,</span> <span class="n">contig_tuples</span><span class="p">,</span> <span class="n">contig_ind</span><span class="p">,</span>
+                      <span class="n">micData</span><span class="p">,</span> <span class="n">nr_peaks</span><span class="p">,</span> <span class="n">nr_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                      <span class="n">nr_slices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine the ideal alignment between two neighbouring tiles</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of strings. List of references to the the tiles in the hdf5 file tile_file.</span>
+<span class="sd">    tile_file: pointer</span>
+<span class="sd">        hdf5 file object. The opened file containing the tiles to stitch.</span>
+<span class="sd">    contig_tuples: list</span>
+<span class="sd">        List of tuples. Each tuple is a tile pair.</span>
+<span class="sd">        Tuples contain two tile indexes denoting these</span>
+<span class="sd">        tiles are contingent to each other.</span>
+<span class="sd">    contig_ind: int</span>
+<span class="sd">        The index of the current tile pair in</span>
+<span class="sd">        contig_tuples. More precisely: the index of the</span>
+<span class="sd">        tuple in contig_tuples containing the indexes of</span>
+<span class="sd">        the tiles that should be aligned.</span>
+<span class="sd">    micData: object</span>
+<span class="sd">        MicroscopeData object. Should contain coordinates of</span>
+<span class="sd">        the tile corners as taken from the microscope.</span>
+<span class="sd">        These coordinates are used to dtermine the overlap</span>
+<span class="sd">        between a tile pair.</span>
+<span class="sd">    nr_peaks: int</span>
+<span class="sd">        The n highest peaks from the PCM</span>
+<span class="sd">        matrix that will be used to do crosscovariance</span>
+<span class="sd">        with. A good number for 2D analysis is 8 peaks and</span>
+<span class="sd">        good numbers for 3D with method =&#39;compress pic&#39; are</span>
+<span class="sd">        6 or 9 peaks.</span>
+<span class="sd">    nr_dim: int</span>
+<span class="sd">        If 3, the code will assume three</span>
+<span class="sd">        dimensional data for the tile, where z is the first</span>
+<span class="sd">        dimension and y and x the second and third. For any</span>
+<span class="sd">        other value 2-dimensional data is assumed.</span>
+<span class="sd">        (default: 2)</span>
+<span class="sd">    nr_slices: int</span>
+<span class="sd">        Only applicable when running with 3D</span>
+<span class="sd">        pictures and using &#39;compres pic&#39; method. Determines</span>
+<span class="sd">        the number of slices that are compressed together</span>
+<span class="sd">        (compression in the z-direction). If None,</span>
+<span class="sd">        all the slices are compressed together. Default:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    best_trans: np.array</span>
+<span class="sd">        1 by 2 or 3 array containing best found (z), y and x translation.</span>
+<span class="sd">    best_cov: float</span>
+<span class="sd">        The covariance of the overlap after translation of the overlap by best_trans.</span>
+<span class="sd">    contig_ind: int</span>
+<span class="sd">        The index of the used tile pair in</span>
+<span class="sd">        contig_tuples. This is necessary to return when</span>
+<span class="sd">        running on multiple processors/cores. More</span>
+<span class="sd">        precisely: the index of the tuple in contig_tuples</span>
+<span class="sd">        containing the indexes of the tiles that should be</span>
+<span class="sd">        aligned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Rename tile indexes</span>
+    <span class="n">ind1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">contig_tuples</span><span class="p">[</span><span class="n">contig_ind</span><span class="p">])</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">contig_tuples</span><span class="p">[</span><span class="n">contig_ind</span><span class="p">])</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating pairwise alignment for indexes: </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">nr_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">tile_1</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile_3D</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind1</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+        <span class="n">tile_2</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile_3D</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind2</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tile_1</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind1</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+        <span class="n">tile_2</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind2</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">tile_1</span><span class="o">.</span><span class="n">size</span> <span class="ow">and</span> <span class="n">tile_2</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="c1"># Determine overlap</span>
+        <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">plot_order</span> <span class="o">=</span> <span class="n">determine_overlap</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span>
+                                                           <span class="n">ind2</span><span class="p">,</span> <span class="n">tile_1</span><span class="p">,</span>
+                                                           <span class="n">tile_2</span><span class="p">,</span>
+                                                           <span class="n">micData</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Shape of overlap 1 and 2: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">overlap2</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">nr_dim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;compress pic&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">nr_slices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">nr_slices</span> <span class="o">=</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span> <span class="o">=</span> <span class="n">align_single_compress_pic</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span>
+                                                             <span class="n">overlap2</span><span class="p">,</span>
+                                                             <span class="n">nr_peaks</span><span class="p">,</span>
+                                                             <span class="n">nr_dim</span><span class="p">,</span>
+                                                             <span class="n">nr_slices</span><span class="p">,</span>
+                                                             <span class="n">plot_order</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">unr_pos_transistions</span> <span class="o">=</span> <span class="n">calculate_pos_shifts</span><span class="p">(</span>
+                <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">nr_peaks</span><span class="p">,</span> <span class="n">nr_dim</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Possible transistions: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span>
+                         <span class="nb">format</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">))</span>
+            <span class="c1"># Do correlation over the found shifts:</span>
+            <span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span> <span class="o">=</span> <span class="n">find_best_trans</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">,</span>
+                                                   <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span>
+                                                   <span class="n">plot_order</span><span class="p">)</span>
+
+        <span class="c1"># Give some feedback</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Best shift: </span><span class="si">{}</span><span class="s2"> covariance: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span>
+                                                           <span class="n">best_cov</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Best shift type: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> covariance type: </span><span class="si">{}</span><span class="s2"> contig_ind type: </span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">best_trans</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">best_trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                    <span class="nb">type</span><span class="p">(</span><span class="n">best_cov</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">contig_ind</span><span class="p">)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># One of the tiles is empty</span>
+        <span class="n">best_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nr_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">best_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Best shift: </span><span class="si">{}</span><span class="s2">. One of the neighbours is empty&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">best_trans</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int16&#39;</span><span class="p">),</span> <span class="n">best_cov</span><span class="p">,</span> <span class="n">contig_ind</span>
+
+
+<div class="viewcode-block" id="refine_single_pair"><a class="viewcode-back" href="../../../API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.refine_single_pair">[docs]</a><span class="k">def</span> <span class="nf">refine_single_pair</span><span class="p">(</span><span class="n">tiles</span><span class="p">,</span> <span class="n">tile_file</span><span class="p">,</span> <span class="n">contig_tuples</span><span class="p">,</span> <span class="n">contig_ind</span><span class="p">,</span>
+                       <span class="n">micData</span><span class="p">,</span> <span class="n">old_P</span><span class="p">,</span> <span class="n">nr_peaks</span><span class="p">,</span>
+                       <span class="n">nr_dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">nr_slices</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine the ideal alignment between two neighbouring tiles.</span>
+
+<span class="sd">    Uses an old alignment as starting point. Meant to use on smFISH</span>
+<span class="sd">    signal data, where the old alignment is taken from the aligning of</span>
+<span class="sd">    the nuclei staining.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of strings. List of references to the the tiles in the hdf5 file tile_file.</span>
+<span class="sd">    tile_file: pointer</span>
+<span class="sd">        hdf5 file object. The opened file containing the tiles to stitch.</span>
+<span class="sd">    contig_tuples: list</span>
+<span class="sd">        List of tuples. Each tuple is a tile pair.</span>
+<span class="sd">        Tuples contain two tile indexes denoting these</span>
+<span class="sd">        tiles are contingent to each other.</span>
+<span class="sd">    contig_ind: int</span>
+<span class="sd">        The index of the current tile pair in</span>
+<span class="sd">        contig_tuples. More precisely: the index of the</span>
+<span class="sd">        tuple in contig_tuples containing the indexes of</span>
+<span class="sd">        the tiles that should be aligned.</span>
+<span class="sd">    micData: object</span>
+<span class="sd">        MicroscopeData object. Should contain coordinates of</span>
+<span class="sd">        the tile corners as taken from the microscope.</span>
+<span class="sd">        These coordinates are used to dtermine the overlap</span>
+<span class="sd">        between a tile pair.</span>
+<span class="sd">    old_P: dict</span>
+<span class="sd">        An old pairwise alignment containing a key</span>
+<span class="sd">        &#39;P&#39; containing a flattened list of 2D or 3D</span>
+<span class="sd">        pairwise translations.</span>
+<span class="sd">        And containing a key &#39;covs&#39; containing the</span>
+<span class="sd">        normalized cross covariance for each alignment.</span>
+<span class="sd">    nr_peaks: int</span>
+<span class="sd">        The n highest peaks from the PCM</span>
+<span class="sd">        matrix that will be used to do crosscovariance</span>
+<span class="sd">        with. A good number for 2D analysis is 8 peaks and</span>
+<span class="sd">        good numbers for 3D with method =&#39;compress pic&#39; are</span>
+<span class="sd">        6 or 9 peaks.</span>
+<span class="sd">    nr_dim: int</span>
+<span class="sd">        If 3, the code will assume three</span>
+<span class="sd">        dimensional data for the tile, where z is the first</span>
+<span class="sd">        dimension and y and x the second and third. For any</span>
+<span class="sd">        other value 2-dimensional data is assumed.</span>
+<span class="sd">        (default: 2)</span>
+<span class="sd">    nr_slices: int</span>
+<span class="sd">        Only applicable when running with 3D</span>
+<span class="sd">        pictures and using &#39;compres pic&#39; method. Determines</span>
+<span class="sd">        the number of slices that are compressed together</span>
+<span class="sd">        (compression in the z-direction). If None,</span>
+<span class="sd">        all the slices are compressed together. Default:</span>
+<span class="sd">        None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    best_trans: np.array</span>
+<span class="sd">        1 by 2 or 3 array containing best found (z), y and x translation.</span>
+<span class="sd">    best_cov: float</span>
+<span class="sd">        The covariance of the overlap after translation of the overlap by best_trans.</span>
+<span class="sd">    contig_ind: int</span>
+<span class="sd">        The index of the used tile pair in</span>
+<span class="sd">        contig_tuples. This is necessary to return when</span>
+<span class="sd">        running on multiple processors/cores. More</span>
+<span class="sd">        precisely: the index of the tuple in contig_tuples</span>
+<span class="sd">        containing the indexes of the tiles that should be</span>
+<span class="sd">        aligned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Rename the indexes of the 2 images to compare:</span>
+    <span class="n">ind1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">contig_tuples</span><span class="p">[</span><span class="n">contig_ind</span><span class="p">])</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">contig_tuples</span><span class="p">[</span><span class="n">contig_ind</span><span class="p">])</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating pairwise alignment for indexes: </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">nr_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">tile_1</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile_3D</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind1</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+        <span class="n">tile_2</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile_3D</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind2</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tile_1</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind1</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+        <span class="n">tile_2</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind2</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">tile_1</span><span class="o">.</span><span class="n">size</span> <span class="ow">and</span> <span class="n">tile_2</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="c1"># Determine overlap</span>
+        <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">plot_order</span> <span class="o">=</span> <span class="n">determine_overlap</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">,</span>
+                                                           <span class="n">tile_1</span><span class="p">,</span>
+                                                           <span class="n">tile_2</span><span class="p">,</span>
+                                                           <span class="n">micData</span><span class="p">)</span>
+        <span class="c1"># Pick the old translation from te pairwise alignment</span>
+        <span class="c1"># array</span>
+        <span class="n">trans</span> <span class="o">=</span> <span class="n">old_P</span><span class="p">[</span><span class="n">contig_ind</span> <span class="o">*</span> <span class="n">nr_dim</span><span class="p">:</span> <span class="n">contig_ind</span> <span class="o">*</span> <span class="n">nr_dim</span> <span class="o">+</span> <span class="n">nr_dim</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cur old trans is: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trans</span><span class="p">))</span>
+
+        <span class="c1"># Determine the overlap translated according to the old</span>
+        <span class="c1"># pairwise translation</span>
+        <span class="n">overlap1_ref</span><span class="p">,</span> <span class="n">overlap2_ref</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">calc_translated_pics</span><span class="p">(</span>
+            <span class="n">trans</span><span class="p">,</span>
+            <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span>
+            <span class="n">round_size</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Take just a bright part from this overlap.</span>
+        <span class="c1"># TODO: code below may crash when possible transistions</span>
+        <span class="c1"># are too big.</span>
+        <span class="c1"># cut_out_coord  = ph.select_cut_out2(overlap1_ref, overlap2_ref)</span>
+        <span class="c1"># overlap1_ref = overlap1_ref[cut_out_coord[0]:(cut_out_coord[0] + 150),</span>
+        <span class="c1">#                    cut_out_coord[1]:(cut_out_coord[1] + 150)]</span>
+        <span class="c1"># overlap2_ref = overlap2_ref[cut_out_coord[0]:(cut_out_coord[0] + 150),</span>
+        <span class="c1">#                    cut_out_coord[1]:(cut_out_coord[1] + 150)]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Shape of overlap 1 and 2: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">overlap1_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">overlap2_ref</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">nr_dim</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;compress pic&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">nr_slices</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">nr_slices</span> <span class="o">=</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span> <span class="o">=</span> <span class="n">align_single_compress_pic</span><span class="p">(</span>
+                <span class="n">overlap1_ref</span><span class="p">,</span>
+                <span class="n">overlap2_ref</span><span class="p">,</span> <span class="n">nr_peaks</span><span class="p">,</span> <span class="n">nr_dim</span><span class="p">,</span> <span class="n">nr_slices</span><span class="p">,</span>
+                <span class="n">plot_order</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Calculate possible transistions</span>
+            <span class="n">unr_pos_transistions</span> <span class="o">=</span> <span class="n">calculate_pos_shifts</span><span class="p">(</span><span class="n">overlap1_ref</span><span class="p">,</span>
+                                                        <span class="n">overlap2_ref</span><span class="p">,</span>
+                                                        <span class="n">nr_peaks</span><span class="p">,</span>
+                                                        <span class="n">nr_dim</span><span class="p">)</span>
+            <span class="c1"># Calculate best xcov of the found shifts:</span>
+            <span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span> <span class="o">=</span> <span class="n">find_best_trans</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">,</span>
+                                                   <span class="n">overlap1_ref</span><span class="p">,</span>
+                                                   <span class="n">overlap2_ref</span><span class="p">,</span>
+                                                   <span class="n">plot_order</span><span class="p">)</span>
+        <span class="c1"># Give some feedback</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Best shift: </span><span class="si">{}</span><span class="s2"> covariance: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span>
+                    <span class="nb">format</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">best_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nr_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">best_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Best shift: </span><span class="si">{}</span><span class="s2">. One of the neighbours is empty&quot;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_trans</span><span class="p">))</span>
+</div>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">best_trans</span><span class="p">),</span> <span class="n">best_cov</span><span class="p">,</span> <span class="n">contig_ind</span>
+
+
+<div class="viewcode-block" id="align_single_compress_pic"><a class="viewcode-back" href="../../../API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.align_single_compress_pic">[docs]</a><span class="k">def</span> <span class="nf">align_single_compress_pic</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">nr_peaks</span><span class="p">,</span> <span class="n">nr_dim</span><span class="p">,</span>
+                              <span class="n">nr_slices</span><span class="p">,</span>
+                              <span class="n">plot_order</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Perform the alignment when using the 3D method &quot;compress pic&quot;</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    overlap1: np.array</span>
+<span class="sd">        Image that overlaps with overlap2</span>
+<span class="sd">    overlap2: np.array</span>
+<span class="sd">        Image that overlaps with overlap1</span>
+<span class="sd">    nr_peaks: int   </span>
+<span class="sd">        The n highest peaks from the PCM</span>
+<span class="sd">        matrix that will be used to do crosscovariance</span>
+<span class="sd">        with. A good number for 2D analysis is 8 peaks and</span>
+<span class="sd">        good numbers for 3D with method =&#39;compress pic&#39; are</span>
+<span class="sd">        6 or 9 peaks.</span>
+<span class="sd">    nr_dim: int</span>
+<span class="sd">        If 3, the code will assume three</span>
+<span class="sd">        dimensional data for the tile, where z is the first</span>
+<span class="sd">        dimension and y and x the second and third. For any</span>
+<span class="sd">        other value 2-dimensional data is assumed.</span>
+<span class="sd">        (default: 2)</span>
+<span class="sd">    nr_slices: int</span>
+<span class="sd">        Only applicable when running with 3D</span>
+<span class="sd">        pictures and using &#39;compres pic&#39; method. Determines</span>
+<span class="sd">        the number of slices that are compressed together</span>
+<span class="sd">        (compression in the z-direction).</span>
+<span class="sd">    plot_order: np.array</span>
+<span class="sd">        Numpy array, filled with ones. The order in wich subplots should be made</span>
+<span class="sd">        if we want to plot overlap1 and 2</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    best_trans: np.array</span>
+<span class="sd">        1 by 3 array containing best found z, y and x translation.</span>
+<span class="sd">    best_cov: float</span>
+<span class="sd">        The covariance of the overlap after translation of the overlap by best_trans.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Unraveled possible transistions contains for each substack</span>
+    <span class="c1"># a list which contains for each of the 3 dimensions</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating pairwise alignment using compress pic &quot;</span>
+                <span class="o">+</span> <span class="s2">&quot;method.&quot;</span><span class="p">)</span>
+    <span class="n">best_trans_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">best_cov_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">unr_pos_transistions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># Change number of peaks, because we are dealing with 3 dimensions</span>
+    <span class="n">nr_peaks</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">nr_peaks</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;nr_peaks data type: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">nr_peaks</span><span class="p">)))</span>
+    <span class="k">while</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">com_overlap1</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">com_overlap2</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
+            <span class="n">com_overlap1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">overlap1</span><span class="p">[</span><span class="n">counter</span><span class="p">:</span><span class="n">counter</span> <span class="o">+</span> <span class="n">nr_slices</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+                        <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
+            <span class="n">com_overlap2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">overlap2</span><span class="p">[</span><span class="n">counter</span><span class="p">:</span><span class="n">counter</span> <span class="o">+</span> <span class="n">nr_slices</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+                        <span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
+
+            <span class="c1"># plt.figure(&#39;compressed image&#39;)</span>
+            <span class="c1"># plt.imshow(com_overlap1[-1])</span>
+            <span class="c1"># plt.show()</span>
+        <span class="n">unr_pos_transistions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">calculate_pos_shifts</span><span class="p">(</span>
+            <span class="n">com_overlap1</span><span class="p">,</span> <span class="n">com_overlap2</span><span class="p">,</span> <span class="n">nr_peaks</span><span class="p">,</span> <span class="n">nr_dim</span><span class="p">))</span>
+        <span class="n">counter</span> <span class="o">+=</span> <span class="n">nr_slices</span>
+
+        <span class="c1"># Do correlation over the found shifts:</span>
+        <span class="n">best_compr_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">2</span><span class="p">),</span>
+                                    <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">best_compr_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="c1"># Test all transistions</span>
+        <span class="k">for</span> <span class="n">com_dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+            <span class="n">best_compr_trans</span><span class="p">[</span><span class="n">com_dim</span><span class="p">],</span> <span class="n">best_compr_cov</span><span class="p">[</span>
+                <span class="n">com_dim</span><span class="p">]</span> <span class="o">=</span> <span class="n">find_best_trans</span><span class="p">(</span>
+                <span class="n">unr_pos_transistions</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">com_dim</span><span class="p">],</span>
+                <span class="n">com_overlap1</span><span class="p">[</span><span class="n">com_dim</span><span class="p">],</span> <span class="n">com_overlap2</span><span class="p">[</span><span class="n">com_dim</span><span class="p">],</span>
+                <span class="n">plot_order</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;best_compr_trans: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_compr_trans</span><span class="p">))</span>
+        <span class="c1"># Find the best translation based on which translation has the highest covariance</span>
+        <span class="c1"># Sort the covariance</span>
+        <span class="n">cov_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">best_compr_cov</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;cov_order: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cov_order</span><span class="p">))</span>
+        <span class="c1"># The translation in each direction is hidden in the 3 flattened pictures.</span>
+        <span class="c1"># The posible z trasistions are at best_compr_trans[1,0] and best_compr_cov[2,0]</span>
+        <span class="c1"># The posible y trasistions are at best_compr_trans[0,0] and best_compr_cov[2,1]</span>
+        <span class="c1"># The posible x trasistions are at best_compr_trans[0,1] and best_compr_cov[1,1]</span>
+        <span class="c1"># Based get the row indexes for the best translation in the z, y and x direction:</span>
+        <span class="n">z_ind</span> <span class="o">=</span> <span class="n">cov_order</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;z_ind index in cov_order options: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">y_ind</span> <span class="o">=</span> <span class="n">cov_order</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;y_ind index in cov_order options: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">x_ind</span> <span class="o">=</span> <span class="n">cov_order</span><span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;x_ind index in cov_order options: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                             <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">cov_order</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;z_ind, y_ind, x_ind: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">z_ind</span><span class="p">,</span> <span class="n">y_ind</span><span class="p">,</span> <span class="n">x_ind</span><span class="p">))</span>
+        <span class="n">best_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="c1"># Z translation</span>
+        <span class="n">best_trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_compr_trans</span><span class="p">[</span><span class="n">z_ind</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">best_cov</span> <span class="o">=</span> <span class="n">best_compr_cov</span><span class="p">[</span><span class="n">z_ind</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;z compr cov: </span><span class="si">{}</span><span class="s1"> best cov overall: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_compr_cov</span><span class="p">[</span><span class="n">z_ind</span><span class="p">],</span> <span class="n">best_cov</span><span class="p">))</span>
+        <span class="c1"># Y translation</span>
+        <span class="k">if</span> <span class="n">y_ind</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">best_trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_compr_trans</span><span class="p">[</span><span class="n">y_ind</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">best_cov</span> <span class="o">=</span> <span class="n">best_cov</span> <span class="o">+</span> <span class="n">best_compr_cov</span><span class="p">[</span><span class="n">y_ind</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">y_ind</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">best_trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_compr_trans</span><span class="p">[</span><span class="n">y_ind</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="n">best_cov</span> <span class="o">=</span> <span class="n">best_cov</span> <span class="o">+</span> <span class="n">best_compr_cov</span><span class="p">[</span><span class="n">y_ind</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="s1">&#39;y_ind has an invalid value, gonna raise an error&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">(</span>
+                <span class="s1">&#39;y_ind has an invalid value, it should be 0 or 2, it is currently </span><span class="si">{}</span><span class="s1">&#39;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y_ind</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;y compr cov: </span><span class="si">{}</span><span class="s1"> best cov overall: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_compr_cov</span><span class="p">[</span><span class="n">y_ind</span><span class="p">],</span> <span class="n">best_cov</span><span class="p">))</span>
+        <span class="c1"># X translation</span>
+        <span class="n">best_trans</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">best_compr_trans</span><span class="p">[</span><span class="n">x_ind</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">best_cov</span> <span class="o">=</span> <span class="p">(</span><span class="n">best_cov</span> <span class="o">+</span> <span class="n">best_compr_cov</span><span class="p">[</span><span class="n">x_ind</span><span class="p">])</span> <span class="o">/</span> <span class="mf">3.0</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;x compr cov: </span><span class="si">{}</span><span class="s1"> best cov overall: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_compr_cov</span><span class="p">[</span><span class="n">x_ind</span><span class="p">],</span> <span class="n">best_cov</span><span class="p">))</span>
+        <span class="n">best_trans_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_trans</span><span class="p">)</span>
+        <span class="n">best_cov_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">best_cov</span><span class="p">)</span>
+    <span class="c1"># Pick the best</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;best_trans_list: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_trans_list</span><span class="p">))</span>
+    <span class="n">best_trans</span> <span class="o">=</span> <span class="n">best_trans_list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">best_cov_list</span><span class="p">)]</span>
+    <span class="n">best_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">best_cov_list</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span>
+
+
+<div class="viewcode-block" id="determine_overlap"><a class="viewcode-back" href="../../../API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.determine_overlap">[docs]</a><span class="k">def</span> <span class="nf">determine_overlap</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">,</span> <span class="n">tile_1</span><span class="p">,</span> <span class="n">tile_2</span><span class="p">,</span> <span class="n">micData</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine the overlap between two neighbouring tiles</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    ind1: int</span>
+<span class="sd">        Index (flattened) of tile 1</span>
+<span class="sd">    ind2: int</span>
+<span class="sd">        Index (flattened) of tile 2</span>
+<span class="sd">    tile_1: np.array</span>
+<span class="sd">        Image 1</span>
+<span class="sd">    tile_2: np.array</span>
+<span class="sd">        Image 2</span>
+<span class="sd">    micData: object</span>
+<span class="sd">        MicroscopeData object containing coordinates</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    overlap1: np.array</span>
+<span class="sd">        Overlapping part of tile_1</span>
+<span class="sd">    overlap2: np.array</span>
+<span class="sd">        Overlapping part of tile_2</span>
+<span class="sd">    plot_order: np.array</span>
+<span class="sd">        Numpy array of ones. The shape of this array is</span>
+<span class="sd">        used for plotting the overlaps in well fitting</span>
+<span class="sd">        subplots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ind1</span> <span class="o">-</span> <span class="n">ind2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="c1"># Overlap on left or right</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">((</span><span class="s2">&quot;Calculating overlap: right of tile </span><span class="si">{0}</span><span class="s2"> and &quot;</span>
+                      <span class="o">+</span> <span class="s2">&quot;left of tile </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Ind: </span><span class="si">{0}</span><span class="s2"> , tile nr: </span><span class="si">{1}</span><span class="s2"> , x-coord: </span><span class="si">{2}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">],</span>
+                    <span class="n">micData</span><span class="o">.</span><span class="n">x_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">]]))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Ind: </span><span class="si">{0}</span><span class="s2"> , tile nr: </span><span class="si">{1}</span><span class="s2"> , x-coord: </span><span class="si">{2}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind2</span><span class="p">,</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">],</span>
+                    <span class="n">micData</span><span class="o">.</span><span class="n">x_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">]]))</span>
+        <span class="c1"># Calculate overlap indexes</span>
+        <span class="n">overlap_ind_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="n">micData</span><span class="o">.</span><span class="n">x_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">]]</span>
+            <span class="o">-</span> <span class="n">micData</span><span class="o">.</span><span class="n">x_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">]])</span>
+        <span class="n">overlap_ind_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="n">micData</span><span class="o">.</span><span class="n">y_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">]]</span>
+            <span class="o">-</span> <span class="n">micData</span><span class="o">.</span><span class="n">y_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">]])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Overlap index, x: </span><span class="si">{}</span><span class="s2"> y: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span>
+                     <span class="nb">format</span><span class="p">(</span><span class="n">overlap_ind_x</span><span class="p">,</span> <span class="n">overlap_ind_y</span><span class="p">))</span>
+        <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">get_overlapping_region</span><span class="p">(</span><span class="n">tile_1</span><span class="p">,</span> <span class="n">tile_2</span><span class="p">,</span>
+                                                       <span class="n">overlap_ind_x</span><span class="p">,</span>
+                                                       <span class="n">overlap_ind_y</span><span class="p">,</span>
+                                                       <span class="s1">&#39;left&#39;</span><span class="p">)</span>
+        <span class="c1"># For subplotting the overlaps later:</span>
+        <span class="n">plot_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Overlap on top or bottom</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">((</span><span class="s2">&quot;Calculating overlap: bottom of tile </span><span class="si">{0}</span><span class="s2"> and &quot;</span>
+                     <span class="o">+</span> <span class="s2">&quot;top of tile </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Ind: </span><span class="si">{0}</span><span class="s2"> , tile nr: </span><span class="si">{1}</span><span class="s2"> , y-coord: </span><span class="si">{2}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">],</span>
+                    <span class="n">micData</span><span class="o">.</span><span class="n">y_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">]]))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Ind: </span><span class="si">{0}</span><span class="s2"> , tile nr: </span><span class="si">{1}</span><span class="s2"> , y-coord: </span><span class="si">{2}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind2</span><span class="p">,</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">],</span>
+                    <span class="n">micData</span><span class="o">.</span><span class="n">y_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">]]))</span>
+        <span class="c1"># Calculate overlap indexes</span>
+        <span class="n">overlap_ind_y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="n">micData</span><span class="o">.</span><span class="n">y_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">]]</span>
+            <span class="o">-</span> <span class="n">micData</span><span class="o">.</span><span class="n">y_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">]])</span>
+        <span class="n">overlap_ind_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="n">micData</span><span class="o">.</span><span class="n">x_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">]]</span>
+            <span class="o">-</span> <span class="n">micData</span><span class="o">.</span><span class="n">x_coords</span><span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">]])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Overlap index, y: </span><span class="si">{}</span><span class="s2"> x: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span>
+                     <span class="nb">format</span><span class="p">(</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="n">overlap_ind_x</span><span class="p">))</span>
+        <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">get_overlapping_region</span><span class="p">(</span><span class="n">tile_1</span><span class="p">,</span> <span class="n">tile_2</span><span class="p">,</span>
+                                                       <span class="n">overlap_ind_x</span><span class="p">,</span>
+                                                       <span class="n">overlap_ind_y</span><span class="p">,</span>
+                                                       <span class="s1">&#39;top&#39;</span><span class="p">)</span>
+        <span class="c1"># For subplotting the overlaps later:</span>
+        <span class="n">plot_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">plot_order</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="calculate_pos_shifts"><a class="viewcode-back" href="../../../API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.calculate_pos_shifts">[docs]</a><span class="k">def</span> <span class="nf">calculate_pos_shifts</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">nr_peaks</span><span class="p">,</span> <span class="n">nr_dim</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calulate possible shifts, given two overlapping images</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    overlap1: np.array</span>
+<span class="sd">        Image that overlaps with overlap2.</span>
+<span class="sd">    overlap2: np.array</span>
+<span class="sd">        Image that overlaps with overlap1.</span>
+<span class="sd">    nr_peaks: int</span>
+<span class="sd">        The number of peaks from the PCM that will be used to calculate shifts</span>
+<span class="sd">    nr_dim: int</span>
+<span class="sd">        If 3, the code will assume three</span>
+<span class="sd">        dimensional data for the tile, where z is the first</span>
+<span class="sd">        dimension and y and x the second and third. For any</span>
+<span class="sd">        other value 2-dimensional data is assumed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    unr_pos_transistions: np.array</span>
+<span class="sd">        Numpy array or list (list only when</span>
+<span class="sd">        method == &#39;compress pic&#39; and nr_dim == 3 )</span>
+<span class="sd">        Numpy array numpy arrays of int, with each</span>
+<span class="sd">        of the inner arrays containing the (z), x</span>
+<span class="sd">        and y translation, if nr_dim is not 3 only</span>
+<span class="sd">        x and y translation are given.</span>
+<span class="sd">        If method == &#39;compress pic&#39; and nr_dim == 3</span>
+<span class="sd">        a list of 3 lists is returned. In each list</span>
+<span class="sd">        the best translations for each compressed</span>
+<span class="sd">        picture are given as numpy arrays of length</span>
+<span class="sd">        2.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Calculate phase correlation matrix of the overlap</span>
+    <span class="k">if</span> <span class="n">nr_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating posible shifts, method: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">method</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;use whole pic&#39;</span><span class="p">:</span>
+            <span class="n">r1</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">calculate_PCM</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">)</span>
+            <span class="c1"># inout.plot_3D(r1)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;calculate per layer&#39;</span><span class="p">:</span>
+            <span class="n">r1</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">calculate_PCM_method2</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">)</span>
+            <span class="c1"># inout.plot_3D(r1)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;compress pic&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;length compressed overlap list: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">overlap1</span><span class="p">)))</span>
+            <span class="n">r1_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">overlap1</span><span class="p">)):</span>
+                <span class="n">r1</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">calculate_PCM</span><span class="p">(</span><span class="n">overlap1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">overlap2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">r1_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r1</span><span class="p">)</span>
+                <span class="c1"># inout.display_tiles(r1_list, np.ones((1,3)))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating posible shifts, in 2D&quot;</span><span class="p">)</span>
+        <span class="n">r1</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">calculate_PCM</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">)</span>
+    <span class="c1"># Get the first nr_peaks peaks</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;compress pic&#39;</span> <span class="ow">and</span> <span class="n">nr_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">unr_pos_transistions</span> <span class="o">=</span> <span class="p">[[],</span> <span class="p">[],</span> <span class="p">[]]</span>
+        <span class="n">collect_zeros</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r1_list</span><span class="p">)):</span>
+            <span class="n">cur_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">r1_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">flat</span><span class="p">[:])[</span><span class="o">-</span><span class="n">nr_peaks</span><span class="p">:]</span>
+            <span class="n">unr_cur_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">cur_trans</span><span class="p">,</span> <span class="n">r1_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;unr_cur_trans: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unr_cur_trans</span><span class="p">))</span>
+
+            <span class="c1"># Calculate correct transition from the found peaks (calculation as in Skimage)</span>
+            <span class="c1"># noinspection PyTypeChecker</span>
+            <span class="n">midpoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">axis_size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">axis_size</span> <span class="ow">in</span>
+                                  <span class="n">overlap1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Midpoints: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">midpoints</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">unr_cur_trans</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;trans bigger than midpoints: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">trans</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">))</span>
+                <span class="n">trans</span><span class="p">[</span><span class="n">trans</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">]</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">overlap1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span>
+                    <span class="n">trans</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">]</span>
+                <span class="n">trans</span><span class="p">[</span><span class="n">trans</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">midpoints</span><span class="p">)]</span> \
+                    <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">overlap1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span>
+                    <span class="n">trans</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">midpoints</span><span class="p">)]</span>
+                <span class="n">unr_pos_transistions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">trans</span><span class="p">)</span>
+                <span class="c1"># If trans is not all zeros, multiply transistion1 by -1</span>
+                <span class="c1"># to get the transistions the both ways</span>
+                <span class="k">if</span> <span class="n">trans</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                    <span class="n">unr_pos_transistions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">trans</span><span class="p">)</span>
+            <span class="c1"># Add zero translation if not already there</span>
+            <span class="n">collect_zeros</span> <span class="o">+=</span> <span class="p">[</span><span class="n">pos</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">unr_pos_transistions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span>
+                              <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pos</span><span class="p">))]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Collect_zeros: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">collect_zeros</span><span class="p">))</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">collect_zeros</span><span class="p">)):</span>
+                <span class="n">unr_pos_transistions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])),</span>
+                             <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Added zero trans to transistion&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                    <span class="s2">&quot;Possible transistion after appending zeros: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pos_transistions1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">r1</span><span class="o">.</span><span class="n">flat</span><span class="p">[:])[</span><span class="o">-</span><span class="n">nr_peaks</span><span class="p">:]</span>
+
+        <span class="c1"># Unravel the found shifts</span>
+        <span class="n">unr_pos_transistions1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">pos_transistions1</span><span class="p">,</span> <span class="n">r1</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;pos_trans1: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unr_pos_transistions1</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;calculate per layer&#39;</span> <span class="ow">and</span> <span class="n">nr_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="c1"># Calculate correct transition from the found peaks (calculation as in Skimage)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Overlap shape for midpoints: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]))</span>
+            <span class="c1"># noinspection PyTypeChecker</span>
+            <span class="n">midpoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">axis_size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">axis_size</span> <span class="ow">in</span>
+                                  <span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Midpoints: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">midpoints</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">unr_pos_transistions1</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;trans bigger than midpoints: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">))</span>
+                <span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:][</span><span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">]</span> <span class="o">-=</span> \
+                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:][</span><span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">]</span>
+                <span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:][</span><span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">midpoints</span><span class="p">)]</span> \
+                    <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">:][</span>
+                    <span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">midpoints</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Calculate correct transition from the found peaks</span>
+            <span class="c1"># (calculation as in Skimage)</span>
+            <span class="n">midpoints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">fix</span><span class="p">(</span><span class="n">axis_size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">axis_size</span> <span class="ow">in</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Midpoints: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">midpoints</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">unr_pos_transistions1</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;trans bigger than midpoints: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">trans</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">))</span>
+                <span class="n">trans</span><span class="p">[</span><span class="n">trans</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">]</span> <span class="o">-=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span>
+                    <span class="n">trans</span> <span class="o">&gt;</span> <span class="n">midpoints</span><span class="p">]</span>
+                <span class="n">trans</span><span class="p">[</span><span class="n">trans</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">midpoints</span><span class="p">)]</span> \
+                    <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span>
+                    <span class="n">trans</span> <span class="o">&lt;</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">midpoints</span><span class="p">)]</span>
+        <span class="c1"># Multiply transistion1 by -1 to get the transistions the both</span>
+        <span class="c1"># ways</span>
+        <span class="n">inv_transistion</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">unr_pos_transistions1</span>
+        <span class="c1"># And remove all zero transistions from the inverted, because</span>
+        <span class="c1"># these are duplicates</span>
+        <span class="n">inv_transistion</span> <span class="o">=</span> <span class="n">inv_transistion</span><span class="p">[</span>
+            <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">inv_transistion</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">unr_pos_transistions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">unr_pos_transistions1</span><span class="p">,</span> <span class="n">inv_transistion</span><span class="p">))</span>
+        <span class="c1"># Add zero translation if not already there</span>
+        <span class="n">collect_zeros</span> <span class="o">=</span> <span class="p">[</span><span class="n">pos</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="n">unr_pos_transistions</span> <span class="k">if</span>
+                         <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">pos</span><span class="p">))]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">collect_zeros</span><span class="p">)):</span>
+            <span class="n">unr_pos_transistions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">,</span>
+                                             <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span>
+                                                 <span class="n">unr_pos_transistions</span><span class="p">[</span>
+                                                     <span class="mi">0</span><span class="p">])),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+                                             <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Added zero trans to transistion&quot;</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">unr_pos_transistions</span>
+
+
+<div class="viewcode-block" id="find_best_trans"><a class="viewcode-back" href="../../../API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.find_best_trans">[docs]</a><span class="k">def</span> <span class="nf">find_best_trans</span><span class="p">(</span><span class="n">pos_transistions</span><span class="p">,</span> <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">plot_order</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Find the best translation using the cross covariance.</span>
+
+<span class="sd">    Shift overlap according to translations and test the cov of</span>
+<span class="sd">    the translated overlaps.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    pos_transistions: np.array</span>
+<span class="sd">        2D numpy array. Array containing y,x-pairs denoting the possible translations.</span>
+<span class="sd">    overlap1: np.array</span>
+<span class="sd">        Image</span>
+<span class="sd">    overlap2: np.array</span>
+<span class="sd">        Image that overlaps with overlap1.</span>
+<span class="sd">    plot_order: np.array</span>
+<span class="sd">        The shape of this array denotes</span>
+<span class="sd">        the order in wich subplots should be made</span>
+<span class="sd">        if we want to plot overlap1 and 2.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    best_trans: np.array</span>
+<span class="sd">        1 by 2 or 3 array containing best found (z), y and x translation.</span>
+<span class="sd">    best_cov: float</span>
+<span class="sd">        The covariance of the overlap after translation of the overlap by best_trans.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Init best_trans and best_cov</span>
+    <span class="c1"># This makes sure that if all correlations are below threshold,</span>
+    <span class="c1"># we get no translation.</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Finding best translation.&quot;</span><span class="p">)</span>
+
+    <span class="n">best_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>  <span class="c1"># np.array([0,0])</span>
+    <span class="n">best_cov</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;best_trans at start </span><span class="si">{}</span><span class="s1">, type: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span>
+                                                    <span class="nb">type</span><span class="p">(</span><span class="n">best_trans</span><span class="p">)))</span>
+
+    <span class="k">for</span> <span class="n">trans</span> <span class="ow">in</span> <span class="n">pos_transistions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;calculate per layer&#39;</span> <span class="ow">and</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">shifted_a</span><span class="p">,</span> <span class="n">shifted_b</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">calc_translated_pics_3D</span><span class="p">(</span>
+                <span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span>
+                <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;use whole pic&#39;</span> <span class="ow">and</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">shifted_a</span><span class="p">,</span> <span class="n">shifted_b</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">calc_translated_pics_3D</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span>
+                                                              <span class="n">overlap1</span><span class="p">,</span>
+                                                              <span class="n">overlap2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shifted_a</span><span class="p">,</span> <span class="n">shifted_b</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">calc_translated_pics</span><span class="p">(</span><span class="n">trans</span><span class="p">,</span>
+                                                           <span class="n">overlap1</span><span class="p">,</span>
+                                                           <span class="n">overlap2</span><span class="p">)</span>
+        <span class="c1"># Calculate xcov:</span>
+        <span class="k">if</span> <span class="n">shifted_a</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">cov</span><span class="p">,</span> <span class="n">monocolor</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">xcov_nd</span><span class="p">(</span><span class="n">shifted_a</span><span class="p">,</span> <span class="n">shifted_b</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Found a 2D picture to compare&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cov_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">monocolor_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">shifted_a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">cov</span><span class="p">,</span> <span class="n">monocolor</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">xcov_nd</span><span class="p">(</span><span class="n">shifted_a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+                                            <span class="n">shifted_b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
+                <span class="n">cov_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cov</span><span class="p">)</span>
+                <span class="n">monocolor_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">monocolor</span><span class="p">)</span>
+            <span class="n">cov_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cov_list</span><span class="p">)</span>
+            <span class="n">monocolor_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">monocolor_list</span><span class="p">)</span>
+            <span class="n">cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">cov_list</span><span class="p">)</span>
+            <span class="n">monocolor</span> <span class="o">=</span> <span class="n">monocolor_list</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;cov </span><span class="si">{}</span><span class="s2"> monocolor </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cov</span><span class="p">,</span> <span class="n">monocolor</span><span class="p">))</span>
+        <span class="c1"># Check for monocolor images, they do not provide usefull cov</span>
+        <span class="k">if</span> <span class="n">monocolor</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="s2">&quot;Monocolor image found, covariance for these images is zero&quot;</span><span class="p">)</span>
+            <span class="n">cov</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">cov</span> <span class="o">&gt;</span> <span class="n">best_cov</span><span class="p">):</span>
+            <span class="n">best_cov</span> <span class="o">=</span> <span class="n">cov</span>
+            <span class="n">best_trans</span> <span class="o">=</span> <span class="n">trans</span>
+            <span class="c1"># Give some feedback</span>
+            <span class="c1"># inout.display_tiles([shifted_a, shifted_b], plot_order, fig_nr = 8, block = True)</span>
+    <span class="c1"># Check the result</span>
+    <span class="n">thr</span> <span class="o">=</span> <span class="mf">0.5</span>
+    <span class="k">if</span> <span class="n">best_cov</span> <span class="o">&lt;</span> <span class="n">thr</span><span class="p">:</span>
+        <span class="n">best_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">ndim</span><span class="p">,</span>
+                              <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="c1"># Line to call display overlap if we want to plot the overlap with the</span>
+    <span class="c1"># best covariance</span>
+    <span class="k">if</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">ph</span><span class="o">.</span><span class="n">display_overlap</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">best_trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span>
+                           <span class="n">best_cov</span><span class="p">,</span> <span class="n">plot_order</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ph</span><span class="o">.</span><span class="n">display_overlap</span><span class="p">(</span><span class="n">overlap1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">overlap2</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span>
+                           <span class="n">best_trans</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span> <span class="n">best_cov</span><span class="p">,</span> <span class="n">plot_order</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;best_trans at end </span><span class="si">{}</span><span class="s1">, type: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span>
+                                                         <span class="nb">type</span><span class="p">(</span>
+                                                             <span class="n">best_trans</span><span class="p">)))</span></div>
+    <span class="k">return</span> <span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span>
+
+
+<div class="viewcode-block" id="plot_overlaps"><a class="viewcode-back" href="../../../API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.plot_overlaps">[docs]</a><span class="k">def</span> <span class="nf">plot_overlaps</span><span class="p">(</span><span class="n">alignment</span><span class="p">,</span> <span class="n">tiles</span><span class="p">,</span> <span class="n">contig_tuples</span><span class="p">,</span> <span class="n">micData</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot the pairwise overlaps</span>
+
+<span class="sd">    </span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    alignment: dict</span>
+<span class="sd">        Dictionary containing key &#39;P&#39; with a flattened list of translations.</span>
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of strings. Each string points to a tile in the hdf5 file.</span>
+<span class="sd">    contig_tuples: list</span>
+<span class="sd">        List of tuples denoting which tiles are contingent to each other.</span>
+<span class="sd">    micData: object</span>
+<span class="sd">        MicroscopeData object containing coordinates.</span>
+
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">    Should be tested and made to work in 3D ?_?</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Trying to plot overlaps, plot will only show when &quot;</span>
+                <span class="o">+</span> <span class="s2">&quot;display_overlap in pairwisehelper.py is True and &quot;</span>
+                <span class="o">+</span> <span class="s2">&quot;matplotlib is imported in inout.py.&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">contig_tuples</span><span class="p">)):</span>
+        <span class="c1"># Pick 2 images to compare:</span>
+        <span class="n">ind1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">contig_tuples</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">ind2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">contig_tuples</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Current indexes: </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind1</span><span class="p">]</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="ow">and</span> <span class="n">tiles</span><span class="p">[</span><span class="n">ind2</span><span class="p">]</span><span class="o">.</span><span class="n">any</span><span class="p">()):</span>
+            <span class="c1"># Determine overlap</span>
+            <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">plot_order</span> <span class="o">=</span> <span class="n">determine_overlap</span><span class="p">(</span>
+                <span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">,</span>
+                <span class="n">tiles</span><span class="p">,</span> <span class="n">micData</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">trans</span> <span class="o">=</span> <span class="n">alignment</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">][</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">:</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Cur trans to be checked: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trans</span><span class="p">))</span>
+            <span class="n">ph</span><span class="o">.</span><span class="n">display_overlap</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span></div>
+                               <span class="n">plot_order</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="align_single_pair_npy"><a class="viewcode-back" href="../../../API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.align_single_pair_npy">[docs]</a><span class="k">def</span> <span class="nf">align_single_pair_npy</span><span class="p">(</span><span class="n">contig_tuple</span><span class="p">,</span><span class="n">filtered_files_list</span><span class="p">,</span><span class="n">micData</span><span class="p">,</span> 
+                          <span class="n">nr_peaks</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine the ideal alignment between two neighbouring tiles</span>
+<span class="sd">    It is a modification of the align_single_pair</span>
+<span class="sd">    function that will run in parallel using .npy image arrays.</span>
+<span class="sd">    The functions runs only in 2D.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    contig_tuple: tuple</span>
+<span class="sd">        Tuple containing two tile indexes denoting these</span>
+<span class="sd">        tiles are contingent to each other.</span>
+<span class="sd">    filtered_files_list: list</span>
+<span class="sd">        List containing the paths to the files to porocess</span>
+<span class="sd">    micData: object</span>
+<span class="sd">        MicroscopeData object. Should contain coordinates of</span>
+<span class="sd">        the tile corners as taken from the microscope.</span>
+<span class="sd">        These coordinates are used to dtermine the overlap</span>
+<span class="sd">        between a tile pair.</span>
+<span class="sd">    nr_peaks: int</span>
+<span class="sd">        The n highest peaks from the PCM</span>
+<span class="sd">        matrix that will be used to do crosscovariance</span>
+<span class="sd">        with. A good number for 2D analysis is 8 peaks and</span>
+<span class="sd">        good numbers for 3D with method =&#39;compress pic&#39; are</span>
+<span class="sd">        6 or 9 peaks.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    best_trans: np.array</span>
+<span class="sd">        1 by 2 or 3 array containing best found (z), y and x translation.</span>
+<span class="sd">    best_cov: float</span>
+<span class="sd">        The covariance of the overlap after translation of the overlap by best_trans.</span>
+<span class="sd">    contig_ind: int</span>
+<span class="sd">        The index of the used tile pair in</span>
+<span class="sd">        contig_tuples. This is necessary to return when</span>
+<span class="sd">        running on multiple processors/cores. More</span>
+<span class="sd">        precisely: the index of the tuple in contig_tuples</span>
+<span class="sd">        containing the indexes of the tiles that should be</span>
+<span class="sd">        aligned.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># This function run only for 2D so I can hard code the nr_dim</span>
+    <span class="n">nr_dim</span> <span class="o">=</span> <span class="mi">2</span>
+    
+    <span class="c1"># The contig_tuple contains the indexes derived from the tile_set</span>
+
+    <span class="n">ind1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">contig_tuple</span><span class="p">)</span>
+    <span class="n">ind2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">contig_tuple</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating pairwise alignment for indexes: </span><span class="si">{}</span><span class="s2"> and </span><span class="si">{}</span><span class="s2">&quot;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">))</span>
+    
+    <span class="c1"># Load the images</span>
+    <span class="c1"># Identify the tile positioned in the original image set</span>
+    <span class="n">tile_1_pos</span> <span class="o">=</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind1</span><span class="p">]</span>
+    <span class="n">tile_2_pos</span> <span class="o">=</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">ind2</span><span class="p">]</span>
+    
+    
+    
+    <span class="n">tile_1_fpath</span> <span class="o">=</span> <span class="p">[</span><span class="n">fpath</span> <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">filtered_files_list</span> <span class="k">if</span> <span class="s1">&#39;pos_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_1_pos</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">fpath</span><span class="p">]</span>
+    <span class="n">tile_2_fpath</span> <span class="o">=</span> <span class="p">[</span><span class="n">fpath</span> <span class="k">for</span> <span class="n">fpath</span> <span class="ow">in</span> <span class="n">filtered_files_list</span> <span class="k">if</span> <span class="s1">&#39;pos_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_2_pos</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">fpath</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">tile_1_fpath</span><span class="p">:</span>
+        <span class="n">tile_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tile_1_fpath</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">tile_1</span> <span class="o">=</span><span class="n">img_as_float</span><span class="p">(</span><span class="n">tile_1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tile_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">tile_2_fpath</span><span class="p">:</span>
+        <span class="n">tile_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tile_2_fpath</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">tile_1</span> <span class="o">=</span><span class="n">img_as_float</span><span class="p">(</span><span class="n">tile_1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">tile_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([],</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    
+        
+    <span class="k">if</span> <span class="p">(</span><span class="n">tile_1</span><span class="o">.</span><span class="n">size</span> <span class="ow">and</span> <span class="n">tile_2</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+<span class="c1">#         Determine overlap</span>
+        <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">plot_order</span> <span class="o">=</span> <span class="n">determine_overlap</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span>
+                                                           <span class="n">ind2</span><span class="p">,</span> <span class="n">tile_1</span><span class="p">,</span>
+                                                           <span class="n">tile_2</span><span class="p">,</span>
+                                                           <span class="n">micData</span><span class="p">)</span>
+    
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Shape of overlap 1 and 2: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">overlap2</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    
+        <span class="n">unr_pos_transistions</span> <span class="o">=</span> <span class="n">calculate_pos_shifts</span><span class="p">(</span>
+                <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">nr_peaks</span><span class="p">,</span> <span class="n">nr_dim</span><span class="p">)</span>
+
+        <span class="c1"># Do correlation over the found shifts:</span>
+        <span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span> <span class="o">=</span> <span class="n">find_best_trans</span><span class="p">(</span><span class="n">unr_pos_transistions</span><span class="p">,</span>
+                                               <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span>
+                                               <span class="n">plot_order</span><span class="p">)</span>
+
+         
+        <span class="c1"># Give some feedback</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Best shift: </span><span class="si">{}</span><span class="s2"> covariance: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span>
+                                                           <span class="n">best_cov</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="s2">&quot;Best shift type: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> covariance type: </span><span class="si">{}</span><span class="s2"> contig_ind type: </span><span class="si">{}</span><span class="s2">&quot;</span>
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">best_trans</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">best_trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                    <span class="nb">type</span><span class="p">(</span><span class="n">best_cov</span><span class="p">),</span> <span class="nb">type</span><span class="p">(</span><span class="n">contig_tuple</span><span class="p">)))</span>
+        
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># One of the tiles is empty</span>
+        <span class="n">best_trans</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nr_dim</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+        <span class="n">best_cov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="s2">&quot;Best shift: </span><span class="si">{}</span><span class="s2">. One of the neighbours is empty&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">best_trans</span><span class="p">))</span>
+    </div>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int16&#39;</span><span class="p">),</span> <span class="n">best_cov</span><span class="p">,</span> <span class="n">contig_tuple</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

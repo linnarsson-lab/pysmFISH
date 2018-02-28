@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>inout &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../index.html"/>
+        <link rel="up" title="Stitching API" href="index.html"/>
+        <link rel="next" title="MicroscopeData" href="MicroscopeData_ref.html"/>
+        <link rel="prev" title="hybregistration" href="hybregistration_ref.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../filtering_ref.html">filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../counting_ref.html">counting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_calling_ref.html">dots_calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_coords_calculations_ref.html">dots_coords_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hdf5_utils_ref.html">hdf5_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io_ref.html">io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_based_segmentation_ref.html">object_based_segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils_ref.html">utils</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Stitching API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="GlobalOptimization_ref.html">Global Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hdf5preparation_ref.html">hdf5preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hybregistration_ref.html">hybregistration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">inout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MicroscopeData_ref.html">MicroscopeData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisehelper_ref.html">pairwisehelper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisesingle_ref.html">pairwisesingle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stitching_ref.html">stitching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tilejoining_ref.html">tilejoining</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">API</a> &raquo;</li>
+        
+          <li><a href="index.html">Stitching API</a> &raquo;</li>
+        
+      <li>inout</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/API/stitching/inout_ref.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysmFISH.stitching_package.inout">
+<span id="inout"></span><h1>inout<a class="headerlink" href="#module-pysmFISH.stitching_package.inout" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.display_tiles">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">display_tiles</code><span class="sig-paren">(</span><em>tiles</em>, <em>tile_set</em>, <em>fig_nr=1</em>, <em>block=True</em>, <em>maximize=False</em>, <em>main_title=None</em>, <em>rgb=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#display_tiles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.display_tiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot tiles in subplots</p>
+<dl class="docutils">
+<dt>tiles: list</dt>
+<dd>List of tiles</dd>
+<dt>tile_set: np.array</dt>
+<dd>Tiles organization</dd>
+<dt>fig_nr: int     </dt>
+<dd>number of the figure window.</dd>
+<dt>block: bool</dt>
+<dd>Block causes the program to stop running after plotting the figure,
+until the figure window is closed.</dd>
+<dt>maximize: bool </dt>
+<dd>Maximize plots the figure full screen.</dd>
+<dt>main_title: str</dt>
+<dd>Main title adds a title text in the figure.</dd>
+<dt>rgb: bool</dt>
+<dd>define the color standard used</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.extract_hdf5_refs">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">extract_hdf5_refs</code><span class="sig-paren">(</span><em>hdf5_group</em>, <em>image_inds</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#extract_hdf5_refs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.extract_hdf5_refs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a list of the dataset is hdf5_group.</p>
+<p>When image_inds is not empty this function returns only the
+data sets corresponding to the numbers in image_inds.</p>
+<dl class="docutils">
+<dt>hdf5_group: pointer</dt>
+<dd>HDF5 group reference. Reference to the group
+from which we should extract the dataset names.
+The data sets are expected to be numbered.</dd>
+<dt>image_inds: iterable</dt>
+<dd>Iterable containing ints. Should contain the
+names of the datasets that will be selected. This
+list could also contain strings, as long as it’s
+contents reflect a subset of dataset names.</dd>
+</dl>
+<dl class="docutils">
+<dt>tile_refs: list</dt>
+<dd>List of strings. The references to the data sets.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.free_hdf5_space">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">free_hdf5_space</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#free_hdf5_space"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.free_hdf5_space" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clean up the hdf5 file after deleting a dataset</p>
+<p>After deleting a data set from an hdf5-file, the disk space taken
+up by that data is not freed. Flushing the hfd5-file may help to
+keep the file smaller after deleting several data sets.</p>
+<dl class="docutils">
+<dt>f: pointer</dt>
+<dd>HDF5 file handle. The opened file that needs flushing.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.get_image_names">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">get_image_names</code><span class="sig-paren">(</span><em>hdf5_file</em>, <em>image_list=array([]</em>, <em>dtype=float64)</em>, <em>hyb_nr=1</em>, <em>gene='Nuclei'</em>, <em>pre_proc_level='FilteredData'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#get_image_names"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.get_image_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the references to the tiles from the hdf5 file.</p>
+<p>If no matching data set was found, None will be used
+instead of a string reference.</p>
+<dl class="docutils">
+<dt>hdf5_file: pointer</dt>
+<dd>HDF5 file handle. The file containing the tiles.</dd>
+<dt>image_list: iterable</dt>
+<dd>Iterable containing ints. Should contain the
+names of the data sets that will be selected. This
+list could also contain strings, as long as it’s
+contents reflect a subset of dataset names.</dd>
+<dt>hyb_nr: int</dt>
+<dd>The number of the hybridization where the
+data sets can be found. This will be used to
+navigate tile_file and find the correct tiles.
+(Default: 1)</dd>
+<dt>gene: str</dt>
+<dd>The name of the gene where the data sets can be found.
+This will be used to navigate tile_file and find the
+correct tiles. (Default: ‘Nuclei’)</dd>
+<dt>pre_proc_level: str</dt>
+<dd>The name of the pre processing group
+where the data sets can be found.
+This will be used to navigate tile_file and find the
+correct tiles. (Default: ‘Filtered’)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.load_stitching_coord">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">load_stitching_coord</code><span class="sig-paren">(</span><em>file_name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#load_stitching_coord"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.load_stitching_coord" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load pickled variables</p>
+<dl class="docutils">
+<dt>file_name: str</dt>
+<dd>The name of a pickled data file. Should be given without extension.</dd>
+</dl>
+<dl class="docutils">
+<dt>: dict  </dt>
+<dd>Unpickled data found in &lt;file_name&gt;’.pkl’</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.load_tile">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">load_tile</code><span class="sig-paren">(</span><em>file_name</em>, <em>hdf5_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#load_tile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.load_tile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a tile into memory as 2D image.</p>
+<dl class="docutils">
+<dt>file_name: str </dt>
+<dd>Hdf5 reference to tile data set.</dd>
+<dt>hdf5_file: pointer</dt>
+<dd>HDF5 file handle. Opened HDF5 file containing the
+tile.</dd>
+</dl>
+<dl class="docutils">
+<dt>: np.array </dt>
+<dd>The tile as 2D image. Or an empty array when the file_name is None.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.load_tile_3D">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">load_tile_3D</code><span class="sig-paren">(</span><em>file_name</em>, <em>hdf5_file=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#load_tile_3D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.load_tile_3D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a tile into memory as 3D image.</p>
+<dl class="docutils">
+<dt>file_name: str</dt>
+<dd>Hdf5 reference to tile data set.</dd>
+<dt>hdf5_file: pointer</dt>
+<dd>HDF5 file handle. Opened HDF5 file containing the tile.</dd>
+</dl>
+<dl class="docutils">
+<dt>: np.array</dt>
+<dd>The tile as 3D image. Or an empty array when the file_name is None.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.plot_coordinates">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">plot_coordinates</code><span class="sig-paren">(</span><em>micData</em>, <em>ind_coord_list=None</em>, <em>block=True</em>, <em>name='coordinates'</em>, <em>file_name=None</em>, <em>invert_yaxis=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#plot_coordinates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.plot_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot top-left coordinates with their tile numbers</p>
+<p>Coordinates are assumed to be in pixels.</p>
+<dl class="docutils">
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Containing the coordinates to be plotted.</dd>
+<dt>block: bool</dt>
+<dd>Plot blocks the running program untill the plotting window is closed if true
+(default: True)</dd>
+<dt>name: str</dt>
+<dd>Name of the plotting window (default: “coordinates”)</dd>
+<dt>file_name: str</dt>
+<dd>Name of the file the image should be saved to.
+The name should list the complete absolute map.
+Default/None causes the image to not be saved. (Default: None)</dd>
+<dt>invert_yaxis: bool</dt>
+<dd>Invert the y-axis when plotting. (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.plot_stitched_coordinates">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">plot_stitched_coordinates</code><span class="sig-paren">(</span><em>corner_list</em>, <em>image_list</em>, <em>block=True</em>, <em>name='stitched_coordinates'</em>, <em>file_name=None</em>, <em>invert_yaxis=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#plot_stitched_coordinates"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.plot_stitched_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot top-left coordinates with their tile numbers</p>
+<p>Coordinates are assumed to be in pixels.</p>
+<dl class="docutils">
+<dt>corner_list <span class="classifier-delimiter">:</span> <span class="classifier">list</span></dt>
+<dd>List with as many elements as there are tiles. Each element contains
+the tile index (as int) and y and x coordinate of the top left corner
+(as a numpy array)</dd>
+<dt>image_list: list</dt>
+<dd>The list of the numbers of the tiles as they are found in the file names,
+but reordered to match the order of corner_list.</dd>
+<dt>block: bool</dt>
+<dd>Plot blocks the running program untill the plotting window is closed if true
+(default: True)</dd>
+<dt>name: str </dt>
+<dd>Name of the plotting window (default: “coordinates”)</dd>
+<dt>file_name: str</dt>
+<dd>Name of the file the image should be saved to.
+The name should list the complete absolute map.
+Default/None causes the image to not be saved. (Default: None)</dd>
+<dt>invert_yaxis: bool</dt>
+<dd>Invert the y-axis when plotting. (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.read_IJ_corners">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">read_IJ_corners</code><span class="sig-paren">(</span><em>folder</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#read_IJ_corners"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.read_IJ_corners" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read Preibisch corners</p>
+<p>Read previously determined global corners from the Preibisch
+imageJ plugin data. This code starts reading below the line:
+‘# Define the image coordinates’ and the file should not contain
+empty lines after this line.</p>
+<p>folder: str  Exact path to the folder, including trailing “/”</p>
+<dl class="docutils">
+<dt>compare_corners: list</dt>
+<dd>List, each element is a list containing the
+tile_ind and a numpy arrray with the
+corresponding corner’s y and x coordinates.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.save_image">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">save_image</code><span class="sig-paren">(</span><em>im_file</em>, <em>hyb_nr</em>, <em>gene</em>, <em>pre_proc_level</em>, <em>image_name</em>, <em>save_file_name</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#save_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.save_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save hdf5 file as a tiff image</p>
+<p>Save the data found in im_file_name[hyb_nr][gene][pre_proc_level][
+image_name] as an image in a tiff-file called save_file_name.
+im_file should be an hdf5-file and image_name should be a
+variable in that file.</p>
+<dl class="docutils">
+<dt>im_file: pointer</dt>
+<dd>HDF5 file handle. Opened HDF5 file containing the image to be saved.</dd>
+<dt>hyb_nr: int </dt>
+<dd>Number of the current hybridization.</dd>
+<dt>gene: str </dt>
+<dd>The name of the gene where the
+image to be saved can be found.
+This will be used to navigate im_file and find the
+correct image.</dd>
+<dt>pre_proc_level: str</dt>
+<dd>The name of the pre processing group
+where the image to be saved can be found.
+This will be used to navigate im_file and find the
+correct image.</dd>
+<dt>image_name: str</dt>
+<dd>The name of the dataset containing the image to be saved.</dd>
+<dt>save_file_name: str</dt>
+<dd>The name of the image file that is going to be generated, should be given without
+extension.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.inout.save_to_file">
+<code class="descclassname">pysmFISH.stitching_package.inout.</code><code class="descname">save_to_file</code><span class="sig-paren">(</span><em>file_name</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/inout.html#save_to_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.inout.save_to_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save pickled stitching info to file_name</p>
+<dl class="docutils">
+<dt>file_name: str</dt>
+<dd>The name of the file where the data will be saved. Should be given without extension.</dd>
+<dt><a href="#id1"><span class="problematic" id="id2">**</span></a>kwarg</dt>
+<dd>All keyword argument values will be
+gathered in a dictionary, with the variable name
+as their key in the dictionary. This dictionary will
+then be saved in the pickled file.</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="MicroscopeData_ref.html" class="btn btn-neutral float-right" title="MicroscopeData" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hybregistration_ref.html" class="btn btn-neutral" title="hybregistration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

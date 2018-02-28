@@ -1,0 +1,1582 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysmFISH.stitching_package.tilejoining &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../API/index.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pysmFISH.stitching_package.tilejoining</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysmFISH.stitching_package.tilejoining</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">skimage.util</span> <span class="k">as</span> <span class="nn">smutil</span>
+<span class="kn">import</span> <span class="nn">skimage.exposure</span> <span class="k">as</span> <span class="nn">smex</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">img_as_float</span><span class="p">,</span> <span class="n">img_as_uint</span>
+<span class="kn">import</span> <span class="nn">glob</span>
+
+
+<span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="c1"># from matplotlib.patches import Rectangle</span>
+<span class="c1"># plt_available = True</span>
+
+<span class="n">plt_available</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">inout</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">pairwisehelper</span> <span class="k">as</span> <span class="n">ph</span>
+
+
+<span class="sd">&quot;&quot;&quot;Calculates the global corners, given the translations</span>
+<span class="sd">for each tile. Also has functions to blend and stitch individual</span>
+<span class="sd">images together in one large image, using the global corners.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1">#################Functions to calculate global corners##############</span>
+<div class="viewcode-block" id="calc_corners_coord"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.calc_corners_coord">[docs]</a><span class="k">def</span> <span class="nf">calc_corners_coord</span><span class="p">(</span><span class="n">tiles</span><span class="p">,</span> <span class="n">transforms</span><span class="p">,</span> <span class="n">md</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">,</span> <span class="n">z_count</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate global corner for each tile using coordinates.</span>
+
+<span class="sd">    Calculates global corner for each tile using transforms and the</span>
+<span class="sd">    microscope coordinates.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of hdf5-references, references</span>
+<span class="sd">        to the images in tile_file, with a</span>
+<span class="sd">        reference for each tile. Here only used to check</span>
+<span class="sd">        the length. If a tile does not have an</span>
+<span class="sd">        associated image, its reference is None.</span>
+<span class="sd">    transforms: np.array</span>
+<span class="sd">        2d np array of size &quot;number of tiles&quot; by 2</span>
+<span class="sd">        representing the y and x transform for each tile.</span>
+<span class="sd">    md: object</span>
+<span class="sd">        MicroscopeData object containing the tile set</span>
+<span class="sd">        (to know the positioning of the tiles) and the y and</span>
+<span class="sd">        x coordinates for each tile as documented by the</span>
+<span class="sd">        microscope.</span>
+<span class="sd">    nr_pixels: int</span>
+<span class="sd">        Height and length of the tile in pixels, tile is assumed to be square.</span>
+<span class="sd">    z_count: int</span>
+<span class="sd">        The number of layers in one tile (size of the z</span>
+<span class="sd">        axis). Should be 1 or None if the tile is 2D.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    : dict</span>
+<span class="sd">        Dictionary containing keys corner_list and</span>
+<span class="sd">        final_image_shape. Corner_list is a list of list, each</span>
+<span class="sd">        list is a pair of an image number (int) and it&#39;s</span>
+<span class="sd">        coordinates (numpy array containing floats).</span>
+<span class="sd">        Final_image_shape is a tuple of size 2 or 3 depending on</span>
+<span class="sd">        the number of dimensions and contains ints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#Initialize the logger and arrays:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filling corner list.&quot;</span><span class="p">)</span>
+    <span class="n">max_final_img</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">min_final_img</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">float</span><span class="p">)</span>
+    <span class="n">tile_inds</span>           <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tiles</span><span class="p">))</span>
+    <span class="n">temp_corner_list</span>    <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1">#Get the masked array, used for checking for missing tiles</span>
+    <span class="n">masked_array</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">getmaskarray</span><span class="p">(</span><span class="n">md</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:])</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;masked_array: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">masked_array</span><span class="p">))</span>
+
+    <span class="c1">#Loop over the tiles in square order:</span>
+    <span class="k">for</span> <span class="n">tile_ind</span> <span class="ow">in</span> <span class="n">tile_inds</span><span class="p">:</span>
+        <span class="c1">#Find out which image number belongs to the current tiles</span>
+        <span class="n">ind_coord</span>       <span class="o">=</span> <span class="n">md</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:][</span><span class="n">tile_ind</span><span class="p">]</span>
+        <span class="c1">#Check if tile is missing</span>
+        <span class="n">tile_missing</span>    <span class="o">=</span> <span class="n">masked_array</span><span class="p">[</span><span class="n">tile_ind</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">tile_missing</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calculating corner for tile index: </span><span class="si">{}</span><span class="s2">  with &quot;</span>
+                        <span class="o">+</span> <span class="s2">&quot;tile number: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind_coord</span><span class="p">,</span> <span class="n">tile_ind</span><span class="p">))</span>
+            <span class="c1">#Get the coordinates of the corner and adjust according</span>
+            <span class="c1">#to the transform in transforms</span>
+            <span class="n">cur_corner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rint</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">md</span><span class="o">.</span><span class="n">y_coords</span><span class="p">[</span><span class="n">ind_coord</span><span class="p">],</span>
+                                           <span class="n">md</span><span class="o">.</span><span class="n">x_coords</span><span class="p">[</span><span class="n">ind_coord</span><span class="p">]])</span>
+                                 <span class="o">-</span> <span class="n">transforms</span><span class="p">[</span><span class="n">tile_ind</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">:])</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Current transform, full: </span><span class="si">{}</span><span class="s2"> truncated: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">transforms</span><span class="p">[</span><span class="n">tile_ind</span><span class="p">],</span>
+                                 <span class="n">transforms</span><span class="p">[</span><span class="n">tile_ind</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">:]))</span>
+
+            <span class="c1">#Adjust the maximum size of the final image if necessary</span>
+            <span class="n">max_final_img</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">max_final_img</span><span class="p">,</span> <span class="n">cur_corner</span><span class="p">)</span>
+            <span class="n">min_final_img</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">min_final_img</span><span class="p">,</span> <span class="n">cur_corner</span><span class="p">)</span>
+            <span class="c1">#Append the calculated corner to the temporary corner</span>
+            <span class="c1">#list</span>
+            <span class="n">temp_corner_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_corner</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#If the tile we want to place is missing, the corner</span>
+            <span class="c1">#will be flagged with np.nan values and added to the list</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Tile is missing for tile index: </span><span class="si">{}</span><span class="s2">  with &quot;</span>
+                        <span class="o">+</span> <span class="s2">&quot;tile number: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind_coord</span><span class="p">,</span> <span class="n">tile_ind</span><span class="p">))</span>
+            <span class="n">cur_corner</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]</span>
+            <span class="n">temp_corner_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cur_corner</span><span class="p">)</span>
+    <span class="c1">#Adjust the temporary corner list according to the minimum of</span>
+    <span class="c1">#the final image.</span>
+    <span class="c1">#This way we get a new origin at min_final_image.</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;min_final_img: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">min_final_img</span><span class="p">))</span>
+    <span class="n">temp_corner_list</span>   <span class="o">-=</span> <span class="n">min_final_img</span>
+    <span class="c1">#Place the temporary corner list in the global variable</span>
+    <span class="n">corner_list</span>        <span class="o">=</span> <span class="p">[[</span><span class="n">tile_inds</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">temp_corner_list</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span>
+                                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tile_inds</span><span class="p">))]</span>
+    <span class="c1">#Adjust the shape of the final image</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">z_count</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">z_count</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">final_image_shape</span>  <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">max_final_img</span> <span class="o">-</span> <span class="n">min_final_img</span>
+                                    <span class="o">+</span> <span class="n">nr_pixels</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">final_image_shape</span>  <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">z_count</span><span class="p">],</span>
+                                <span class="n">max_final_img</span> <span class="o">-</span> <span class="n">min_final_img</span>
+                                <span class="o">+</span> <span class="n">nr_pixels</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+    <span class="c1">#Give some feedback</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Corners calculated&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Corner_list: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner_list</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final image shape: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">final_image_shape</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;corner_list&#39;</span><span class="p">:</span> <span class="n">corner_list</span><span class="p">,</span></div>
+            <span class="s1">&#39;final_image_shape&#39;</span><span class="p">:</span> <span class="n">final_image_shape</span><span class="p">}</span>
+
+
+<div class="viewcode-block" id="apply_IJ_corners"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.apply_IJ_corners">[docs]</a><span class="k">def</span> <span class="nf">apply_IJ_corners</span><span class="p">(</span><span class="n">tiles</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">micData</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Use corners from ImageJ for each tile to detemine corners.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of hdf5-references, references</span>
+<span class="sd">        to the images in tile_file, with a</span>
+<span class="sd">        reference for each tile. Here only used to check</span>
+<span class="sd">        the length. If a tile does not have an</span>
+<span class="sd">        associated image, its reference is None.</span>
+<span class="sd">    corners: list</span>
+<span class="sd">        List of list, each list is a pair of an image number</span>
+<span class="sd">        (int) and it&#39;s coordinates (numpy array containing</span>
+<span class="sd">        floats).</span>
+<span class="sd">    micData: object</span>
+<span class="sd">        MicData object. Used to make an image list: the</span>
+<span class="sd">        numbers of the images to be stitches sorted</span>
+<span class="sd">        according to the tile indexes.</span>
+<span class="sd">    nr_pixels: int</span>
+<span class="sd">        Denoting size of the tile.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    : dict</span>
+<span class="sd">        Same as calc_corners_coord() returns.</span>
+<span class="sd">        Dictionary containing keys corner_list and</span>
+<span class="sd">        final_image_shape. Corner_list is a list of list, each</span>
+<span class="sd">        list is a pair of an image number (int) and it&#39;s</span>
+<span class="sd">        coordinates (numpy array containing floats).</span>
+<span class="sd">        Final_image_shape is a tuple of size 2 or 3 depending on</span>
+<span class="sd">        the numer of dimensions and contains ints.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#Initialize the logger and arrays:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Filling corner list, using ImageJ&quot;</span><span class="p">)</span>
+    <span class="n">corner_list</span>         <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">max_final_img</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">min_final_img</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">tile_inds</span>           <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tiles</span><span class="p">))</span>
+    <span class="c1"># Make a list of image numbers, matching with the numbers in the</span>
+    <span class="c1"># image files</span>
+    <span class="n">flat_tile_set</span> <span class="o">=</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="o">.</span><span class="n">flat</span><span class="p">[:]</span>
+    <span class="n">image_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">micData</span><span class="o">.</span><span class="n">tile_nr</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span> <span class="k">if</span> <span class="n">ind</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+                                    <span class="k">else</span> <span class="o">-</span><span class="mi">1</span> <span class="k">for</span> <span class="n">ind</span> <span class="ow">in</span> <span class="n">flat_tile_set</span><span class="p">]</span>
+    <span class="n">image_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_equal</span><span class="p">(</span><span class="n">image_list</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1">#Loop over the tiles in square order:</span>
+    <span class="k">for</span> <span class="n">tile_ind</span> <span class="ow">in</span> <span class="n">tile_inds</span><span class="p">:</span>
+        <span class="c1">#Find out which image number belongs to the current tiles</span>
+        <span class="n">image_nr</span>        <span class="o">=</span> <span class="n">image_list</span><span class="p">[</span><span class="n">tile_ind</span><span class="p">]</span>
+        <span class="c1">#Find the corner that matches the image number</span>
+        <span class="n">cur_corner</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">corners</span>
+                            <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">image_nr</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Index found (coord, image_nr, tile): </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cur_corner</span><span class="p">,</span> <span class="n">image_nr</span><span class="p">,</span> <span class="n">tile_ind</span><span class="p">))</span>
+        <span class="c1">#Adjust the maximum size of the final image if necessary</span>
+        <span class="n">max_final_img</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">max_final_img</span><span class="p">,</span> <span class="n">cur_corner</span><span class="p">)</span>
+        <span class="n">min_final_img</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">min_final_img</span><span class="p">,</span> <span class="n">cur_corner</span><span class="p">)</span>
+        <span class="n">corner_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">tile_ind</span><span class="p">,</span> <span class="n">cur_corner</span><span class="p">])</span>
+
+    <span class="c1">#TODO: Adjust corner to start at (0,0)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;min_final_img: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">min_final_img</span><span class="p">))</span>
+    <span class="n">final_image_shape</span>  <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">max_final_img</span> <span class="o">-</span> <span class="n">min_final_img</span>
+                                    <span class="o">+</span> <span class="n">nr_pixels</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Corners determined&quot;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Corner_list: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner_list</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Final image shape: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">final_image_shape</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;corner_list&#39;</span><span class="p">:</span> <span class="n">corner_list</span><span class="p">,</span></div>
+        <span class="s1">&#39;final_image_shape&#39;</span><span class="p">:</span> <span class="n">final_image_shape</span><span class="p">}</span>
+
+
+<span class="c1">########### Functions to join the tiles into to final image ############</span>
+<div class="viewcode-block" id="make_mask"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.make_mask">[docs]</a><span class="k">def</span> <span class="nf">make_mask</span><span class="p">(</span><span class="n">joining</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">,</span> <span class="n">blending_mask</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the mask that indicates where tiles overlap.</span>
+
+<span class="sd">    This mask will have the same size a the final image.</span>
+<span class="sd">    This function assigns a float (1.0, 2.0, 3.0 or 4.0) to each pixel,</span>
+<span class="sd">    indicating if 1, 2, 3 or 4 tiles are going to overlap in this pixel.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    joining: dict</span>
+<span class="sd">        Dictionary containing the corner list</span>
+<span class="sd">        (with key: &#39;corner_list&#39;) with the tile indexes</span>
+<span class="sd">        and their corresponding corners</span>
+<span class="sd">    nr_pixels: int      </span>
+<span class="sd">        Indicates the size of the tiles</span>
+<span class="sd">    blending_mask: pointer</span>
+<span class="sd">        Dataset in an hdf5 file containing a 2D numpy</span>
+<span class="sd">        array. Array has the size of final image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making blending mask&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">corner</span> <span class="ow">in</span> <span class="n">joining</span><span class="p">[</span><span class="s1">&#39;corner_list&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+            <span class="c1">#Get the right part of mask</span>
+            <span class="n">cur_mask</span> <span class="o">=</span> <span class="n">blending_mask</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span><span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">nr_pixels</span><span class="p">),</span>
+                            <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span><span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">nr_pixels</span><span class="p">)]</span>
+            <span class="c1"># Place it back, after plus one</span>
+            <span class="n">blending_mask</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span><span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">nr_pixels</span><span class="p">),</span>
+                            <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span><span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">nr_pixels</span><span class="p">)]</span> <span class="o">=</span> \</div>
+                             <span class="n">cur_mask</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">cur_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+            <span class="c1">#print(i,corner)</span>
+            <span class="c1">#print(&#39;intervals:&#39;,int(corner[0]),int(corner[0]) + #int(nr_pixels),int(corner[1]),int(corner[1]) + int(nr_pixels))</span>
+
+
+<div class="viewcode-block" id="generate_blended_tile"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.generate_blended_tile">[docs]</a><span class="k">def</span> <span class="nf">generate_blended_tile</span><span class="p">(</span><span class="n">temp_file</span><span class="p">,</span> <span class="n">im_file</span><span class="p">,</span> <span class="n">tiles</span><span class="p">,</span> <span class="n">tile_file</span><span class="p">,</span> <span class="n">corner_ind_coord</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">,</span> <span class="n">tile_set</span><span class="p">,</span>
+                <span class="n">blend</span><span class="p">,</span> <span class="n">linear_blending</span><span class="p">,</span> <span class="n">ubyte</span><span class="p">,</span>
+                <span class="n">nr_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Blend the tile if necessary and then save it temp_file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    temp_file: pointer</span>
+<span class="sd">        Pointer to hdf5 file withv following groups:</span>
+<span class="sd">        tiles, temp_masks, ubytes.</span>
+<span class="sd">        Each group contains as many datasets as there are</span>
+<span class="sd">        tiles, the datasets are named after the the tile</span>
+<span class="sd">        index found in the first element of corner.</span>
+<span class="sd">        This function places a blended tile and a corner in</span>
+<span class="sd">        data set that matches the tile ind argument.</span>
+<span class="sd">    im_file: pointer</span>
+<span class="sd">            Pointer to hdf5 file with dataset &quot;blending_mask&quot;</span>
+<span class="sd">            which contains a numpy array. blending_mask should</span>
+<span class="sd">            be 1 where ther is no overlap and 2, 3 or 4 where</span>
+<span class="sd">            the respective number of tiles overlap.</span>
+<span class="sd">            Other datasets in this file are: final_image</span>
+<span class="sd">            and temp_mask</span>
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of hdf5-references, references</span>
+<span class="sd">        to the images in tile_file, with a</span>
+<span class="sd">        reference for each tile. If a tile does not have</span>
+<span class="sd">        an associated image, its reference is None.</span>
+<span class="sd">    tile_file: pointer</span>
+<span class="sd">        hdf5 file object. The opened file containing the tiles to stitch.</span>
+<span class="sd">    corner_ind_coord: list</span>
+<span class="sd">        Contains two elements, the first one is an</span>
+<span class="sd">        int representing the tile index, the second one is</span>
+<span class="sd">        a numpy array containing the corner&#39;s coordinates.</span>
+<span class="sd">    nr_pixels: int</span>
+<span class="sd">        Denoting size of the tile.</span>
+<span class="sd">    tile_set: np.array</span>
+<span class="sd">        Masked numpy array. The shape of the array</span>
+<span class="sd">        indicates the shape of the tile set.</span>
+<span class="sd">    blend: bool</span>
+<span class="sd">        When True blending will be applied,</span>
+<span class="sd">        when false no blending at all will be applied.</span>
+<span class="sd">    linear_blending: bool</span>
+<span class="sd">        When True blending will be linear</span>
+<span class="sd">        and when False, blending will be non-linear.</span>
+<span class="sd">    ubyte: bool</span>
+<span class="sd">        Ubyte image will be saved when True. Only full resolution image will be saved when False.</span>
+<span class="sd">    nr_dim: int</span>
+<span class="sd">        If 3, the code will assume three dimensional</span>
+<span class="sd">        data for the tile, where z is the first dimension</span>
+<span class="sd">        and y and x the second and third. For any other</span>
+<span class="sd">        value 2-dimensional data is assumed. (default: 2)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get corner</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">corner_ind_coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">corner</span> <span class="o">=</span> <span class="n">corner_ind_coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Load tile</span>
+    <span class="k">if</span> <span class="n">nr_dim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">cur_tile</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile_3D</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cur_tile</span> <span class="o">=</span> <span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">)</span>
+    <span class="c1"># Check if tile is empty</span>
+    <span class="k">if</span> <span class="n">cur_tile</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Blending tile: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Corner position in final image: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner</span><span class="p">))</span>
+        <span class="c1">#Pick the right region of the image with corner</span>
+        <span class="n">ymin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ymax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">nr_pixels</span>
+        <span class="n">xmin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">xmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">nr_pixels</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot; Tile </span><span class="si">{}</span><span class="s2">, Cur region: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">blend</span><span class="p">:</span>
+            <span class="c1">#Get current mask and region to paste the tile into</span>
+            <span class="n">cur_mask</span>   <span class="o">=</span> <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;blending_mask&#39;</span><span class="p">][</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span>
+
+            <span class="c1">#Blend</span>
+            <span class="n">blended_tile</span><span class="p">,</span> <span class="n">cur_temp_mask</span>  <span class="o">=</span> <span class="n">perform_blending_par_proof</span><span class="p">(</span><span class="n">i</span><span class="p">,</span>
+                    <span class="n">cur_mask</span><span class="p">,</span> <span class="n">cur_tile</span><span class="p">,</span>
+                    <span class="n">linear_blending</span><span class="p">,</span> <span class="n">tiles</span><span class="p">,</span> <span class="n">tile_set</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">)</span>
+
+            <span class="c1">#Save the blended tile and the adjusted mask (mask is just saved for debugging)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;shape tile in temp file: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;blended_tiles&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;shape current tile: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">blended_tile</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+            <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;blended_tiles&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][:]</span> <span class="o">=</span> <span class="n">blended_tile</span>
+            <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;temp_masks&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][:]</span>  <span class="o">=</span> <span class="n">cur_temp_mask</span>
+
+            <span class="c1">#Place the low resolution region back,</span>
+            <span class="k">if</span> <span class="n">ubyte</span><span class="p">:</span>
+                <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">,</span>
+                                    <span class="n">category</span> <span class="o">=</span> <span class="ne">UserWarning</span><span class="p">)</span>
+                    <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;ubytes&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][:]</span> <span class="o">=</span> \
+                                <span class="n">smutil</span><span class="o">.</span><span class="n">img_as_ubyte</span><span class="p">(</span><span class="n">blended_tile</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Blended tile </span><span class="si">{}</span><span class="s2"> placed into temp_group.&quot;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Place the region back without blending</span>
+            <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;blended_tiles&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][:]</span> <span class="o">=</span> <span class="n">cur_tile</span>
+
+            <span class="c1">#Place the low resolution region back</span>
+            <span class="k">if</span> <span class="n">ubyte</span><span class="p">:</span>
+                <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;ubytes&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)][:]</span> <span class="o">=</span> \
+                                <span class="n">smutil</span><span class="o">.</span><span class="n">img_as_ubyte</span><span class="p">(</span><span class="n">cur_tile</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Tile </span><span class="si">{}</span><span class="s2"> placed into temp_group without &quot;</span>
+                        <span class="o">+</span> <span class="s2">&quot;blending.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Skipped empty tile, tile: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="non_linear_blending"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.non_linear_blending">[docs]</a><span class="k">def</span> <span class="nf">non_linear_blending</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Define sigmoid for non-linear blending</span>
+
+<span class="sd">    The steepness and half value of the curve are hardcoded here and</span>
+<span class="sd">    good for a 10% overlap. For other overlaps flexibity in the</span>
+<span class="sd">    steepness may be good to implement. (Halfpoint should be the</span>
+<span class="sd">    same)</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    x: np.array</span>
+<span class="sd">        1d np-array, used as x values in the sigmoid curve</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    y : np.array</span>
+<span class="sd">        1d np-array, y values corresponding to x after applying</span>
+<span class="sd">        sigmoid function on them</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">((</span><span class="o">-</span><span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">))))</span>
+
+    <span class="c1">#logger.debug(&quot;Non linear blending x {}&quot;.format(x))</span>
+    <span class="c1">#logger.debug(&quot;Non linear blending y {}&quot;.format(y))</span>
+    <span class="c1">#plt.figure(&quot;alpha&quot;)</span>
+    <span class="c1">#plt.plot(x,y,&#39;-*&#39;)</span>
+    <span class="c1">#plt.show()</span></div>
+    <span class="k">return</span> <span class="n">y</span>
+
+
+<div class="viewcode-block" id="non_linear_blending_corner"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.non_linear_blending_corner">[docs]</a><span class="k">def</span> <span class="nf">non_linear_blending_corner</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate blending weights for pixels where four tiles overlap</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    x: np.array</span>
+<span class="sd">        1d numpy array, x and y should be of the same length. The</span>
+<span class="sd">        distance from the corner in the x direction for each pixel.</span>
+<span class="sd">    y: np.array</span>
+<span class="sd">        1d numpy array, x and y should be of the same length. The</span>
+<span class="sd">        distance from the corner in the x direction for each pixel.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    : np.array</span>
+<span class="sd">        1d numpy array, same size as x and y. Weight for each pixel.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span>
+
+
+<div class="viewcode-block" id="perform_blending_par_proof"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.perform_blending_par_proof">[docs]</a><span class="k">def</span> <span class="nf">perform_blending_par_proof</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">,</span> <span class="n">cur_mask</span><span class="p">,</span>
+                        <span class="n">cur_tile</span><span class="p">,</span> <span class="n">linear_blending</span><span class="p">,</span>
+                        <span class="n">tiles</span><span class="p">,</span> <span class="n">tile_set</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Blend a tile with the background around it.</span>
+
+<span class="sd">    Each pixel in the overlap gets a weight depending on its distance</span>
+<span class="sd">    from the border.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    tile_ind: int</span>
+<span class="sd">        Index of the current tile</span>
+<span class="sd">    cur_mask: np.array</span>
+<span class="sd">        The mask denoting were in the</span>
+<span class="sd">        picture tile have already been placed. A value of</span>
+<span class="sd">        0 means no picture, a value of 1 means that a</span>
+<span class="sd">        picture has been placed, a value of 2 means that</span>
+<span class="sd">        there is overlap with the current tile.</span>
+<span class="sd">    cur_tile: np.array</span>
+<span class="sd">        The warped image to be placed..</span>
+<span class="sd">    linear_blending: bool</span>
+<span class="sd">        If true perform linear blending,</span>
+<span class="sd">        otherwise non-linear blending.</span>
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of hdf5-references, references</span>
+<span class="sd">        to the images in tile_file, with a</span>
+<span class="sd">        reference for each tile. Here only used to check</span>
+<span class="sd">        if a tile exists, if a tile does not have an</span>
+<span class="sd">        associated image, its reference is None.</span>
+<span class="sd">    tile_set: np.array</span>
+<span class="sd">        np-array representing the shape of the tile set</span>
+<span class="sd">    nr_pixels: int</span>
+<span class="sd">        Denoting size of the tile.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    cur_tile: np.array</span>
+<span class="sd">        The blended cur_tile, same type and</span>
+<span class="sd">        size as the input argument cur_type.</span>
+<span class="sd">    cur_temp_mask: np.array</span>
+<span class="sd">        Array like the cur_mask as it was</span>
+<span class="sd">        passed to the function, but with the pixels that</span>
+<span class="sd">        overlap replaced by their respective weights. This</span>
+<span class="sd">        mask can be plotted for debugging.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Performing blending on tile </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">))</span>
+    <span class="c1"># Find overlapping indexes in the blending mask.</span>
+    <span class="n">overlapping_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">cur_mask</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;overlapping inds: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">overlapping_inds</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;size of cur_mask: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cur_mask</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">overlapping_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="ow">or</span> <span class="n">overlapping_inds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+
+        <span class="n">cur_corner_tl</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">cur_corner_br</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">nr_pixels</span><span class="p">,</span><span class="n">nr_pixels</span><span class="p">])</span>
+
+        <span class="c1"># Make lists for the 4 borders, with large numbers for borders that should not be used:</span>
+        <span class="c1"># Order: [top, left, bottom, right]</span>
+        <span class="n">border_direct</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">int</span><span class="p">)</span> <span class="o">*</span> <span class="mi">9999</span>
+        <span class="n">border_indirect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">dtype</span> <span class="o">=</span> <span class="nb">int</span><span class="p">)</span> <span class="o">*</span> <span class="mi">9999</span>
+        <span class="n">true_int</span> <span class="o">=</span> <span class="mi">0</span>            <span class="c1"># Value to use if overlap at a border exists</span>
+        <span class="n">unr_tile_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Checking neighbours of current tile: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">))</span>
+        <span class="c1"># Go through the 4 directly neighbouring tiles</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">upper_neighbour</span> <span class="o">=</span> <span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">upper_neighbour_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">upper_neighbour</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">upper_neighbour_ind</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># There is an upper neighbour</span>
+                <span class="n">border_direct</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Direct neighbour top&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="c1"># There is no upper neighbour</span>
+            <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">left_neighbour_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">left_neighbour_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">left_neighbour_ind</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;neighbouring tile on left: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">left_neighbour_ind</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">left_neighbour_ind</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># There is a left neighbour</span>
+                <span class="n">border_direct</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lower_neighbour_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">lower_neighbour_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">lower_neighbour_ind</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">lower_neighbour_ind</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># There is a lower neighbour</span>
+                <span class="n">border_direct</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">right_neighbour_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">right_neighbour_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">right_neighbour_ind</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">right_neighbour_ind</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># There is a right neighbour</span>
+                <span class="n">border_direct</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="c1"># Extra cases for indirect neighbours:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">indirect_neighbour_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">indirect_neighbour_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">indirect_neighbour_ind</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">indirect_neighbour_ind</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># There is an indirect neigbour on the top left</span>
+                <span class="n">border_indirect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+                <span class="n">border_indirect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">indirect_neighbour_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">indirect_neighbour_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">indirect_neighbour_ind</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">indirect_neighbour_ind</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># There is an indirect upper neigbour on the right</span>
+                <span class="n">border_indirect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+                <span class="n">border_indirect</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">indirect_neighbour_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">indirect_neighbour_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">indirect_neighbour_ind</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">indirect_neighbour_ind</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># There is an indirect neigbour on the bottom left</span>
+                <span class="n">border_indirect</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+                <span class="n">border_indirect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">indirect_neighbour_ind</span> <span class="o">=</span> <span class="p">(</span><span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">unr_tile_ind</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">indirect_neighbour_ind</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">indirect_neighbour_ind</span><span class="p">,</span> <span class="n">tile_set</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">indirect_neighbour_ind</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># There is an indirect neigbour on the bottom right</span>
+                <span class="n">border_indirect</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+                <span class="n">border_indirect</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_int</span>
+        <span class="c1"># Take the indirect and direct borders together:</span>
+        <span class="n">border_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">minimum</span><span class="p">(</span><span class="n">border_direct</span><span class="p">,</span> <span class="n">border_indirect</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Border direct: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_direct</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Border indirect: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_indirect</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Border all: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_all</span><span class="p">))</span>
+
+        <span class="c1"># For each pixel in the overlapping pixels calculate the distance from</span>
+        <span class="c1"># the border and determine a weight based on the distance</span>
+
+        <span class="c1"># Determine how many tiles overlap in the overlapping pixels</span>
+        <span class="n">overlapping_values</span> <span class="o">=</span> <span class="n">cur_mask</span><span class="p">[</span><span class="n">overlapping_inds</span><span class="p">]</span>
+        <span class="c1"># Determine border distance to the top-left border and the bottom-right border:</span>
+        <span class="c1"># So that there will be an np array of shape: (nr of pixels, 4), where each row</span>
+        <span class="c1"># contains the distance to the corners in this order: [top, left, bottom, right]</span>
+        <span class="n">overlapping_pxls</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">overlapping_inds</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">border_dist_list_raw</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="nb">abs</span><span class="p">(</span><span class="n">overlapping_pxls</span> <span class="o">-</span> <span class="n">cur_corner_tl</span><span class="p">),</span>
+                                      <span class="nb">abs</span><span class="p">(</span><span class="n">overlapping_pxls</span> <span class="o">-</span> <span class="n">cur_corner_br</span><span class="p">)))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;border_dist_list: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_dist_list_raw</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;border_dist_list shape: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_dist_list_raw</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+        <span class="c1"># Take out irrelevant borders, add a large number so thay will not be taken</span>
+        <span class="c1"># into account in the later analysis</span>
+        <span class="n">border_dist_list_indirect</span> <span class="o">=</span> <span class="n">border_dist_list_raw</span> <span class="o">+</span> <span class="n">border_indirect</span>
+        <span class="n">border_dist_list_direct</span> <span class="o">=</span> <span class="n">border_dist_list_raw</span> <span class="o">+</span> <span class="n">border_direct</span>
+        <span class="n">border_dist_list</span> <span class="o">=</span> <span class="n">border_dist_list_raw</span> <span class="o">+</span> <span class="n">border_all</span>
+
+        <span class="c1"># Center of the tile</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nr_pixels</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;center: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">center</span><span class="p">))</span>
+        <span class="c1"># Find all the pixels that have the center dist to one of the borders:</span>
+        <span class="c1"># Center pixels will include pixels that form a plus centered</span>
+        <span class="c1"># on the center of the tile and are part of an overlapping bit, like so:</span>
+        <span class="c1">#  _________</span>
+        <span class="c1"># |    |    |</span>
+        <span class="c1"># |__     __|</span>
+        <span class="c1"># |         |</span>
+        <span class="c1"># |____|____|</span>
+        <span class="c1">#</span>
+
+        <span class="n">center_pixel_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">border_dist_list_raw</span> <span class="o">==</span> <span class="n">center</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;center_pixel_inds: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">center_pixel_inds</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">center_pixel_inds</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="c1"># Find the normalization factor for each border:</span>
+            <span class="c1"># Look at the border distance of the pixels in the center</span>
+            <span class="n">center_pixels_dist</span> <span class="o">=</span> <span class="n">border_dist_list_direct</span><span class="p">[</span><span class="n">center_pixel_inds</span><span class="p">,</span> <span class="p">:]</span>
+            <span class="c1"># Get only the center pixels distances that belong to each border,</span>
+            <span class="c1"># prevents taking distances into account that are to far to belong to</span>
+            <span class="c1"># the corresponding border.</span>
+            <span class="c1"># Set the pixels that are farther away than the center to 1,</span>
+            <span class="c1"># to prevent them from being included in further analysis.</span>
+            <span class="n">center_pixels_dist</span><span class="p">[</span><span class="n">center_pixels_dist</span> <span class="o">&gt;=</span> <span class="n">center</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="c1"># Find the maximum distance to each border within the center pixels.</span>
+            <span class="c1"># This will be used as the maximum distance to the border, within</span>
+            <span class="c1"># the overlap that belongs to that border.</span>
+            <span class="c1"># (yields array of length 4)</span>
+            <span class="n">max_dist_pixels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">center_pixels_dist</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Max border dist pixels: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_dist_pixels</span><span class="p">))</span>
+            <span class="c1"># Normalize with the found maximum distance for each border:</span>
+            <span class="n">border_dist_list_direct_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfarray</span><span class="p">(</span><span class="n">border_dist_list_direct</span><span class="p">)</span> \
+                                                    <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">asfarray</span><span class="p">(</span><span class="n">max_dist_pixels</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Closest border for each pixel: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">border_dist_list_direct_norm</span><span class="p">,</span>  <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)))</span>
+            <span class="c1"># Get the normalized distance to the closest border for each pixel.</span>
+            <span class="c1"># We now have a 1D array of length nr of pixels, where each entry</span>
+            <span class="c1"># represents the normalized distance from the pixel to the border</span>
+            <span class="c1"># it belongs to.</span>
+            <span class="n">border_dist_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">border_dist_list_direct_norm</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;border_dist_norm: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_dist_norm</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;border_dist_norm max, min: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">border_dist_norm</span><span class="p">),</span>
+                                    <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">border_dist_norm</span><span class="p">)))</span>
+
+            <span class="c1"># Plots to check which pixels belong to which border,</span>
+            <span class="c1"># uses closest_border.</span>
+            <span class="c1">#closest_border = np.argmin(border_dist_list_direct_norm, axis=1)</span>
+            <span class="c1">#cur_temp_mask1 = np.copy(cur_mask)</span>
+            <span class="c1">#cur_temp_mask1[:,:] = 4.0</span>
+            <span class="c1">#cur_temp_mask1[overlapping_inds] = np.array(closest_border)</span>
+            <span class="c1">#plt.figure(&quot;Assigned borders&quot;)</span>
+            <span class="c1">#plt.imshow(cur_temp_mask1, interpolation = &#39;none&#39;)</span>
+            <span class="c1">#plt.show(block = False)</span>
+            <span class="c1">#cur_temp_mask2 = np.copy(cur_mask)</span>
+            <span class="c1">#cur_temp_mask2[overlapping_inds] = np.array(border_dist_norm)</span>
+            <span class="c1">#plt.figure(&quot;border distance&quot;)</span>
+            <span class="c1">#plt.imshow(cur_temp_mask2, &#39;gray&#39;, interpolation = &#39;none&#39;)</span>
+            <span class="c1">#plt.show()</span>
+
+            <span class="c1"># Plot the mask and blended tile</span>
+            <span class="c1"># cur_temp_mask = np.copy(cur_mask)</span>
+            <span class="c1"># cur_temp_mask[overlapping_inds] = np.array(border_dist_norm)</span>
+            <span class="c1"># plt.figure(&quot;Normalized distance linear&quot;)</span>
+            <span class="c1"># plt.imshow(cur_temp_mask, &#39;gray&#39;, interpolation = &#39;none&#39;)</span>
+            <span class="c1"># plt.show()</span>
+
+            <span class="c1"># Now calculate weights for the blending with direct neighbours</span>
+            <span class="k">if</span> <span class="n">linear_blending</span><span class="p">:</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="n">border_dist_norm</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">weights</span> <span class="o">=</span> <span class="n">non_linear_blending</span><span class="p">(</span><span class="n">border_dist_norm</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;weights max, min: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
+                            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">weights</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">weights</span><span class="p">)))</span>
+            <span class="c1"># Plot the mask and blended tile</span>
+            <span class="c1"># cur_temp_mask = np.copy(cur_mask)</span>
+            <span class="c1"># cur_temp_mask[overlapping_inds] = np.array(weights)</span>
+            <span class="c1"># plt.figure(&quot;Blending without corner blending&quot;)</span>
+            <span class="c1"># plt.imshow(cur_temp_mask, &#39;gray&#39;, interpolation = &#39;none&#39;)</span>
+            <span class="c1"># plt.show()</span>
+            <span class="c1">#~ plt.figure(&quot;Blending tile&quot;)</span>
+            <span class="c1">#~ plt.imshow(cur_tile, &#39;gray&#39;, interpolation = &#39;none&#39;)</span>
+            <span class="c1">#~ plt.show()</span>
+
+            <span class="c1"># Change the weights in the corners:</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">check_corner_blending</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">border_dist_list</span><span class="p">,</span> <span class="n">max_dist_pixels</span><span class="p">,</span>
+                            <span class="n">overlapping_values</span><span class="p">,</span>
+                            <span class="n">border_direct</span><span class="p">,</span> <span class="n">border_indirect</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span>
+                            <span class="n">linear_blending</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We have only a corner overlapping, no sides</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> has only a lonely corner and nothing else&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">))</span>
+            <span class="c1"># Set weights to one to give them to check_corner_blending</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">overlapping_inds</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="c1"># Blend the corner, with max_value set to two.</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="n">check_corner_blending</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">border_dist_list</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span>
+                            <span class="n">overlapping_values</span><span class="p">,</span>
+                            <span class="n">border_direct</span><span class="p">,</span> <span class="n">border_indirect</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span>
+                            <span class="n">linear_blending</span><span class="p">,</span> <span class="n">max_value</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Converted to float because data where save in uint16</span>
+        <span class="n">cur_tile</span><span class="o">=</span><span class="n">img_as_float</span><span class="p">(</span><span class="n">cur_tile</span><span class="p">)</span>
+        <span class="c1"># Apply the weights to the pictures</span>
+        <span class="k">if</span> <span class="n">cur_tile</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cur_tile</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                <span class="n">cur_tile</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">overlapping_inds</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+                <span class="c1">#~ plt.figure(&quot;Blending tile&quot;)</span>
+                <span class="c1">#~ plt.imshow(cur_tile[i], &#39;gray&#39;, interpolation = &#39;none&#39;)</span>
+                <span class="c1">#~ plt.show()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cur_tile</span><span class="p">[</span><span class="n">overlapping_inds</span><span class="p">]</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+        <span class="c1"># Fill the temporary mask for debugging</span>
+        <span class="n">cur_temp_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">cur_mask</span><span class="p">)</span>
+        <span class="n">cur_temp_mask</span><span class="p">[</span><span class="n">overlapping_inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+
+        <span class="c1"># Plot the mask and blended tile</span>
+        <span class="c1">#~ if tile_ind in [32, 33, 34, 60, 61, 62, 88, 89, 90]:</span>
+            <span class="c1">#~ plt.figure(&quot;Blending tile&quot;)</span>
+            <span class="c1">#~ plt.imshow(cur_tile, &#39;gray&#39;, interpolation = &#39;none&#39;)</span>
+            <span class="c1">#~ plt.show()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If there is no overlap just return the original tile and</span>
+        <span class="c1"># the temporary mask for debugging</span>
+        <span class="n">cur_temp_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">cur_mask</span><span class="p">)</span>
+</div>
+    <span class="k">return</span> <span class="n">cur_tile</span><span class="p">,</span> <span class="n">cur_temp_mask</span>
+
+
+<div class="viewcode-block" id="check_corner_blending"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.check_corner_blending">[docs]</a><span class="k">def</span> <span class="nf">check_corner_blending</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">border_dist_list</span><span class="p">,</span> <span class="n">max_dist_pixels</span><span class="p">,</span>
+                          <span class="n">overlapping_values</span><span class="p">,</span> <span class="n">border_direct</span><span class="p">,</span>
+                          <span class="n">border_indirect</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">linear_blending</span><span class="p">,</span>
+                          <span class="n">max_value</span> <span class="o">=</span> <span class="mi">4</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to improve blending of differently overlapping corners.</span>
+
+<span class="sd">    In a corner 2, 3 or 4 tile can overlap. Depending on how many tiles</span>
+<span class="sd">    overlap and in wich direction they overlap the weights for a tile</span>
+<span class="sd">    are adjusted by this function.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    weights: np.array</span>
+<span class="sd">        1D numpy array. A weight for each overlapping</span>
+<span class="sd">        pixel, as determined by the function</span>
+<span class="sd">        perform_blending_par_proof (Weights depend on</span>
+<span class="sd">        direct borders, or 1 if there is only a lonely</span>
+<span class="sd">        corner)</span>
+<span class="sd">    border_dist_list: np.array</span>
+<span class="sd">        2D numpy array of shape: (nr of overlapping</span>
+<span class="sd">        pixels, 4). Array containing for each pixel the</span>
+<span class="sd">        distance to each of the four borders in this</span>
+<span class="sd">        order [top, left, bottom, right], for borders</span>
+<span class="sd">        that do not overlap to another</span>
+<span class="sd">        tile the distance has been set to 999 or</span>
+<span class="sd">        greater.</span>
+<span class="sd">    max_dist_pixels: np.array</span>
+<span class="sd">        Numpy array of shape: (1, 4). The maximum</span>
+<span class="sd">        distance to each of the four borders in this</span>
+<span class="sd">        order [top, left, bottom, right], for borders</span>
+<span class="sd">        that do not overlap to another tile the max</span>
+<span class="sd">        distance will be to 9999 or greater.</span>
+<span class="sd">    overlapping_values: np.array</span>
+<span class="sd">        1D numpy array of floats. An float value</span>
+<span class="sd">        indicating how many tiles are overlapping</span>
+<span class="sd">        for each overlapping pixel. This array has the</span>
+<span class="sd">        same size as weights.</span>
+<span class="sd">    border_direct: np.array</span>
+<span class="sd">        1 by 4 numpy array. Array indicating for each</span>
+<span class="sd">        border if there is a direct overlap.</span>
+<span class="sd">        If there is overlap the value is 0, otherwise</span>
+<span class="sd">        the value is 9999.</span>
+<span class="sd">    border_indirect: np.array</span>
+<span class="sd">        1 by 4 numpy array. Array indicating for each</span>
+<span class="sd">        border if there is a indirect overlap.</span>
+<span class="sd">        If there is overlap the value is 0, otherwise</span>
+<span class="sd">        the value is 9999.</span>
+<span class="sd">    center: int</span>
+<span class="sd">        The center of th tile, this is the</span>
+<span class="sd">        same number in the x and y direction.</span>
+<span class="sd">    linear_blending: bool</span>
+<span class="sd">        If true perform linear blending,</span>
+<span class="sd">        otherwise non-linear blending.</span>
+<span class="sd">    max_value: int</span>
+<span class="sd">        The maximum value expected in the</span>
+<span class="sd">        overlap. Default is 4, this is the overall</span>
+<span class="sd">        maximum in the blending mask. When max_value</span>
+<span class="sd">        is 2, we assume that the tile only overlaps</span>
+<span class="sd">        in one or multiple corners. Because when only a</span>
+<span class="sd">        corner of a tile is overlapping and there is</span>
+<span class="sd">        no other overlap the maximum is 2. (Default: 4)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    weights: np.array</span>
+<span class="sd">        1D numpy array. The array &#39;weights&#39; that was passed</span>
+<span class="sd">        to as an argument, but now adjusted for the corners.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Performing corner blending...&quot;</span><span class="p">)</span>
+    <span class="c1"># Find the corners</span>
+    <span class="c1"># Define the borders that belong to each corner</span>
+    <span class="n">corner_defs</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Border_dist_list: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_dist_list</span><span class="p">[:,:]))</span>
+    <span class="k">for</span> <span class="n">corner</span> <span class="ow">in</span> <span class="n">corner_defs</span><span class="p">:</span>
+        <span class="c1"># Init lonely corner</span>
+        <span class="n">lonely_corner</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># Find the indexes of the corner pixels</span>
+        <span class="n">corner_inds1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">border_dist_list</span><span class="p">[:,</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;=</span> <span class="n">center</span><span class="p">)</span>
+        <span class="n">corner_inds2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">border_dist_list</span><span class="p">[:,</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;=</span> <span class="n">center</span><span class="p">)</span>
+        <span class="n">big_corner_inds</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">corner_inds1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">corner_inds2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># Print the corners indexes</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Corner </span><span class="si">{}</span><span class="s2"> inds1: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner_inds1</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Corner </span><span class="si">{}</span><span class="s2"> inds2: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner_inds2</span><span class="p">))</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Corner </span><span class="si">{}</span><span class="s2"> inds_intersect: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">big_corner_inds</span><span class="p">))</span>
+        <span class="c1"># Determine if there is a corner where only 2 tiles overlap</span>
+        <span class="c1"># (if this is the case lonely_corner will be set to True)</span>
+        <span class="c1"># If 3 or four tiles overlap lonely corner is set to False.</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">border_indirect</span><span class="p">[</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">999</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">border_direct</span><span class="p">[</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span><span class="n">border_indirect</span><span class="p">[</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="mi">999</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">border_direct</span><span class="p">[</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)):</span>
+            <span class="c1"># There are only indirect tiles overlapping with this corner</span>
+            <span class="n">pos_corner_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlapping_values</span> <span class="o">==</span> <span class="mf">2.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">lonely_corner</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">max_value</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># If max_value of 2 was passed, assume that the corner has</span>
+            <span class="c1"># only 2 tiles overlapping</span>
+            <span class="n">pos_corner_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlapping_values</span> <span class="o">==</span> <span class="mf">2.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">lonely_corner</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Else assume that more tiles are overlapping</span>
+            <span class="n">pos_corner_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlapping_values</span> <span class="o">&gt;</span> <span class="mf">2.0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">corner_inds</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">big_corner_inds</span><span class="p">,</span> <span class="n">pos_corner_inds</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Corner </span><span class="si">{}</span><span class="s2"> inds_intersect pos: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner_inds</span><span class="p">))</span>
+
+        <span class="c1">#If we found any overlap in the corner:</span>
+        <span class="k">if</span> <span class="n">corner_inds</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">lonely_corner</span><span class="p">:</span>
+                <span class="c1"># 2 tiles are overlapping, but only in the corner</span>
+                <span class="c1"># Calculate the Manhattan distance to the corner of the</span>
+                <span class="c1"># current tile for each pixel belonging to this corning.</span>
+                <span class="n">border_dist_corner</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">asfarray</span><span class="p">(</span><span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> \
+                                    <span class="o">+</span> <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;LC border_dist_corner </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_dist_corner</span><span class="p">))</span>
+                <span class="c1"># Find the maximum distance for normalization</span>
+                <span class="n">max_dist_pixels_corner</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">border_dist_corner</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;LC max_dist_pixels_corner </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_dist_pixels_corner</span><span class="p">))</span>
+                <span class="c1"># Normalize and apply non-linear function if necessary</span>
+                <span class="k">if</span> <span class="n">linear_blending</span><span class="p">:</span>
+                    <span class="n">weights_corner</span> <span class="o">=</span> <span class="n">border_dist_corner</span> <span class="o">/</span> \
+                                        <span class="n">max_dist_pixels_corner</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">weights_corner</span> <span class="o">=</span> <span class="n">non_linear_blending</span><span class="p">(</span>
+                                            <span class="n">border_dist_corner</span> <span class="o">/</span> \
+                                            <span class="n">max_dist_pixels_corner</span><span class="p">)</span>
+                <span class="c1">#Place back new weights, overwrite old:</span>
+                <span class="n">weights</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights_corner</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;LC weights </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">weights</span><span class="p">))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;LC max weights </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">weights</span><span class="p">)))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">overlapping_values</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="mf">3.5</span><span class="p">:</span>
+                    <span class="c1"># 4 tiles overlap.</span>
+                    <span class="c1"># If the mean of this corner is larger than 3.5, assume</span>
+                    <span class="c1"># that 4 tiles overlap here.</span>
+
+                    <span class="c1"># Pick the indexes of the corner where all 4 tiles</span>
+                    <span class="c1"># actually overlap</span>
+                    <span class="n">corner_inds4</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlapping_values</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+                    <span class="n">corner_inds</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner_inds4</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Corner </span><span class="si">{}</span><span class="s2"> inds_intersect  4: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner_inds</span><span class="p">))</span>
+                    <span class="c1">#Find the manhattan distance to corner at these indexes</span>
+                    <span class="n">border_dist_corner</span> <span class="o">=</span> <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> \
+                                         <span class="o">+</span> <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+                    <span class="n">max_dist_pixels_corner</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">border_dist_corner</span><span class="p">))</span>
+                    <span class="c1"># Normalize and apply non-linear function if necessary</span>
+                    <span class="k">if</span> <span class="n">linear_blending</span><span class="p">:</span>
+                        <span class="n">weights_corner</span> <span class="o">=</span> <span class="n">border_dist_corner</span> <span class="o">/</span> \
+                                            <span class="n">max_dist_pixels_corner</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfarray</span><span class="p">(</span><span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span> <span class="o">/</span> \
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">max_dist_pixels</span><span class="p">[</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+                        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfarray</span><span class="p">(</span><span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">/</span> \
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">max_dist_pixels</span><span class="p">[</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;x: </span><span class="si">{}</span><span class="s1">  x max: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;y: </span><span class="si">{}</span><span class="s1"> y max: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)))</span>
+                        <span class="n">weights_corner</span> <span class="o">=</span> <span class="n">non_linear_blending_corner</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                    <span class="c1"># Place back new weights:</span>
+                    <span class="n">weights</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">]</span> <span class="o">=</span> <span class="n">weights_corner</span>
+                <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">overlapping_values</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">3.5</span><span class="p">:</span>
+                    <span class="c1"># 3 corners overlap.</span>
+                    <span class="c1"># If the mean of this corner is smaller than 3.5, assume</span>
+                    <span class="c1"># that 4 tiles overlap here.</span>
+                    <span class="n">corner_inds3</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlapping_values</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+                    <span class="c1">#corner_inds     = corner_inds3</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Corner </span><span class="si">{}</span><span class="s2"> inds_intersect 3: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner</span><span class="p">,</span> <span class="n">corner_inds3</span><span class="p">))</span>
+                    <span class="c1"># Find which of the two borders is not a direct border:</span>
+                    <span class="n">special_border</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">special_border_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">border_direct</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;special_border_list </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">special_border_list</span><span class="p">))</span>
+                    <span class="k">for</span> <span class="n">border</span> <span class="ow">in</span> <span class="n">corner</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">border</span> <span class="ow">in</span> <span class="n">special_border_list</span><span class="p">:</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;special_border found </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border</span><span class="p">))</span>
+                            <span class="n">special_border</span> <span class="o">=</span> <span class="n">border</span>
+                    <span class="k">if</span> <span class="n">special_border</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="c1"># Special border means that this border does</span>
+                        <span class="c1"># not overlap with the tile next to it,</span>
+                        <span class="c1"># therefore there are no overlapping pixels</span>
+                        <span class="c1"># assigned to this border.</span>
+                        <span class="c1"># Take all pixels that belong to the special</span>
+                        <span class="c1"># border into account with the corner:</span>
+                        <span class="c1"># Determine the maximum distance from the</span>
+                        <span class="c1"># borders within this corner</span>
+                        <span class="n">max_dist_pixels_corner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds3</span><span class="p">,</span> <span class="p">:],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="c1"># Determine new corner pixels based on the maximum distance</span>
+                        <span class="n">extra_corner_inds1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">border_dist_list</span><span class="p">[:,</span> <span class="n">special_border</span><span class="p">]</span>
+                                                    <span class="o">&lt;=</span> <span class="n">max_dist_pixels_corner</span><span class="p">[</span><span class="n">special_border</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;extra_corner_inds1 </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">extra_corner_inds1</span><span class="p">))</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;big_corner_inds </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">big_corner_inds</span><span class="p">))</span>
+                        <span class="c1">#Replace corner inds with new corner indexes, including the extra corner indexes:</span>
+                        <span class="n">corner_inds</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">intersect1d</span><span class="p">(</span><span class="n">extra_corner_inds1</span><span class="p">,</span> <span class="n">big_corner_inds</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;corner_inds shape </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner_inds</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+                        <span class="c1"># Replace corner inds 3, with part of the corner that is 3:</span>
+                        <span class="n">corner_inds3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">overlapping_values</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;corner_inds3 shape </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">corner_inds3</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+                        <span class="c1"># Get the manhattan distance where 3 tiles overlap</span>
+                        <span class="n">border_dist_corner3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfarray</span><span class="p">(</span>
+                                <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">[</span><span class="n">corner_inds3</span><span class="p">],</span> <span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> \
+                                <span class="o">+</span> <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">[</span><span class="n">corner_inds3</span><span class="p">],</span> <span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;border_dist_corner </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">border_dist_corner3</span><span class="p">))</span>
+                        <span class="n">max_man_dist_corner</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">border_dist_corner3</span><span class="p">))</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;max_man_dist_corner </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_man_dist_corner</span><span class="p">))</span>
+                        <span class="c1"># Also get the manhattan distance for all corner pixels,</span>
+                        <span class="c1"># also where only 2 tiles overlap</span>
+                        <span class="n">border_dist_corner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asfarray</span><span class="p">(</span>
+                                    <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> \
+                                    <span class="o">+</span> <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+                        <span class="c1"># Then normalize this using the maximum of the manhattan</span>
+                        <span class="c1"># distance in the area where 3 tiles overlap.</span>
+                        <span class="c1"># So the part where 3 tiles overlap will be normalized in</span>
+                        <span class="c1"># a normal way, but the parts where only 2 tiles overlap will</span>
+                        <span class="c1"># not be normalized properly.</span>
+                        <span class="n">norm_manh_dist</span> <span class="o">=</span> <span class="n">border_dist_corner</span> <span class="o">/</span> <span class="n">max_man_dist_corner</span>
+                        <span class="c1"># Then, adjust the norm_manh_dist to deal with the parts where two tiles overlap.</span>
+                        <span class="c1"># Get the minimum and maximum border distance where all 3 tiles overlap</span>
+                        <span class="c1"># (direct distance to the closest border)</span>
+                        <span class="n">max_corner3_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span>
+                                            <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">[</span><span class="n">corner_inds3</span><span class="p">],:],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="n">min_corner3_dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span>
+                                            <span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">[</span><span class="n">corner_inds3</span><span class="p">],:],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;max_corner3_dist min_corner3_dist </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span>
+                                    <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">max_corner3_dist</span><span class="p">,</span> <span class="n">min_corner3_dist</span><span class="p">))</span>
+                        <span class="c1"># Then used this min and max to adjust the weights of pixels that are closer to a border</span>
+                        <span class="c1"># to zero and weights of pixels that are farther away from a border to 1.</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">corner</span><span class="p">:</span>
+                            <span class="n">norm_manh_dist</span><span class="p">[</span><span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                                                    <span class="o">&lt;</span> <span class="n">min_corner3_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;number of pixels closer to corner than end overlap 3: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">norm_manh_dist</span><span class="p">[</span><span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                                                    <span class="o">&lt;</span> <span class="n">min_corner3_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]])))</span>
+                            <span class="n">norm_manh_dist</span><span class="p">[</span><span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                                                    <span class="o">&gt;</span> <span class="n">max_corner3_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">1.0</span>
+                            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;number of pixels farther away from corner than start overlap 3: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">norm_manh_dist</span><span class="p">[</span><span class="n">border_dist_list</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+                                                    <span class="o">&gt;</span> <span class="n">max_corner3_dist</span><span class="p">[</span><span class="n">i</span><span class="p">]])))</span>
+                        <span class="c1"># Make the weights non-linear if necessary</span>
+                        <span class="k">if</span> <span class="n">linear_blending</span><span class="p">:</span>
+                            <span class="n">corner_weights</span> <span class="o">=</span> <span class="n">norm_manh_dist</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">corner_weights</span> <span class="o">=</span> <span class="n">non_linear_blending</span><span class="p">(</span><span class="n">norm_manh_dist</span><span class="p">)</span>
+                        <span class="c1"># Multiply the original weights in the corner with the  newly calculated corner weights,</span>
+                        <span class="c1"># this way in the corner we get a combination of weights decreasing towards the direct border</span>
+                        <span class="c1"># and weights decreasing towards the corner of the tile.</span>
+                        <span class="n">weights</span><span class="p">[</span><span class="n">corner_inds</span><span class="p">]</span> <span class="o">*=</span> <span class="n">corner_weights</span>
+</div>
+    <span class="k">return</span> <span class="n">weights</span>
+
+
+<div class="viewcode-block" id="make_final_image"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.make_final_image">[docs]</a><span class="k">def</span> <span class="nf">make_final_image</span><span class="p">(</span><span class="n">joining</span><span class="p">,</span> <span class="n">temp_file</span><span class="p">,</span> <span class="n">im_file</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Puts blended tiles at the correct position in the final image.</span>
+
+<span class="sd">    Takes blended tiles as found in temp_file and &quot;pastes&quot; them at the</span>
+<span class="sd">    correct position as indicated by joining in the final image. The</span>
+<span class="sd">    final image is kept in im_file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    joining: dict</span>
+<span class="sd">        Containing corners for tiles</span>
+<span class="sd">    temp_file: pointer</span>
+<span class="sd">        Pointer to hdf5 object with the following groups:</span>
+<span class="sd">        tiles,  temp_masks, ubytes.</span>
+<span class="sd">        Each group contains as many datasets as there are</span>
+<span class="sd">        tiles, the datasets are named after the the tile</span>
+<span class="sd">        index found in the first element of corner.</span>
+<span class="sd">        This function places a blended tile and a corner in</span>
+<span class="sd">        data set that matches the tile ind argument.</span>
+<span class="sd">    im_file: pointer</span>
+<span class="sd">        Pointer to hdf5 object with dataset</span>
+<span class="sd">        &quot;blending_mask&quot;</span>
+<span class="sd">        which contains a numpy array. blending_mask should</span>
+<span class="sd">        be 1 where ther is no overlap and 2, 3 or 4 where</span>
+<span class="sd">        the respective number of tiles overlap.</span>
+<span class="sd">        Other datasets in this file are: final_image</span>
+<span class="sd">        and temp_mask</span>
+<span class="sd">    nr_pixels: int</span>
+<span class="sd">        Size of the tile, tile is assumed to be a square.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Looping over all tiles and pasting them in the final &quot;</span>
+                <span class="o">+</span> <span class="s2">&quot;image...&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">corner</span> <span class="ow">in</span> <span class="n">joining</span><span class="p">[</span><span class="s1">&#39;corner_list&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>  <span class="c1"># Check for empty tile</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Placing tile: </span><span class="si">{}</span><span class="s1"> in corner: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                        <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">corner</span><span class="p">))</span>
+            <span class="c1"># Pick the right region of the image using the corner</span>
+            <span class="n">ymin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">ymax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">nr_pixels</span>
+            <span class="n">xmin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">xmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">nr_pixels</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;i: </span><span class="si">{}</span><span class="s1"> ymin: </span><span class="si">{}</span><span class="s1"> ymax: </span><span class="si">{}</span><span class="s1"> xmin: </span><span class="si">{}</span><span class="s1"> xmax: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span>
+                         <span class="nb">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">))</span>
+            <span class="c1"># Place the tile:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">joining</span><span class="p">[</span><span class="s1">&#39;final_image_shape&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;final_image&#39;</span><span class="p">][:,</span> <span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;blended_tiles&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="s1">&#39;final_image_ubyte&#39;</span> <span class="ow">in</span> <span class="n">im_file</span><span class="p">:</span>
+                    <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;final_image_ubyte&#39;</span><span class="p">][:,</span> <span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;ubytes&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;final_image&#39;</span><span class="p">][</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;blended_tiles&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="s1">&#39;final_image_ubyte&#39;</span> <span class="ow">in</span> <span class="n">im_file</span><span class="p">:</span>
+                    <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;final_image_ubyte&#39;</span><span class="p">][</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;ubytes&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span></div>
+            <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;temp_mask&#39;</span><span class="p">][</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;temp_masks&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span>
+
+<div class="viewcode-block" id="paste_in_final_image_MPI"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.paste_in_final_image_MPI">[docs]</a><span class="k">def</span> <span class="nf">paste_in_final_image_MPI</span><span class="p">(</span><span class="n">joining</span><span class="p">,</span> <span class="n">temp_file</span><span class="p">,</span> <span class="n">im_file</span><span class="p">,</span> <span class="n">tile_ind</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Puts one blended tile at the correct position in the final image.</span>
+
+<span class="sd">    Takes the blended tile as found at tile_ind in temp_file and</span>
+<span class="sd">    &quot;pastes&quot; them at the correct position as indicated by joining in</span>
+<span class="sd">    the final image. The final image is kept in im_file.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    joining: dict</span>
+<span class="sd">        Containing corners for tiles</span>
+<span class="sd">    temp_file: pointer</span>
+<span class="sd">        Pointer to hdf5 object with the following groups:</span>
+<span class="sd">        tiles,  temp_masks, ubytes.</span>
+<span class="sd">        Each group contains as many datasets as there are</span>
+<span class="sd">        tiles, the datasets are named after the the tile</span>
+<span class="sd">        index found in the first element of corner.</span>
+<span class="sd">        This function places a blended tile and a corner in</span>
+<span class="sd">        data set that matches the tile ind argument.</span>
+<span class="sd">    im_file: pointer</span>
+<span class="sd">        Pointer to hdf5 object with dataset</span>
+<span class="sd">        &quot;blending_mask&quot;</span>
+<span class="sd">        which contains a numpy array. blending_mask should</span>
+<span class="sd">        be 1 where ther is no overlap and 2, 3 or 4 where</span>
+<span class="sd">        the respective number of tiles overlap.</span>
+<span class="sd">        Other datasets in this file are: final_image</span>
+<span class="sd">        and temp_mask</span>
+<span class="sd">    tile_ind: int</span>
+<span class="sd">        Index of the tile that should be placed</span>
+<span class="sd">    nr_pixels: int</span>
+<span class="sd">        Size of the tile, tile is assumed to be a square.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Find the right corner</span>
+    <span class="n">cur_corner</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(([</span><span class="n">i</span><span class="p">,</span> <span class="n">corner</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">corner</span> <span class="ow">in</span> <span class="n">joining</span><span class="p">[</span><span class="s1">&#39;corner_list&#39;</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">tile_ind</span><span class="p">)),</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">]])[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Pasting tile </span><span class="si">{}</span><span class="s1"> in final image, in corner: </span><span class="si">{}</span><span class="s1">&#39;</span>
+                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">,</span> <span class="n">cur_corner</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;tile_ind: </span><span class="si">{}</span><span class="s1"> cur_corner: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">,</span> <span class="n">cur_corner</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">cur_corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>            <span class="c1"># Check for empty tile</span>
+        <span class="c1"># Pick the right region of the image using the corner</span>
+        <span class="n">ymin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cur_corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">ymax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cur_corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">nr_pixels</span>
+        <span class="n">xmin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cur_corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">xmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cur_corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">nr_pixels</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;Global corners: </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span>
+                     <span class="nb">format</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">))</span>
+        <span class="c1"># Place the tile:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">joining</span><span class="p">[</span><span class="s1">&#39;final_image_shape&#39;</span><span class="p">])</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;final_image&#39;</span><span class="p">][:,</span> <span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;blended_tiles&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="s1">&#39;final_image_ubyte&#39;</span> <span class="ow">in</span> <span class="n">im_file</span><span class="p">:</span>
+                <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;final_image_ubyte&#39;</span><span class="p">][:,</span> <span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;ubytes&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;final_image&#39;</span><span class="p">][</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;blended_tiles&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">)]</span>
+            <span class="k">if</span> <span class="s1">&#39;final_image_ubyte&#39;</span> <span class="ow">in</span> <span class="n">im_file</span><span class="p">:</span>
+                <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;final_image_ubyte&#39;</span><span class="p">][</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;ubytes&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="s1">&#39;temp_mask&#39;</span> <span class="ow">in</span> <span class="n">im_file</span><span class="p">:</span></div>
+            <span class="n">im_file</span><span class="p">[</span><span class="s1">&#39;temp_mask&#39;</span><span class="p">][</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">temp_file</span><span class="p">[</span><span class="s1">&#39;temp_masks&#39;</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">)]</span>
+
+
+<div class="viewcode-block" id="assess_overlap"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.assess_overlap">[docs]</a><span class="k">def</span> <span class="nf">assess_overlap</span><span class="p">(</span><span class="n">joining</span><span class="p">,</span> <span class="n">tiles</span><span class="p">,</span> <span class="n">tile_file</span><span class="p">,</span> <span class="n">contig_tuples</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the covariance of the overlap</span>
+
+<span class="sd">    This function is usefull to see the quality of the final overlap.</span>
+<span class="sd">    It always works with flattened (max projected) tiles.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    joining: dict      </span>
+<span class="sd">        Dictionary containing the corner list</span>
+<span class="sd">        (with key: &#39;corner_list&#39;) with the tile indexes</span>
+<span class="sd">        and their corresponding corners</span>
+<span class="sd">    tiles: list</span>
+<span class="sd">        List of hdf5-references, references</span>
+<span class="sd">        to the images in tile_file, with a</span>
+<span class="sd">        reference for each tile.</span>
+<span class="sd">        If a tile does not have an associated image,</span>
+<span class="sd">        its name is None.</span>
+<span class="sd">    tile_file: pointer</span>
+<span class="sd">        hdf5 file object. The opened file containing the</span>
+<span class="sd">        tiles to stitch.</span>
+<span class="sd">    contig_tuples: list</span>
+<span class="sd">        List of tuples. Each tuple is a tile pair.</span>
+<span class="sd">        Tuples contain two tile indexes denoting these</span>
+<span class="sd">        tiles are contingent to each other.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    xcov: float</span>
+<span class="sd">        The cross covariance between the overlapping parts of the two images.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Assessing overlap...&quot;</span><span class="p">)</span>
+    <span class="n">allow_plot</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">xcov_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">sorted_corners</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">joining</span><span class="p">[</span><span class="s1">&#39;corner_list&#39;</span><span class="p">])</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s1">&#39;sorted corner list: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sorted_corners</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">contig_tuples</span><span class="p">:</span>
+        <span class="n">xcov</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        <span class="n">ind1</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+        <span class="n">ind2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tiles</span><span class="p">[</span><span class="n">ind1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">tiles</span><span class="p">[</span><span class="n">ind2</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ind1</span> <span class="o">-</span> <span class="n">ind2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1">#Overlap on left or right</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">((</span><span class="s2">&quot;Overlap on right of tile </span><span class="si">{0}</span><span class="s2"> and left of&quot;</span>
+                                    <span class="o">+</span> <span class="s2">&quot; tile </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">))</span>
+                <span class="n">corner1</span> <span class="o">=</span> <span class="n">sorted_corners</span><span class="p">[</span><span class="n">ind1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">corner2</span> <span class="o">=</span> <span class="n">sorted_corners</span><span class="p">[</span><span class="n">ind2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="c1">#Calculate overlap indexes</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;x values of, ind </span><span class="si">{}</span><span class="s2">, x-coord: </span><span class="si">{}</span><span class="s2">  ind </span><span class="si">{}</span><span class="s2">, x-coord: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span>  <span class="n">corner1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ind2</span><span class="p">,</span> <span class="n">corner2</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;y values of, ind </span><span class="si">{}</span><span class="s2">, x-coord: </span><span class="si">{}</span><span class="s2">  ind </span><span class="si">{}</span><span class="s2">, x-coord: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span>  <span class="n">corner1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ind2</span><span class="p">,</span> <span class="n">corner2</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">overlap_ind_x</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">corner2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">overlap_ind_y</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">corner2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Overlap index, x: </span><span class="si">{}</span><span class="s2"> y: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span>
+                                <span class="nb">format</span><span class="p">(</span><span class="n">overlap_ind_x</span><span class="p">,</span> <span class="n">overlap_ind_y</span><span class="p">))</span>
+                <span class="c1"># Loading tiles in function call, loading the flattened version of the tiles.</span>
+                <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">get_overlapping_region</span><span class="p">(</span><span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind1</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">),</span>
+                                        <span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind2</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">),</span>
+                                        <span class="n">overlap_ind_x</span><span class="p">,</span> <span class="n">overlap_ind_y</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">)</span>
+                <span class="c1">#For subplotting the overlaps later:</span>
+                <span class="n">plot_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">#Overlap on top or bottom</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">((</span><span class="s2">&quot;Overlap on bottom of tile </span><span class="si">{0}</span><span class="s2"> and top of&quot;</span>
+                                    <span class="o">+</span> <span class="s2">&quot;tile </span><span class="si">{1}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span> <span class="n">ind2</span><span class="p">))</span>
+                <span class="n">corner1</span> <span class="o">=</span> <span class="n">sorted_corners</span><span class="p">[</span><span class="n">ind1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">corner2</span> <span class="o">=</span> <span class="n">sorted_corners</span><span class="p">[</span><span class="n">ind2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="c1">#Calculate overlap indexes</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;x values of, ind </span><span class="si">{}</span><span class="s2">, x-coord: </span><span class="si">{}</span><span class="s2"> cur_corner ind </span><span class="si">{}</span><span class="s2">, x-coord: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span>  <span class="n">corner1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ind2</span><span class="p">,</span> <span class="n">corner2</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;y values of, ind </span><span class="si">{}</span><span class="s2">, y-coord: </span><span class="si">{}</span><span class="s2">  ind </span><span class="si">{}</span><span class="s2">, y-coord: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                                <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ind1</span><span class="p">,</span>  <span class="n">corner1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ind2</span><span class="p">,</span> <span class="n">corner2</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="n">overlap_ind_x</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">corner2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">overlap_ind_y</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">corner2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Overlap index, y: </span><span class="si">{}</span><span class="s2"> x: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span>
+                                <span class="nb">format</span><span class="p">(</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="n">overlap_ind_x</span><span class="p">))</span>
+                <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">get_overlapping_region</span><span class="p">(</span><span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind1</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">),</span>
+                                        <span class="n">inout</span><span class="o">.</span><span class="n">load_tile</span><span class="p">(</span><span class="n">tiles</span><span class="p">[</span><span class="n">ind2</span><span class="p">],</span> <span class="n">tile_file</span><span class="p">),</span>
+                                        <span class="n">overlap_ind_x</span><span class="p">,</span> <span class="n">overlap_ind_y</span><span class="p">,</span> <span class="s1">&#39;top&#39;</span><span class="p">)</span>
+                <span class="c1">#For subplotting the overlaps later:</span>
+                <span class="n">plot_order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+
+
+            <span class="k">if</span> <span class="n">allow_plot</span><span class="p">:</span>
+                <span class="n">overlap_rgb</span>         <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span>
+                <span class="n">overlap_rgb</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span>  <span class="o">=</span> <span class="n">smex</span><span class="o">.</span><span class="n">rescale_intensity</span><span class="p">(</span><span class="n">overlap1</span><span class="p">)</span>
+                <span class="n">overlap_rgb</span><span class="p">[:,:,</span><span class="mi">1</span><span class="p">]</span>  <span class="o">=</span> <span class="n">smex</span><span class="o">.</span><span class="n">rescale_intensity</span><span class="p">(</span><span class="n">overlap2</span><span class="p">)</span>
+
+                <span class="c1">#overlap_masked          = np.copy(overlap_rgb)</span>
+                <span class="c1">#overlap_masked[:,:,0][overlapping_inds]    *=  1.0 - np.array(weights)</span>
+                <span class="c1">#overlap_masked[:,:,1][overlapping_inds]    *= np.array(weights)</span>
+
+            <span class="n">cor_coeff</span><span class="p">,</span> <span class="n">mono_color</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">xcov_nd</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">mono_color</span><span class="p">):</span>
+                <span class="n">xcov</span> <span class="o">=</span> <span class="n">cor_coeff</span>
+
+            <span class="k">if</span> <span class="n">mono_color</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;The overlapping images are mono colored, &quot;</span>
+                             <span class="o">+</span> <span class="s2">&quot;xcov: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cor_coeff</span><span class="p">))</span>
+                <span class="n">title_text</span> <span class="o">=</span> <span class="s2">&quot;Mono color, xcov: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cor_coeff</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Normalized cross covariance of overlap: &quot;</span>
+                             <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cor_coeff</span><span class="p">))</span>
+                <span class="n">title_text</span> <span class="o">=</span> <span class="s2">&quot;XCov: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cor_coeff</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">allow_plot</span><span class="p">:</span>
+                <span class="n">inout</span><span class="o">.</span><span class="n">display_tiles</span><span class="p">([</span><span class="n">overlap1</span><span class="p">,</span>
+                                <span class="n">overlap2</span><span class="p">,</span>
+                                <span class="n">overlap_rgb</span><span class="p">],</span>
+                                <span class="n">plot_order</span><span class="p">,</span> <span class="n">fig_nr</span> <span class="o">=</span> <span class="s2">&quot;overlap check&quot;</span><span class="p">,</span>
+                                <span class="n">maximize</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">main_title</span> <span class="o">=</span> <span class="n">title_text</span><span class="p">,</span>
+                                <span class="n">rgb</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">xcov_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xcov</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">xcov_list</span>
+
+
+<div class="viewcode-block" id="generate_blended_tile_npy"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.generate_blended_tile_npy">[docs]</a><span class="k">def</span> <span class="nf">generate_blended_tile_npy</span><span class="p">(</span><span class="n">corner_ind_coord</span><span class="p">,</span><span class="n">stitching_files_dir</span><span class="p">,</span>
+                              <span class="n">blended_tiles_directory</span><span class="p">,</span> <span class="n">masked_tiles_directory</span><span class="p">,</span>
+                              <span class="n">analysis_name</span><span class="p">,</span><span class="n">processing_hyb</span><span class="p">,</span><span class="n">reference_gene</span><span class="p">,</span>
+                              <span class="n">micData</span><span class="p">,</span> <span class="n">tiles</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">,</span>
+                <span class="n">linear_blending</span><span class="p">):</span>
+
+    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Blend the tile if necessary and then save it temp blended folder.</span>
+<span class="sd">    Modification of the generate_blended_tile that run using .npy files</span>
+<span class="sd">    and doesn&#39;t save the data in a hdf5 file</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    ------------</span>
+<span class="sd">    </span>
+<span class="sd">    corner_ind_coord: list</span>
+<span class="sd">        Contains two elements, the first one is an</span>
+<span class="sd">        int representing the tile index, the second one is</span>
+<span class="sd">        a numpy array containing the corner&#39;s coordinates.</span>
+<span class="sd">    stitching_files_dir: str</span>
+<span class="sd">        Path to the files to stitch</span>
+<span class="sd">    analysis_name: str </span>
+<span class="sd">        Name of the current analysis</span>
+<span class="sd">    blended_tiles_directory: str</span>
+<span class="sd">        Path to the directory where to save the blended tiles    </span>
+<span class="sd">    masked_tiles_directory: str</span>
+<span class="sd">        Path to the directory with the masks                                       </span>
+<span class="sd">    processing_hyb: str</span>
+<span class="sd">        Name of the hybridization processed</span>
+<span class="sd">    reference_gene: str</span>
+<span class="sd">        Name of the gene to be stitched</span>
+<span class="sd">    blending_mask: np.array</span>
+<span class="sd">        Array containing the blending mask used for blending the images     </span>
+<span class="sd">    micData: object</span>
+<span class="sd">        MicroscopeData object. Contains coordinates of</span>
+<span class="sd">        the tile corners as taken from the microscope.                   </span>
+<span class="sd">    tiles: np.array</span>
+<span class="sd">        Array with tile number. -1 correspond to missing tile      </span>
+<span class="sd">    nr_pixels: int</span>
+<span class="sd">        Denoting size of the tile. </span>
+<span class="sd">    linear_blending: bool</span>
+<span class="sd">        When True blending will be linear and when False, blending will be non-linear.</span>
+<span class="sd">                    </span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+       
+    <span class="n">stitching_files_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">stitching_files_dir</span><span class="o">+</span><span class="s1">&#39;*.npy&#39;</span><span class="p">)</span>
+    <span class="n">masked_files_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">masked_tiles_directory</span><span class="o">+</span><span class="s1">&#39;*.npy&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Get corner</span>
+    <span class="n">tile_ind</span> <span class="o">=</span> <span class="n">corner_ind_coord</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">corner</span> <span class="o">=</span> <span class="n">corner_ind_coord</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="c1"># Get the reference address of the tile to load</span>
+    <span class="n">tile_ref</span> <span class="o">=</span> <span class="n">tiles</span><span class="p">[</span><span class="n">tile_ind</span><span class="p">]</span>
+    
+    <span class="c1"># Check if the tile is existing</span>
+    <span class="k">if</span> <span class="n">tile_ref</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+        
+        <span class="c1"># Get the tile number</span>
+        <span class="n">tile_number</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_ref</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.npy&#39;</span>
+        
+        <span class="c1"># Load the tile</span>
+        <span class="n">tile_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">tile_p</span> <span class="k">for</span> <span class="n">tile_p</span> <span class="ow">in</span> <span class="n">stitching_files_list</span> <span class="k">if</span> <span class="n">tile_number</span> <span class="ow">in</span> <span class="n">tile_p</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">cur_tile</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tile_path</span><span class="p">)</span>
+        
+        <span class="c1"># Load the mask</span>
+        <span class="n">mask_ref</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.npy&#39;</span>
+        <span class="n">mask_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">mask_p</span> <span class="k">for</span> <span class="n">mask_p</span> <span class="ow">in</span> <span class="n">stitching_files_list</span> <span class="k">if</span> <span class="n">mask_ref</span> <span class="ow">in</span> <span class="n">mask_p</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">mask_path</span><span class="p">:</span>
+            <span class="n">cur_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mask_path</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        
+            <span class="c1">#Blend</span>
+            <span class="n">blended_tile</span><span class="p">,</span> <span class="n">cur_temp_mask</span>  <span class="o">=</span> <span class="n">perform_blending_par_proof</span><span class="p">(</span><span class="n">tile_ind</span><span class="p">,</span>
+                    <span class="n">cur_mask</span><span class="p">,</span> <span class="n">cur_tile</span><span class="p">,</span>
+                    <span class="n">linear_blending</span><span class="p">,</span> <span class="n">tiles</span><span class="p">,</span> <span class="n">micData</span><span class="o">.</span><span class="n">tile_set</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">)</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">blended_tile</span> <span class="o">=</span> <span class="n">cur_tile</span>
+        <span class="c1"># Convert the blended tile to uint16 to be able to save it in the </span>
+        <span class="c1"># prefilled hdf5</span>
+        <span class="n">blended_tile</span> <span class="o">=</span> <span class="n">img_as_uint</span><span class="p">(</span><span class="n">blended_tile</span><span class="p">)</span>
+
+        <span class="c1"># Save the blended tiles</span>
+        <span class="n">fname</span> <span class="o">=</span> <span class="n">blended_tiles_directory</span> <span class="o">+</span> <span class="n">analysis_name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">reference_gene</span><span class="o">+</span><span class="s1">&#39;_blended_tile_pos&#39;</span><span class="o">+</span><span class="n">tile_number</span></div>
+        <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span><span class="n">blended_tile</span><span class="p">)</span>
+
+
+<span class="c1"># Write the blended image in the hdf5 file</span>
+<div class="viewcode-block" id="make_final_image_npy"><a class="viewcode-back" href="../../../API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.make_final_image_npy">[docs]</a><span class="k">def</span> <span class="nf">make_final_image_npy</span><span class="p">(</span><span class="n">joining</span><span class="p">,</span> <span class="n">stitching_file</span><span class="p">,</span> <span class="n">blended_tiles_directory</span><span class="p">,</span> <span class="n">tiles</span><span class="p">,</span><span class="n">gene</span><span class="p">,</span> <span class="n">nr_pixels</span><span class="p">):</span>
+    
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Puts blended tiles at the correct position in the final image.</span>
+<span class="sd">    Modified version of the make_final_image that works on .npy stored</span>
+<span class="sd">    images. Works only in 2D.</span>
+
+<span class="sd">    Takes blended tiles as found in the blended_tiles_directory and &quot;pastes&quot; </span>
+<span class="sd">    them at the correct position as indicated by joining in the final image</span>
+<span class="sd">    in the hdf5 file. </span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    joining: dict</span>
+<span class="sd">        Containing corners for tiles</span>
+<span class="sd">    stitching_file: pointer</span>
+<span class="sd">        Pointer to hdf5 object with the following groups:</span>
+<span class="sd">    blended_tiles_directory: str</span>
+<span class="sd">        Path to the directory where to save the blended tiles                    </span>
+<span class="sd">    tiles: np.array</span>
+<span class="sd">        Array with tile number. -1 correspond to missing tile</span>
+<span class="sd">    gene: str</span>
+<span class="sd">        Name of the gene to be stitched</span>
+<span class="sd">    nr_pixels: int</span>
+<span class="sd">        Size of the tile, tile is assumed to be a square.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    
+    <span class="n">blended_files_list</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">blended_tiles_directory</span><span class="o">+</span><span class="s1">&#39;*.npy&#39;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">corner</span> <span class="ow">in</span> <span class="n">joining</span><span class="p">[</span><span class="s1">&#39;corner_list&#39;</span><span class="p">]:</span>
+         
+            <span class="n">tile_ref</span> <span class="o">=</span> <span class="n">tiles</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="n">tile_ref</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Get the tile number</span>
+                
+                <span class="n">tile_number</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_ref</span><span class="p">)</span><span class="o">+</span><span class="s1">&#39;.npy&#39;</span>
+            
+                <span class="n">image_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">ipath</span> <span class="k">for</span> <span class="n">ipath</span> <span class="ow">in</span> <span class="n">blended_files_list</span> <span class="k">if</span> <span class="n">tile_number</span> <span class="ow">in</span> <span class="n">ipath</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">image_path</span><span class="p">)</span>
+
+                <span class="c1"># Pick the right region of the image using the corner</span>
+                <span class="n">ymin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">ymax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="n">nr_pixels</span>
+                <span class="n">xmin</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">xmax</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">corner</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">nr_pixels</span>
+
+                <span class="c1"># Place the tile:</span>
+                <span class="n">stitching_file</span><span class="p">[</span><span class="n">gene</span><span class="p">][</span><span class="s1">&#39;StitchedImage&#39;</span><span class="p">][</span><span class="s1">&#39;final_image&#39;</span><span class="p">][</span><span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span> <span class="o">+=</span> <span class="n">img</span>          </div>
+                <span class="n">stitching_file</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

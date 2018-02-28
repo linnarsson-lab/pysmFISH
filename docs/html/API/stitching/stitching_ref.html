@@ -1,0 +1,818 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>stitching &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../index.html"/>
+        <link rel="up" title="Stitching API" href="index.html"/>
+        <link rel="next" title="tilejoining" href="tilejoining_ref.html"/>
+        <link rel="prev" title="pairwisesingle" href="pairwisesingle_ref.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../filtering_ref.html">filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../counting_ref.html">counting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_calling_ref.html">dots_calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_coords_calculations_ref.html">dots_coords_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hdf5_utils_ref.html">hdf5_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io_ref.html">io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_based_segmentation_ref.html">object_based_segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils_ref.html">utils</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Stitching API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="GlobalOptimization_ref.html">Global Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hdf5preparation_ref.html">hdf5preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hybregistration_ref.html">hybregistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inout_ref.html">inout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MicroscopeData_ref.html">MicroscopeData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisehelper_ref.html">pairwisehelper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisesingle_ref.html">pairwisesingle</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">stitching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tilejoining_ref.html">tilejoining</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">API</a> &raquo;</li>
+        
+          <li><a href="index.html">Stitching API</a> &raquo;</li>
+        
+      <li>stitching</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/API/stitching/stitching_ref.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysmFISH.stitching_package.stitching">
+<span id="stitching"></span><h1>stitching<a class="headerlink" href="#module-pysmFISH.stitching_package.stitching" title="Permalink to this headline">¶</a></h1>
+<p>Find or apply coordinates to stitch an image</p>
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.assess_performance">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">assess_performance</code><span class="sig-paren">(</span><em>micData</em>, <em>alignment</em>, <em>joining</em>, <em>cov_signal</em>, <em>xcov_list</em>, <em>folder</em>, <em>use_IJ_corners=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#assess_performance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.assess_performance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assess the performance of the stitching</p>
+<p>This functions writes its the result to a file in “folder”.</p>
+<dl class="docutils">
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Contains coordinates of
+the tile corners as taken from the microscope
+and contains the tile set.</dd>
+<dt>alignment: dict</dt>
+<dd>Contains key ‘P’ with a 1D numpy array
+containing pairwise alignment y and x coordinates
+(and z-coordinates when applicable) for each
+neighbouring pair of tiles, array will be
+2 * len(contig_typles) for 2D data
+or 3 * len(contig_typles) for 3D data.
+Also contains key ‘covs’ with a 1D numpy array
+containing covariance for each pairwise alignment in
+‘P’, ‘covs’ will be len(contig_typles).</dd>
+<dt>joining: dict</dt>
+<dd>Contains keys corner_list and
+final_image_shape.
+Corner_list is a list of list, each list is a pair
+of a tile index (int) and it’s tile’s shifted
+coordinates in the final image (numpy array
+containing floats).
+Final_image_shape is a tuple of size 2 or 3
+depending on the numer of dimensions and contains
+ints.</dd>
+<dt>cov_signal: np.array</dt>
+<dd>The covariance of each neighbouring
+tile pair in the part of the tiles that overlap in
+the final stitched signal image.</dd>
+<dt>xcov_list: list</dt>
+<dd>List of cross covariance of the
+overlap of the tiles in the final stitched image.
+As returned by tilejoining.assess_overlap.</dd>
+<dt>folder: str</dt>
+<dd>String representing a path. The folder where the
+performance report should be saved. Needs a
+trailing slash (‘/’).</dd>
+<dt>use_IJ_corners: bool</dt>
+<dd>If True compare our corners to Image J
+found in a file in folder, the file name should
+contain: TileConfiguration.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.get_pairwise_alignments">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">get_pairwise_alignments</code><span class="sig-paren">(</span><em>tiles</em>, <em>tile_file</em>, <em>contig_tuples</em>, <em>micData</em>, <em>nr_peaks=8</em>, <em>nr_slices=None</em>, <em>nr_dim=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#get_pairwise_alignments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.get_pairwise_alignments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the pairwise transition</p>
+<p>Calculates pairwise transition for each neighbouring pair of
+tiles. This functions is only used in the single core version of the
+code, not when using MPI.</p>
+<dl class="docutils">
+<dt>tiles: list</dt>
+<dd>List of references to the the tiles in the hdf5 file tile_file.</dd>
+<dt>tile_file: pointer</dt>
+<dd>HDF5 file handle. Reference to the opened file containing the tiles.</dd>
+<dt>contig_tuples: list</dt>
+<dd>List of tuples. Each tuple is a tile pair.
+Tuples contain two tile indexes denoting these
+tiles are contingent to each other.</dd>
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Containing coordinates of
+the tile corners as taken from the microscope.</dd>
+<dt>nr_peaks: int</dt>
+<dd>Number of peaks to be extracted from the PCM (Default: 8)</dd>
+<dt>nr_slices: int </dt>
+<dd><p class="first">Only applicable when running with 3D
+pictures and using ‘compres pic’ method in
+pairwisesingle.py. Determines the number of slices
+that are compressed together (compression in the
+z-direction). If None, all the slices are compressed</p>
+<blockquote class="last">
+<div>together. (Default: None)</div></blockquote>
+</dd>
+<dt>nr_dim: int</dt>
+<dd>If 3, the code will assume three dimensional data
+for the tile, where z is the first dimension and y and x
+the second and third. For any other value 2-dimensional data
+is assumed. (default: 2)</dd>
+</dl>
+<dl class="docutils">
+<dt>: dict</dt>
+<dd>Contains key ‘P’ with a 1D numpy array
+containing pairwise alignment y and x coordinates
+(and z-coordinates when applicable) for each
+neighbouring pair of tiles, array will be
+2 * len(contig_typles) for 2D data
+or 3 * len(contig_typles) for 3D data.
+Also contains key ‘covs’ with a 1D numpy array
+containing covariance for each pairwise alignment in
+‘P’, ‘covs’ will be len(contig_typles).</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.get_pairwise_input">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">get_pairwise_input</code><span class="sig-paren">(</span><em>ImageProperties</em>, <em>folder</em>, <em>tile_file</em>, <em>hyb_nr</em>, <em>gene='Nuclei'</em>, <em>pre_proc_level='FilteredData'</em>, <em>est_overlap=0.1</em>, <em>y_flip=False</em>, <em>nr_dim=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#get_pairwise_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.get_pairwise_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the information necessary to do the pairwise allignment</p>
+<p>Find the pairwise pars for an unknown stitching.
+Works best with a folder containing
+image with nuclei (DAPI staining)</p>
+<dl class="docutils">
+<dt>folder: str</dt>
+<dd>String representing the path of the folder containing
+the tile file and the yaml metadata file. Needs a
+trailing slash (‘/’).</dd>
+<dt>tile_file: pointer</dt>
+<dd>HDF5 file handle. Reference to the opened file containing the tiles.</dd>
+<dt>hyb_nr: int</dt>
+<dd>The number of the hybridization we are going to
+stitch. This will be used to navigate tile_file and find
+the correct tiles.</dd>
+<dt>gene: str</dt>
+<dd>The name of the gene we are going to stitch.
+This will be used to navigate tile_file and find the
+correct tiles. (Default: ‘Nuclei’)</dd>
+<dt>pre_proc_level: str</dt>
+<dd>The name of the pre processing group of
+the tiles we are going to stitch.
+This will be used to navigate tile_file and find the
+correct tiles. (Default: ‘Filtered’)</dd>
+<dt>est_overlap: float</dt>
+<dd>The fraction of two neighbours that should
+overlap, this is used to estimate the shape of the
+tile set and then overwritten by the actual average
+overlap according to the microscope coordinates.
+(default: 0.1)</dd>
+<dt>y_flip: bool</dt>
+<dd>The y_flip variable is designed for the cases where the
+microscope sequence is inverted in the y-direction. When
+set to True the y-coordinates will also be inverted
+before determining the tile set. (Default: False)</dd>
+<dt>nr_dim: int</dt>
+<dd>If 3, the code will assume three dimensional data
+for the tile, where z is the first dimension and y and x
+the second and third. For any other value 2-dimensional data
+is assumed. (Default: 2)</dd>
+</dl>
+<dl class="docutils">
+<dt>tiles: list</dt>
+<dd>List of references to the the tiles in the hdf5 file tile_file.</dd>
+<dt>contig_tuples: list</dt>
+<dd>List of tuples. Each tuple is a tile pair.
+Tuples contain two tile indexes denoting these
+tiles are contingent to each other.</dd>
+<dt>nr_pixels: int</dt>
+<dd>Height and length of the tile in pixels, tile is assumed to be square.</dd>
+<dt>z_count: int</dt>
+<dd>The number of layers in one tile (size of the z-axis). Is 1 when nr_dim is not 3.</dd>
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Contains coordinates of the tile corners as taken from the microscope.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.get_pairwise_input_npy">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">get_pairwise_input_npy</code><span class="sig-paren">(</span><em>image_properties</em>, <em>converted_positions</em>, <em>hybridization</em>, <em>est_overlap=0.1</em>, <em>y_flip=False</em>, <em>nr_dim=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#get_pairwise_input_npy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.get_pairwise_input_npy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the information necessary to do the pairwise allignment
+Modified version of the get_pairwise_input functions that work on .npy 
+files and not on hdf5</p>
+<p>Find the pairwise pairs for an unknown stitching.</p>
+<dl class="docutils">
+<dt>image_properties: dict </dt>
+<dd>Dictionary with the image details parsed from the Experimental_metadata.yaml file</dd>
+<dt>converted_positions: dict</dt>
+<dd>Dictionary  with the coords of the images for all hybridization
+The coords are a list of floats</dd>
+<dt>hybridization: str </dt>
+<dd>Hybridization that will be processed (Ex. Hybridization2)</dd>
+<dt>est_overlap: float</dt>
+<dd>The fraction of two neighbours that should
+overlap, this is used to estimate the shape of the
+tile set and then overwritten by the actual average
+overlap according to the microscope coordinates.
+(default: 0.1)</dd>
+<dt>y_flip: bool</dt>
+<dd>The y_flip variable is designed for the cases where the
+microscope sequence is inverted in the y-direction. When
+set to True the y-coordinates will also be inverted
+before determining the tile set. (Default: False)</dd>
+<dt>nr_dim: int</dt>
+<dd>If 3, the code will assume three dimensional data
+for the tile, where z is the first dimension and y and x
+the second and third. For any other value 2-dimensional data
+is assumed. (Default: 2)</dd>
+</dl>
+<dl class="docutils">
+<dt>tiles: np.array</dt>
+<dd>Array of int with the tiles number. -1 indicate an empty tile</dd>
+<dt>contig_tuples: list</dt>
+<dd>List of tuples. Each tuple is a tile pair.
+Tuples contain two tile indexes denoting these
+tiles are contingent to each other.</dd>
+<dt>nr_pixels: int</dt>
+<dd>Height and length of the tile in pixels, tile is assumed to be square.</dd>
+<dt>z_count: int</dt>
+<dd>The number of layers in one tile (size of
+the z-axis). Is 1 when nr_dim is not 3.</dd>
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Contains coordinates of
+the tile corners as taken from the microscope.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.get_place_tile_input">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">get_place_tile_input</code><span class="sig-paren">(</span><em>folder</em>, <em>tiles</em>, <em>contig_tuples</em>, <em>micData</em>, <em>nr_pixels</em>, <em>z_count</em>, <em>alignment</em>, <em>data_name</em>, <em>nr_dim=2</em>, <em>save_alignment=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#get_place_tile_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.get_place_tile_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do the global alignment and get the shifted corner coordinates.</p>
+<p>Calculates a shift in global coordinates for each tile (global
+alignment) and then applies these shifts to the  corner coordinates
+of each tile and returns and saves these shifted corner coordinates.</p>
+<p>This function produces a file with stitching data in folder
+called data_name, this file includes the corner coordinates which
+can be used to apply the stitching to another gene.</p>
+<dl class="docutils">
+<dt>folder: str</dt>
+<dd>String representing the path of the folder containing
+the tile file and the yaml metadata file. Needs a
+trailing slash (‘/’).</dd>
+<dt>tiles: list</dt>
+<dd>List of strings. List of references to the the
+tiles in the hdf5 file tile_file.</dd>
+<dt>contig_tuples: list</dt>
+<dd>List of tuples. Each tuple is a tile pair.
+Tuples contain two tile indexes denoting these
+tiles are contingent to each other.</dd>
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Contains coordinates of
+the tile corners as taken from the microscope.</dd>
+<dt>nr_pixels: int</dt>
+<dd>Height and length of the tile in pixels, tile is assumed to be square.</dd>
+<dt>z_count: int</dt>
+<dd>The number of layers in one tile (size of the z-axis). Is 1 when nr_dim is not 3.</dd>
+<dt>alignment: dict</dt>
+<dd>Contains key ‘P’ with a 1D numpy array
+containing pairwise alignment y and x coordinates
+(and z-coordinates when applicable) for each
+neighbouring pair of tiles, array will be
+2 * len(contig_typles) for 2D data
+or 3 * len(contig_typles) for 3D data.
+Also contains key ‘covs’ with a 1D numpy array
+containing covariance for each pairwise alignment in
+‘P’, ‘covs’ will be len(contig_typles).</dd>
+<dt>data_name: str</dt>
+<dd>Name of the file containing the pickled stitching data.</dd>
+<dt>nr_dim: int</dt>
+<dd>If 3, the code will assume three dimensional data
+for the tile, where z is the first dimension and y and x
+the second and third. For any other value 2-dimensional data
+is assumed. (default: 2)</dd>
+<dt>save_alignment: bool</dt>
+<dd>When False only the stitching
+coordinates and microscope data will be saved. When
+True also the contigency tuples and pairwise
+alignment will be saved (this is necessary if we
+want to refine the stitching later). (Default: True)</dd>
+</dl>
+<dl class="docutils">
+<dt>joining: dict</dt>
+<dd>Contains keys corner_list and
+final_image_shape.
+Corner_list is a list of list, each list is a pair
+of a tile index (int) and it’s tile’s shifted
+coordinates in the final image (numpy array
+containing floats).
+Final_image_shape is a tuple of size 2 or 3
+depending on the numer of dimensions and contains
+ints.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.get_place_tile_input_apply">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">get_place_tile_input_apply</code><span class="sig-paren">(</span><em>folder</em>, <em>tile_file</em>, <em>hyb_nr</em>, <em>data_name</em>, <em>gene='Nuclei'</em>, <em>pre_proc_level='Filtered'</em>, <em>nr_dim=2</em>, <em>check_pairwise=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#get_place_tile_input_apply"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.get_place_tile_input_apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the data needed to apply stitching to another gene</p>
+<dl class="docutils">
+<dt>folder: str</dt>
+<dd>String representing the path of the folder containing
+the tile file, the stitching data file the yaml metadata
+file. Needs a trailing slash (‘/’).</dd>
+<dt>tile_file: pointer</dt>
+<dd>HDF5 file handle. Reference to the opened file
+containing the tiles.</dd>
+<dt>hyb_nr: int</dt>
+<dd>The number of the hybridization we are going to
+stitch. This will be used to navigate tile_file and find
+the correct tiles.</dd>
+<dt>data_name: str</dt>
+<dd>Name of the file containing the pickled stitching data.</dd>
+<dt>gene: str</dt>
+<dd>The name of the gene we are going to stitch.
+This will be used to navigate tile_file and find the
+correct tiles. (Default: ‘Nuclei’)</dd>
+<dt>pre_proc_level: str</dt>
+<dd>The name of the pre processing group of
+the tiles we are going to stitch.
+This will be used to navigate tile_file and find the
+correct tiles. (Default: ‘Filtered’)</dd>
+<dt>nr_dim: int</dt>
+<dd>If 3, the code will assume three dimensional data
+for the tile, where z is the first dimension and y and x
+the second and third. For any other value 2-dimensional data
+is assumed. (Default: 2)</dd>
+<dt>check_pairwise: bool</dt>
+<dd>If True the contig_tuples array is assumed
+to be in the pickled data file and will be returned.
+(Default: False)</dd>
+</dl>
+<dl class="docutils">
+<dt>joining: dict</dt>
+<dd>Taken from the stitching data file.
+Contains keys corner_list and final_image_shape.
+Corner_list is a list of list, each list is a pair
+of an image number (int) and it’s coordinates (numpy
+array containing floats).
+Final_image_shape is a tuple of size 2 or 3
+depending on the numer of dimensions and contains
+ints.</dd>
+<dt>tiles: list</dt>
+<dd>List of references to the the tiles in the hdf5 file tile_file.</dd>
+<dt>nr_pixels: int</dt>
+<dd>Height and length of the tile in pixels, tile is assumed to be square.</dd>
+<dt>z_count: int</dt>
+<dd>The number of layers in one tile (size of
+the z-axis). Is 1 when nr_dim is not 3.</dd>
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Taken from the pickled
+stitching data.
+Contains coordinates of the tile corners as taken
+from the microscope.</dd>
+<dt>contig_tuples: list</dt>
+<dd>Only returned if check_pairwise == True.
+list of tuples. Taken from the pickled
+stitching data. Each tuple is a tile pair.
+Tuples contain two tile indexes denoting these
+tiles are contingent to each other.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.get_place_tile_input_apply_npy">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">get_place_tile_input_apply_npy</code><span class="sig-paren">(</span><em>hyb_dir</em>, <em>stitched_reference_files_dir</em>, <em>data_name</em>, <em>image_properties</em>, <em>nr_dim=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#get_place_tile_input_apply_npy"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.get_place_tile_input_apply_npy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Modified version of the get_place_tile_input_apply
+Get the data needed to apply stitching to another gene</p>
+<dl class="docutils">
+<dt>hyb_dir: str</dt>
+<dd>String representing the path of the folder containing
+the tile file, the stitching data file the yaml metadata file.</dd>
+<dt>stitched_reference_files_dir: str</dt>
+<dd>String representing the path of the folder containing the registered data.</dd>
+<dt>data_name: str  </dt>
+<dd>Name of the file containing the pickled stitching data.</dd>
+<dt>image_properties: dict</dt>
+<dd>Dictionary with the image details parsed from the Experimental_metadata.yaml file</dd>
+<dt>nr_dim: int</dt>
+<dd>If 3, the code will assume three dimensional data
+for the tile, where z is the first dimension and y and x
+the second and third. For any other value 2-dimensional data
+is assumed. (Default: 2)</dd>
+</dl>
+<dl class="docutils">
+<dt>joining: dict</dt>
+<dd>Taken from the stitching data file.
+Contains keys corner_list and final_image_shape.
+Corner_list is a list of list, each list is a pair
+of an image number (int) and it’s coordinates (numpy
+array containing floats).
+Final_image_shape is a tuple of size 2 or 3
+depending on the numer of dimensions and contains
+ints.</dd>
+<dt>tiles: list</dt>
+<dd>List of strings. List of references to the the tiles in the hdf5 file tile_file.</dd>
+<dt>nr_pixels: int</dt>
+<dd>Height and length of the tile in pixels, tile is assumed to be square.</dd>
+<dt>z_count: int</dt>
+<dd>The number of layers in one tile (size of the z-axis). Is 1 when nr_dim is not 3.</dd>
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Taken from the pickled stitching data.
+Contains coordinates of the tile corners as taken from the microscope.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.get_refine_pairwise_input">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">get_refine_pairwise_input</code><span class="sig-paren">(</span><em>folder</em>, <em>tile_file</em>, <em>hyb_nr</em>, <em>data_name</em>, <em>gene='Nuclei'</em>, <em>pre_proc_level='Filtered'</em>, <em>nr_dim=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#get_refine_pairwise_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.get_refine_pairwise_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the data needed to refine stitching with another gene</p>
+<dl class="docutils">
+<dt>folder: str</dt>
+<dd>String representing the path of the folder containing
+the tile file, the stitching data file the yaml metadata
+file. Needs a trailing slash (‘/’).</dd>
+<dt>tile_file: pointer</dt>
+<dd>HDF5 file handle. Reference to the opened file
+containing the tiles.</dd>
+<dt>hyb_nr: int</dt>
+<dd>The number of the hybridization we are going to
+stitch. This will be used to navigate tile_file and find
+the correct tiles.</dd>
+<dt>data_name: str</dt>
+<dd>Name of the file containing the pickled stitching data.</dd>
+<dt>gene: str</dt>
+<dd>The name of the gene we are going to stitch.
+This will be used to navigate tile_file and find the
+correct tiles. (Default: ‘Nuclei’)</dd>
+<dt>pre_proc_level: str</dt>
+<dd>The name of the pre processing group of
+the tiles we are going to stitch.
+This will be used to navigate tile_file and find the
+correct tiles. (Default: ‘Filtered’)</dd>
+<dt>nr_dim: int</dt>
+<dd>If 3, the code will assume three dimensional data
+for the tile, where z is the first dimension and y and x
+the second and third. For any other value 2-dimensional data
+is assumed. (Default: 2)</dd>
+</dl>
+<dl class="docutils">
+<dt>tiles: list</dt>
+<dd>List of references to the the tiles in the hdf5 file tile_file.</dd>
+<dt>contig_tuples: list</dt>
+<dd>List of tuples. Each tuple is a tile pair.
+Tuples contain two tile indexes denoting these
+tiles are contingent to each other.</dd>
+<dt>nr_pixels: int</dt>
+<dd>Height and length of the tile in pixels, tile
+is assumed to be square.</dd>
+<dt>z_count: int</dt>
+<dd>The number of layers in one tile (size of the z-axis). Is 1 when nr_dim is not 3.</dd>
+<dt>micData: object</dt>
+<dd>MicroscopeData object. Contains coordinates of
+the tile corners as taken from the microscope.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.plot_final_image">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">plot_final_image</code><span class="sig-paren">(</span><em>im_file_name</em>, <em>joining</em>, <em>hyb_nr=1</em>, <em>gene='Nuclei'</em>, <em>fig_name='final image'</em>, <em>shrink_image=False</em>, <em>block=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#plot_final_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.plot_final_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays the high quality final image in a plot window.</p>
+<p>Takes a lot of working memory for full sized images.
+When plt_available is false this function does nothing and returns
+None.</p>
+<dl class="docutils">
+<dt>im_file_name: str</dt>
+<dd>Filename of the hdf5 file, containing the final image.</dd>
+<dt>fig_name: str</dt>
+<dd>Name of the plotting window (default: “final image”).</dd>
+<dt>shrink_image: bool</dt>
+<dd>Turn on shrink_image to reduce display quality and memory usage. (Default: False)</dd>
+<dt>block: bool</dt>
+<dd>Plot blocks the running program untill
+the plotting window is closed if true. Turn off
+block to make the code continue untill the next call
+of  plt.show(block=True) before displaying the
+image. (default: True)</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.refine_pairwise_alignments">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">refine_pairwise_alignments</code><span class="sig-paren">(</span><em>tiles</em>, <em>tile_file</em>, <em>contig_tuples</em>, <em>alignment_old</em>, <em>micData=None</em>, <em>nr_peaks=8</em>, <em>nr_dim=2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#refine_pairwise_alignments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.refine_pairwise_alignments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the pairwise transition</p>
+<p>Calculates pairwise transition for each neighbouring pair of
+tiles.</p>
+<dl class="docutils">
+<dt>tiles: np.array</dt>
+<dd>Array of tiles, a tile should be a 2d np.array
+representing a picture</dd>
+<dt>contig_tuples: list</dt>
+<dd>List of tuples denoting which tiles are contingent to each other.</dd>
+<dt>micData: object</dt>
+<dd>MicroscopeData object containing coordinates (default None)</dd>
+<dt>nr_peaks: int</dt>
+<dd>nr of peaks to be extracted from the PCM (default 8)</dd>
+<dt>nr_dim: int</dt>
+<dd>If 3, the code will assume three dimensional data
+for the tile, where z is the first dimension and y and x
+the second and third. For any other value 2-dimensional data
+is assumed. (default: 2)</dd>
+</dl>
+<dl class="docutils">
+<dt>: dict</dt>
+<dd>Contains key ‘P’ with a 1D numpy array
+containing pairwise alignment y and x coordinates
+(and z-coordinates when applicable) for each
+neighbouring pair of tiles, array will be
+2 * len(contig_typles) for 2D data
+or 3 * len(contig_typles) for 3D data.
+Also contains key ‘covs’ with a 1D numpy array
+containing covariance for each pairwise alignment in
+‘P’, ‘covs’ will be len(contig_typles).</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.stitching.save_as_tiff">
+<code class="descclassname">pysmFISH.stitching_package.stitching.</code><code class="descname">save_as_tiff</code><span class="sig-paren">(</span><em>data_file</em>, <em>hyb_nr</em>, <em>gene</em>, <em>location_image</em>, <em>pre_proc_level='StitchedImage'</em>, <em>mode='both'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/stitching.html#save_as_tiff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.stitching.save_as_tiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the results as a tiff image for visual inspection.</p>
+<dl class="docutils">
+<dt>data_file: pointer</dt>
+<dd>HDF5 file handle. HDF5 file containing the final image.</dd>
+<dt>gene: str</dt>
+<dd>The name of the gene we stitched.
+This will be used to navigate data_file and find the
+correct final picture.</dd>
+<dt>hyb_nr: int</dt>
+<dd>The number of the hybridization we have
+stitched.This will be used to navigate data_file and
+find the correct final picture.</dd>
+<dt>location_image: str</dt>
+<dd>Full path to the file where the tiff file
+will be saved (extension not necessary).</dd>
+<dt>pre_proc_level: str</dt>
+<dd>The name of the pre processing group of
+the tiles we are going to stitch. Normally this will
+be ‘StitchedImage’, but when the final image is
+found in another datagroup it may be changed.
+This will be used to navigate data_file and find the
+correct final image. (Default: ‘StitchedImage’)</dd>
+<dt>mode: str</dt>
+<dd>Mode determines what color, quality and
+how many images are saved.
+Possible values for mode: save_ubyte, save_float,
+save_rgb. If another or no value is given the image
+is saved as is and a as a low quality copy
+(pixel depth 8 bits) (Default: ‘both’)</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="tilejoining_ref.html" class="btn btn-neutral float-right" title="tilejoining" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pairwisesingle_ref.html" class="btn btn-neutral" title="pairwisesingle" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

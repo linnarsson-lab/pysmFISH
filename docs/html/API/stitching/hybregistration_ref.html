@@ -1,0 +1,754 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>hybregistration &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../index.html"/>
+        <link rel="up" title="Stitching API" href="index.html"/>
+        <link rel="next" title="inout" href="inout_ref.html"/>
+        <link rel="prev" title="hdf5preparation" href="hdf5preparation_ref.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../filtering_ref.html">filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../counting_ref.html">counting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_calling_ref.html">dots_calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_coords_calculations_ref.html">dots_coords_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hdf5_utils_ref.html">hdf5_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io_ref.html">io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_based_segmentation_ref.html">object_based_segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils_ref.html">utils</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Stitching API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="GlobalOptimization_ref.html">Global Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hdf5preparation_ref.html">hdf5preparation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">hybregistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inout_ref.html">inout</a></li>
+<li class="toctree-l3"><a class="reference internal" href="MicroscopeData_ref.html">MicroscopeData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisehelper_ref.html">pairwisehelper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisesingle_ref.html">pairwisesingle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stitching_ref.html">stitching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tilejoining_ref.html">tilejoining</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">API</a> &raquo;</li>
+        
+          <li><a href="index.html">Stitching API</a> &raquo;</li>
+        
+      <li>hybregistration</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/API/stitching/hybregistration_ref.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysmFISH.stitching_package.hybregistration">
+<span id="hybregistration"></span><h1>hybregistration<a class="headerlink" href="#module-pysmFISH.stitching_package.hybregistration" title="Permalink to this headline">¶</a></h1>
+<p>Functions to perform registration between all hybridizations.</p>
+<dl class="docutils">
+<dt>register_final_images(folder, gene=’Nuclei’,</dt>
+<dd><blockquote class="first">
+<div>sub_pic_frac=0.2, use_MPI=False,
+apply_to_corners=True, apply_warping = True)</div></blockquote>
+<p class="last">– Register stitched images an in all  HDF5 file in the folder</p>
+</dd>
+<dt>find_reg_final_image(im_file_1, im_file_n,</dt>
+<dd><blockquote class="first">
+<div>max_trans, sub_pic_frac,
+nr_peaks=8)</div></blockquote>
+<p class="last">– Find the transform that registers image n correctly onto
+image 1.</p>
+</dd>
+<dt>transform_final_image(im_file_n, trans, new_size)</dt>
+<dd>– Transform an image according to trans.</dd>
+<dt>transform_data_file(folder, data_name, trans,</dt>
+<dd><blockquote class="first">
+<div>new_size)</div></blockquote>
+<p class="last">– Transform the corners in the pickled data file</p>
+</dd>
+<dt>align_sub_region(overlap1, overlap2, nr_peaks)</dt>
+<dd>– Determine how much overlap2 should be shifted to fit
+overlap1, help function for find_reg_final_image</dd>
+</dl>
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.align_sub_region">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">align_sub_region</code><span class="sig-paren">(</span><em>overlap1</em>, <em>overlap2</em>, <em>nr_peaks</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#align_sub_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.align_sub_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine how much overlap2 should be shifted to fit overlap1.</p>
+<dl class="docutils">
+<dt>overlap1: np.array</dt>
+<dd>2D numpy array. Patch of the image that should be compared.</dd>
+<dt>overlap2: np.array</dt>
+<dd>2D numpy array. Patch of the image that should be compared.</dd>
+<dt>nr_peaks: int</dt>
+<dd>The number of peaks used to get the best peaks from the phase correlation matrix.</dd>
+</dl>
+<dl class="docutils">
+<dt>best_trans: np.array</dt>
+<dd>Array of len 2 containing ints. Transform that projects overlap2 
+correctly onto overlap1.</dd>
+<dt>best_cov: float</dt>
+<dd>The normalized covariance</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.correct_trans_and_size">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">correct_trans_and_size</code><span class="sig-paren">(</span><em>trans_relative</em>, <em>old_size_list</em>, <em>max_trans</em>, <em>compare_in_seq</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#correct_trans_and_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.correct_trans_and_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Correct the translations and the size of the registered images.</p>
+<dl class="docutils">
+<dt>trans_relative: np.array</dt>
+<dd>Array of ints. The array with the non-corrected translation.</dd>
+<dt>old_size_list: np.array</dt>
+<dd>Array of ints. The array with the sizes of all the final,
+non-registered images.</dd>
+<dt>max_trans: np.array</dt>
+<dd>Array of ints. Variable to store the largest translation found up to now.</dd>
+<dt>compare_in_seq: bool</dt>
+<dd>Determines if we should compare images in sequence or if we should compare
+all to the first image.</dd>
+</dl>
+<dl class="docutils">
+<dt>trans: np.array</dt>
+<dd>Array of ints. The array with the corrected translations for each image.</dd>
+<dt>new_size: np.array </dt>
+<dd>Array of length 2 containing ints. The size the images should have after registration.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.find_reg_final_image">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">find_reg_final_image</code><span class="sig-paren">(</span><em>im_file_1</em>, <em>im_file_n</em>, <em>max_trans</em>, <em>sub_pic_frac</em>, <em>region=None</em>, <em>nr_peaks=8</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#find_reg_final_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.find_reg_final_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the transform that registers image n correctly onto image 1.</p>
+<p>Parameters:
+im_file_1: pointer</p>
+<blockquote>
+<div>HDF5 group reference or file handle, should
+contain a dataset “final_image” holding image 1.</div></blockquote>
+<dl class="docutils">
+<dt>im_name_n: pointer</dt>
+<dd>HDF5 group reference or file handle, should
+contain a dataset “final_image” holding image n.</dd>
+<dt>max_trans: np.array</dt>
+<dd>Array of length 2 with dtype: int.
+Largest translation currently found.</dd>
+<dt>sub_pic_frac: float </dt>
+<dd>The fraction of the size of the original 
+image that should be used to compare images.</dd>
+<dt>region: list</dt>
+<dd>List of length four containing ints. The
+region that should be compared to determine
+the shift needed for registration.
+Should be in the order: [y_min, y_max, x_min,
+x_max]. When region is defined, sub_pic_frac
+will not be used.
+By default the code will determine the region
+itself taking a area around the
+center of the image with a size
+determined by sub_pic_frac(Default: None)</dd>
+<dt>nr_peaks: int        </dt>
+<dd>The number of peaks used to get the best peaks 
+from the phase correlation matrix. (default: 8)</dd>
+</dl>
+<dl class="docutils">
+<dt>trans: np.array</dt>
+<dd>Array of length 2 containing ints.
+Translation that projects image n correctly onto image 1.</dd>
+<dt>max_trans: np.array</dt>
+<dd>Array of shape (1, 2) containing ints.
+The max_trans value that was passed to this
+function, replaced by (part of) the current
+translation if it is larger than max_trans.</dd>
+<dt>shape_n: tuple</dt>
+<dd>Tuple of python ints. The shape of image n.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.get_single_relative_trans">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">get_single_relative_trans</code><span class="sig-paren">(</span><em>file_name_list</em>, <em>i</em>, <em>gene</em>, <em>max_trans</em>, <em>sub_pic_frac=0.2</em>, <em>region=None</em>, <em>use_MPI=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#get_single_relative_trans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.get_single_relative_trans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the translation between image i - 1 and image i.</p>
+<p>Get the translation between the image in file_name_list[i - 1] and
+file_name_list[i].</p>
+<dl class="docutils">
+<dt>file_name_list: list</dt>
+<dd>List of strings. List of the sf.hdf5-files in the folder.</dd>
+<dt>i: int</dt>
+<dd>Index of the second image in the current comparison.</dd>
+<dt>gene: str</dt>
+<dd>The gene of which the stitched
+images are present and should be realigned.
+Typically this will be ‘Nuclei’, because the
+smFISH genes will not have enough signal to
+align the pictures properly.
+(Default: ‘Nuclei’)</dd>
+<dt>max_trans: np.array</dt>
+<dd>Array of ints. Variable to store the
+largest translation found up to now,
+initialized at zero.</dd>
+<dt>sub_pic_frac: float</dt>
+<dd>The fraction of the size of the original image that should be used to compare
+images. (Default: 0.2)</dd>
+<dt>region: list</dt>
+<dd>List of length four containing ints. The
+region that should be compared to determine
+the shift needed for registration.
+Should be in the order: [y_min, y_max, x_min,
+x_max]. When region is defined, sub_pic_frac
+will not be used.
+By default the code will determine the region
+itself taking a area around the
+center of the image with a size
+determined by sub_pic_frac (Default: None)</dd>
+<dt>use_MPI: bool</dt>
+<dd>If True open the files in MPI
+friendly mode, if False open files in normal
+single processing mode. (Default: False)</dd>
+</dl>
+<dl class="docutils">
+<dt>cur_trans: np.array</dt>
+<dd>Array of ints. Translation found between the two images that are currently
+being compared.</dd>
+<dt>max_trans: np.array</dt>
+<dd>Array of ints. The largest translation found up to now.</dd>
+<dt>cur_old_size: np.array</dt>
+<dd>The sizes of the original final image found in file_name_list
+at index i.</dd>
+<dt>i: int</dt>
+<dd>The index of the second image file used for the current comparison (The first image
+file is file 1).</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.get_single_trans">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">get_single_trans</code><span class="sig-paren">(</span><em>file_name_list</em>, <em>i</em>, <em>gene</em>, <em>im_file_1</em>, <em>max_trans</em>, <em>sub_pic_frac=0.2</em>, <em>region=None</em>, <em>use_MPI=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#get_single_trans"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.get_single_trans" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the translation between image 1 and image i.</p>
+<p>Get the translation between the image in file 1 and file i
+from file_name_list.</p>
+<dl class="docutils">
+<dt>file_name_list: list</dt>
+<dd>List of strings. List of the sf.hdf5-files in the folder.</dd>
+<dt>i: int</dt>
+<dd>Index of the current file to compare.</dd>
+<dt>gene: str</dt>
+<dd>Gene of which the stitched
+images are present and should be realigned.
+Typically this will be ‘Nuclei’, because the
+smFISH genes will not have enough signal to
+align the pictures properly.
+(Default: ‘Nuclei’)</dd>
+<dt>im_file_1: pointer</dt>
+<dd>Reference to the group in the first file that contains th final image.</dd>
+<dt>max_trans: np.array</dt>
+<dd>Variable to store the largest translation found up to now,
+initialized at zero.</dd>
+<dt>sub_pic_frac: float</dt>
+<dd>The fraction of the size of the original image that should be used to compare
+images. (Default: 0.2)</dd>
+<dt>region: list</dt>
+<dd>List of length four containing ints. The
+region that should be compared to determine
+the shift needed for registration.
+Should be in the order: [y_min, y_max, x_min,
+x_max]. When region is defined, sub_pic_frac
+will not be used.
+By default the code will determine the region
+itself taking a area around the
+center of the image with a size
+determined by sub_pic_frac(Default: None)</dd>
+<dt>use_MPI: bool</dt>
+<dd>If True open the files in MPI friendly mode, if False open files in normal
+single processing mode. (Default: False)</dd>
+</dl>
+<dl class="docutils">
+<dt>cur_trans: np.array</dt>
+<dd>Array of ints. Translation found between the two images that are currently
+being compared.</dd>
+<dt>max_trans: np.array </dt>
+<dd>Array of ints. The largest translation found up to now.</dd>
+<dt>cur_old_size: np.array</dt>
+<dd>Array of ints. The sizes of the original final image found in file_name_list
+at index i.</dd>
+<dt>i: int</dt>
+<dd>The index of the second image file used for the current comparison (The first image
+file is file 1).</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.prepare_for_comparing">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">prepare_for_comparing</code><span class="sig-paren">(</span><em>folder</em>, <em>gene</em>, <em>compare_in_seq</em>, <em>use_MPI=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#prepare_for_comparing"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.prepare_for_comparing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prepare the file list, first file and init other lists.</p>
+<dl class="docutils">
+<dt>folder: str         </dt>
+<dd>The name of the folder containing the
+pickled file with stitching data, needs a
+trailing slash (“/”).</dd>
+<dt>gene: str</dt>
+<dd>The gene of which the stitched
+images are present and should be realigned.
+Typically this will be ‘Nuclei’, because the
+smFISH genes will not have enough signal to
+align the pictures properly.
+(Default: ‘Nuclei’)</dd>
+<dt>compare_in_seq: bool</dt>
+<dd>Determines if we should compare
+images in sequence or if we should compare
+all to the first image.</dd>
+<dt>use_MPI: bool</dt>
+<dd>If True open the files in MPI
+friendly mode, if False open files in normal
+single processing mode. (Default: False)</dd>
+</dl>
+<dl class="docutils">
+<dt>file_name_list: list</dt>
+<dd>List of strings. List of the sf.hdf5-files in the folder.</dd>
+<dt>trans: np.array</dt>
+<dd>Array of ints. The array to store the translations, initialized with zeros.</dd>
+<dt>old_size_list: np.array </dt>
+<dd>Array of ints. The array to store the sizes of the final images, initialized with
+zeros.</dd>
+<dt>max_trans: np.array</dt>
+<dd>Array of ints. Variable to store the
+largest translation found up to now,
+initialized at zero.</dd>
+</dl>
+<p>Only returned if compare_in_seq is True:
+file_1: pointer</p>
+<blockquote>
+<div>File handle to the first hdf5 file in the folder.</div></blockquote>
+<dl class="docutils">
+<dt>im_file_1: pointer</dt>
+<dd>Reference to the group in   the first file that contains th final image.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.register_final_images">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">register_final_images</code><span class="sig-paren">(</span><em>folder</em>, <em>gene='Nuclei'</em>, <em>sub_pic_frac=0.2</em>, <em>use_MPI=False</em>, <em>apply_to_corners=True</em>, <em>apply_warping=False</em>, <em>region=None</em>, <em>compare_in_seq=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#register_final_images"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.register_final_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register stitched images an in all  HDF5 file in the folder</p>
+<p>Loops the hybridizations in the HDF5 file, takes the stitched
+images as indicated by gene and then compares each image to the
+first image.
+For the comparison only a small patch of the images is used, the
+size of this patch can be controlled with “sub_pic_frac”.</p>
+<dl class="docutils">
+<dt>folder: str</dt>
+<dd>The name of the folder containing the pickled file with stitching data, 
+needs a trailing slash (“/”).</dd>
+<dt>gene: str </dt>
+<dd>The gene of which the stitched images are present and should be realigned.
+Typically this will be ‘Nuclei’, because the smFISH genes will not have 
+enough signal to align the pictures properly. (Default: ‘Nuclei’)</dd>
+<dt>sub_pic_frac: float </dt>
+<dd>The fraction of the size of the original image that should be used to compare
+images. (Default: 0.2)</dd>
+<dt>use_MPI: bool </dt>
+<dd>If True open the files in MPI friendly mode, if False open files in normal
+single processing mode. (Default: False)</dd>
+<dt>apply_to_corners: bool</dt>
+<dd>Determines if the found registration will be applied to the tile
+corners in the pickled stitching data file. (Default: True)</dd>
+<dt>apply_warping: bool</dt>
+<dd>Determines if the found registration will be applied as a warp to the
+final pictures in the hdf5 file, should not be used with large datasets.
+(Default: False)</dd>
+<dt>region: list </dt>
+<dd>List of length four containing ints. The region that should be compared to determine
+the shift needed for registration. Should be in the order: [y_min, y_max, x_min,
+x_max]. When region is defined, sub_pic_frac will not be used.
+By default the code will determine the region itself taking a area around the
+center of the image with a size determined by sub_pic_frac(Default: None)</dd>
+<dt>compare_in_seq: bool </dt>
+<dd>Determines if we should compare images in sequence or if we should compare
+all to the first image.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.register_final_images_old">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">register_final_images_old</code><span class="sig-paren">(</span><em>folder</em>, <em>gene='Nuclei'</em>, <em>sub_pic_frac=0.2</em>, <em>use_MPI=False</em>, <em>apply_to_corners=True</em>, <em>apply_warping=False</em>, <em>region=None</em>, <em>compare_in_seq=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#register_final_images_old"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.register_final_images_old" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register stitched images an in all  HDF5 file in the folder</p>
+<p>Loops the hybridizations in the HDF5 file, takes the stitched
+images as indicated by gene and then compares each image to the
+first image.
+For the comparison only a small patch of the images is used, the
+size of this patch can be controlled with “sub_pic_frac”.</p>
+<dl class="docutils">
+<dt>folder: str</dt>
+<dd>The name of the folder containing the
+pickled file with stitching data, needs a
+trailing slash (“/”).</dd>
+<dt>gene: str</dt>
+<dd>The gene of which the stitched
+images are present and should be realigned.
+Typically this will be ‘Nuclei’, because the
+smFISH genes will not have enough signal to
+align the pictures properly.
+(Default: ‘Nuclei’)</dd>
+<dt>sub_pic_frac: float</dt>
+<dd>The fraction of the size of the
+original image that should be used to compare
+images.
+(Default: 0.2)</dd>
+<dt>use_MPI: bool</dt>
+<dd>True open the files in MPI friendly mode, if False open files in normal
+single processing mode. (Default: False)</dd>
+<dt>apply_to_corners: bool</dt>
+<dd>Determines if the found
+registration will be applied to the tile
+corners in the pickled stitching data file.
+(Default: True)</dd>
+<dt>apply_warping: bool</dt>
+<dd>Determines if the found
+registration will be applied as a warp to the
+final pictures in the hdf5 file, should not
+be used with large datasets.
+(Default: False)</dd>
+<dt>region: list</dt>
+<dd>List of length four containing ints. The
+region that should be compared to determine
+the shift needed for registration.
+Should be in the order: [y_min, y_max, x_min,
+x_max]. When region is defined, sub_pic_frac
+will not be used.
+By default the code will determine the region
+itself taking a area around the
+center of the image with a size
+determined by sub_pic_frac(Default: None)</dd>
+<dt>compare_in_seq: bool</dt>
+<dd>Determines if we should compare
+images in sequence or if we should compare
+all to the first image.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.register_final_images_reg_data_only">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">register_final_images_reg_data_only</code><span class="sig-paren">(</span><em>folder</em>, <em>gene='Nuclei'</em>, <em>sub_pic_frac=0.2</em>, <em>use_MPI=False</em>, <em>apply_to_corners=True</em>, <em>apply_warping=False</em>, <em>region=None</em>, <em>compare_in_seq=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#register_final_images_reg_data_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.register_final_images_reg_data_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Register stitched images an in all  HDF5 file in the folders. 
+It is modified from register_final_images and saves only the reg_data
+file with the new coords and nothing in the hdf5 file.</p>
+<p>Loops the hybridizations in the HDF5 file, takes the stitched
+images as indicated by gene and then compares each image to the
+first image.
+For the comparison only a small patch of the images is used, the
+size of this patch can be controlled with “sub_pic_frac”.</p>
+<dl class="docutils">
+<dt>folder: str</dt>
+<dd>The name of the folder containing the
+pickled file with stitching data, needs a
+trailing slash (“/”).</dd>
+<dt>gene: str</dt>
+<dd>The gene of which the stitched
+images are present and should be realigned.
+Typically this will be ‘Nuclei’, because the
+smFISH genes will not have enough signal to
+align the pictures properly.
+(Default: ‘Nuclei’)</dd>
+<dt>sub_pic_frac: float</dt>
+<dd>The fraction of the size of the original image that should be used to compare
+images. (Default: 0.2)</dd>
+<dt>use_MPI: bool</dt>
+<dd>If True open the files in MPI friendly mode, if False open files in normal
+single processing mode. (Default: False)</dd>
+<dt>apply_to_corners: bool</dt>
+<dd>Determines if the found
+registration will be applied to the tile
+corners in the pickled stitching data file.
+(Default: True)</dd>
+<dt>apply_warping: bool</dt>
+<dd>Determines if the found
+registration will be applied as a warp to the
+final pictures in the hdf5 file, should not
+be used with large datasets.
+(Default: False)</dd>
+<dt>region: list</dt>
+<dd>List of length four containing ints. The
+region that should be compared to determine
+the shift needed for registration.
+Should be in the order: [y_min, y_max, x_min,
+x_max]. When region is defined, sub_pic_frac
+will not be used.
+By default the code will determine the region
+itself taking a area around the
+center of the image with a size
+determined by sub_pic_frac(Default: None)</dd>
+<dt>compare_in_seq: bool</dt>
+<dd>Determines if we should compare images in sequence or if we should compare
+all to the first image.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.transform_data_file">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">transform_data_file</code><span class="sig-paren">(</span><em>folder</em>, <em>data_name</em>, <em>trans</em>, <em>new_size</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#transform_data_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.transform_data_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform the corners in the pickled data file</p>
+<dl class="docutils">
+<dt>folder: str</dt>
+<dd>The name of the folder containing the
+pickled file with stitching data, needs a
+trailing slash (“/”).</dd>
+<dt>data_name: str</dt>
+<dd>Name of the pickled file with the corner coordinates.</dd>
+<dt>trans: np.array</dt>
+<dd>Array of len 2 containing ints. y and x transform of the image.</dd>
+<dt>new_size: tuple</dt>
+<dd>Tuple of length 2. The size of the image after the transform.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pysmFISH.stitching_package.hybregistration.transform_final_image">
+<code class="descclassname">pysmFISH.stitching_package.hybregistration.</code><code class="descname">transform_final_image</code><span class="sig-paren">(</span><em>im_file_n</em>, <em>trans</em>, <em>new_size</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/hybregistration.html#transform_final_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.hybregistration.transform_final_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform an image according to trans.</p>
+<dl class="docutils">
+<dt>im_file_n: pointer </dt>
+<dd>HDF5 group reference or file handle, should
+contain a dataset “final_image” holding image n.</dd>
+<dt>trans: np.array</dt>
+<dd>Array of len 2 containing ints. y and x transform of the image.</dd>
+<dt>new_size: tuple</dt>
+<dd>Tuple of length 2. The size of the image after the transform.</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="inout_ref.html" class="btn btn-neutral float-right" title="inout" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="hdf5preparation_ref.html" class="btn btn-neutral" title="hdf5preparation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,391 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>MicroscopeData &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../index.html"/>
+        <link rel="up" title="Stitching API" href="index.html"/>
+        <link rel="next" title="pairwisehelper" href="pairwisehelper_ref.html"/>
+        <link rel="prev" title="inout" href="inout_ref.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../filtering_ref.html">filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../counting_ref.html">counting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_calling_ref.html">dots_calling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dots_coords_calculations_ref.html">dots_coords_calculations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hdf5_utils_ref.html">hdf5_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io_ref.html">io</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_based_segmentation_ref.html">object_based_segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils_ref.html">utils</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">Stitching API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="GlobalOptimization_ref.html">Global Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hdf5preparation_ref.html">hdf5preparation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hybregistration_ref.html">hybregistration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="inout_ref.html">inout</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MicroscopeData</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisehelper_ref.html">pairwisehelper</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pairwisesingle_ref.html">pairwisesingle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="stitching_ref.html">stitching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tilejoining_ref.html">tilejoining</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">API</a> &raquo;</li>
+        
+          <li><a href="index.html">Stitching API</a> &raquo;</li>
+        
+      <li>MicroscopeData</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/API/stitching/MicroscopeData_ref.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-pysmFISH.stitching_package.MicroscopeData">
+<span id="microscopedata"></span><h1>MicroscopeData<a class="headerlink" href="#module-pysmFISH.stitching_package.MicroscopeData" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="pysmFISH.stitching_package.MicroscopeData.MicroscopeData">
+<em class="property">class </em><code class="descclassname">pysmFISH.stitching_package.MicroscopeData.</code><code class="descname">MicroscopeData</code><span class="sig-paren">(</span><em>coord_data</em>, <em>y_flip</em>, <em>nr_dim</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/MicroscopeData.html#MicroscopeData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.MicroscopeData.MicroscopeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves and stores the tile set and corner coordinates of each
+tile from raw coordinate input.</p>
+<dl class="docutils">
+<dt>y_flip: bool</dt>
+<dd>It is assumed that the microscope
+coordinates have their origin in right top of the image.
+During the stitching we use the left, top as the origin.
+Therefore the x-coordinates will be inverted by the
+normalization. But not the y-coords.
+The y_flip variable is designed for the cases where the
+microscope sequence is inverted in the y-direction. When
+set to True the y-coordinates will also be inverted
+before determining the tile set.</dd>
+<dt>x_coords: np.array</dt>
+<dd>Array of x coordinates, will be loaded
+as raw microscope coordinates in um by init() and
+converted to pixels and normalized to start at zero by
+normalize_coords().</dd>
+<dt>y_coords: np.array</dt>
+<dd>Array of y coordinates, will be loaded
+as raw microscope coordinates in um by init() and
+converted to pixels and normalized to start at zero by
+normalize_coords().</dd>
+<dt>z_coords: np.array</dt>
+<dd>Array of z coordinates, will be loaded
+as raw microscope coordinates in um by init() and
+converted to pixels and normalized to start at zero by
+normalize_coords().</dd>
+<dt>tile_nr: np.array</dt>
+<dd>The numbers of the tiles as found in coord_data.</dd>
+<dt>tile_set: np.array</dt>
+<dd>Array with the same shape as the
+tile set, values indicate the index at which the
+corresponing tile is found in tiles and tile_nr.</dd>
+<dt>running_av: float</dt>
+<dd>The estimated overlap between two
+neighbouring tiles in pixels, adapted for the tiles we
+already know the placement and overlap of.</dd>
+<dt>logger: logger</dt>
+<dd>logger instance</dd>
+</dl>
+<dl class="method">
+<dt id="pysmFISH.stitching_package.MicroscopeData.MicroscopeData.check_tile_set">
+<code class="descname">check_tile_set</code><span class="sig-paren">(</span><em>est_x_tol</em>, <em>nr_pixels</em>, <em>row_tol=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/MicroscopeData.html#MicroscopeData.check_tile_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.MicroscopeData.MicroscopeData.check_tile_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the estimated overlap between tiles is close enough
+to the running average.</p>
+<dl class="docutils">
+<dt>est_x_tol: int</dt>
+<dd>The distance between two tiles in the
+x-direction as estimated before reading all coordinates.</dd>
+<dt>nr_pixels: int</dt>
+<dd>The the width of the tile in pixels.</dd>
+<dt>row_tol: int</dt>
+<dd>The distance between y coordinates
+above which a tile is considered to belong to a
+new row, this value is passed directly to
+make_tile_set. (default = None)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysmFISH.stitching_package.MicroscopeData.MicroscopeData.make_tile_set">
+<code class="descname">make_tile_set</code><span class="sig-paren">(</span><em>est_x_tol</em>, <em>nr_pixels</em>, <em>row_tol=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/MicroscopeData.html#MicroscopeData.make_tile_set"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.MicroscopeData.MicroscopeData.make_tile_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Based on the coordinates find a tile set.</p>
+<p>Use the coordinates to produce a tile set that has the shape
+of the grid the tiles should be placed on and for each tile in
+this grid gives the index for the tile_nr, x_coords and
+y_coords.
+Plots the coordinates when plot_avaible == True in inout.</p>
+<dl class="docutils">
+<dt>est_x_tol: int</dt>
+<dd>The estimated difference in the x
+direction between the corners of two
+neighbouring tiles in pixels</dd>
+<dt>nr_pixels: int</dt>
+<dd>Needed to estimate the distance between two separate tiles</dd>
+<dt>row_tol: int</dt>
+<dd>Row tolerance in pixels: The distance
+between y coordinates above which a tile is
+considered to belong to a new row. Default is None,
+which leads to 0.5 * nr_pixels.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pysmFISH.stitching_package.MicroscopeData.MicroscopeData.normalize_coords">
+<code class="descname">normalize_coords</code><span class="sig-paren">(</span><em>pixel_size</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pysmFISH/stitching_package/MicroscopeData.html#MicroscopeData.normalize_coords"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.stitching_package.MicroscopeData.MicroscopeData.normalize_coords" title="Permalink to this definition">¶</a></dt>
+<dd><p>Normalize the coordinates and put the origin in upper left
+corner.
+Takes list with absolute index, x, y values from microscope
+and normalizes, converts and inverts them to get the coordinates
+in pixels with the origin in left upper corner.</p>
+<p>NB:In the new microscope setup the origin is in the bottom right 
+corner.</p>
+<dl class="docutils">
+<dt>pixel_size: float</dt>
+<dd>The size of one pixel in the microscope
+image, used to convert the microscope coordinates to pixels.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="pairwisehelper_ref.html" class="btn btn-neutral float-right" title="pairwisehelper" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="inout_ref.html" class="btn btn-neutral" title="inout" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

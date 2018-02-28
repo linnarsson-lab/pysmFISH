@@ -1,0 +1,714 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>pysmFISH.stitching_package.pairwisehelper &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../../genindex.html"/>
+        <link rel="search" title="Search" href="../../../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../../../index.html"/>
+        <link rel="up" title="Module code" href="../../index.html"/> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../API/index.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../scripts/index.html">Scripts</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials/index.html">Tutorials</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../notebooks/index.html">Notebooks</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../licence/index.html">Licence</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>pysmFISH.stitching_package.pairwisehelper</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for pysmFISH.stitching_package.pairwisehelper</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Helper functions for the class pairwise alignment</span>
+<span class="sd">Creates its own logger object when imported.</span>
+
+<span class="sd">Functions:</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">skimage.transform</span> <span class="k">as</span> <span class="nn">smtf</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="c1"># import matplotlib.pyplot as plt</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">inout</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<span class="c1">####################Third level helper functions####################</span>
+<div class="viewcode-block" id="get_overlapping_region"><a class="viewcode-back" href="../../../API/stitching/pairwisehelper_ref.html#pysmFISH.stitching_package.pairwisehelper.get_overlapping_region">[docs]</a><span class="k">def</span> <span class="nf">get_overlapping_region</span><span class="p">(</span><span class="n">tile_1</span><span class="p">,</span> <span class="n">tile_2</span><span class="p">,</span>
+                           <span class="n">overlap_ind_x</span><span class="p">,</span> <span class="n">overlap_ind_y</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Given the overlap indexes calculate the overlap in direction.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    tile_1: np.array</span>
+<span class="sd">        2D or 3D numpy array representing an image.</span>
+<span class="sd">    tile_2: np.array</span>
+<span class="sd">        2D or 3D numpy array representing an image.</span>
+<span class="sd">    overlap_ind_x: int</span>
+<span class="sd">        The difference in pixels between the tile corners in the x/column direction.</span>
+<span class="sd">    overlap_ind_y: int</span>
+<span class="sd">        The difference in pixels between the tile corners in the y/row direction.</span>
+<span class="sd">    direction: str</span>
+<span class="sd">        Valid values: &#39;left&#39; or &#39;top&#39;. Denotes if</span>
+<span class="sd">        the two tiles neighbour on the right and left or</span>
+<span class="sd">        at the bottom and top.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    overlap_1: np.array</span>
+<span class="sd">        2D or 3D numpy arrays. The parts of each image that overlap.</span>
+<span class="sd">    overlap_2: np.array</span>
+<span class="sd">        2D or 3D numpy arrays. The parts of each image that overlap.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;left&#39;</span> <span class="ow">and</span> <span class="n">tile_1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># Adjust y overlap on left:</span>
+        <span class="k">if</span> <span class="n">overlap_ind_y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[:,</span> <span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">overlap_ind_y</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># For negative difference in y index select overlap:</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[</span><span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="p">:</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># For positive y index select overlap</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[:</span><span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="p">:</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;left&#39;</span> <span class="ow">and</span> <span class="n">tile_1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="c1"># Adjust y overlap on left:</span>
+        <span class="k">if</span> <span class="n">overlap_ind_y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[:,</span> <span class="p">:,</span> <span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">overlap_ind_y</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># For negative difference in y index select overlap:</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[:,</span> <span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="p">:</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># For positive y index select overlap</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:,</span> <span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="p">:</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span> <span class="ow">and</span> <span class="n">tile_1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="c1"># Adjust x overlap:</span>
+        <span class="k">if</span> <span class="n">overlap_ind_x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[</span><span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">elif</span> <span class="n">overlap_ind_x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># For negative difference in x index select overlap:</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[</span><span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="p">:</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># For positive x index select overlap</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[</span><span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="n">overlap_ind_x</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;top&#39;</span> <span class="ow">and</span> <span class="n">tile_1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="c1"># Adjust x overlap:</span>
+        <span class="k">if</span> <span class="n">overlap_ind_x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[:,</span> <span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">elif</span> <span class="n">overlap_ind_x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># For negative difference in x index select overlap:</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[:,</span> <span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">:]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="p">:</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># For positive x index select overlap</span>
+            <span class="n">overlap_1</span> <span class="o">=</span> <span class="n">tile_1</span><span class="p">[:,</span> <span class="o">-</span><span class="n">overlap_ind_y</span><span class="p">:,</span> <span class="p">:</span><span class="o">-</span><span class="n">overlap_ind_x</span><span class="p">]</span>
+            <span class="n">overlap_2</span> <span class="o">=</span> <span class="n">tile_2</span><span class="p">[:,</span> <span class="p">:</span><span class="n">overlap_ind_y</span><span class="p">,</span> <span class="n">overlap_ind_x</span><span class="p">:]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;The overlapping region could not be retrieved</span><span class="se">\n</span><span class="s2">&quot;</span>
+                       <span class="o">+</span> <span class="s2">&quot;The overlap direction and dimension of the image do not match any known case</span><span class="se">\n</span><span class="s2">&quot;</span>
+                       <span class="o">+</span> <span class="s2">&quot;Direction: </span><span class="si">{}</span><span class="s2"> Dimension: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">direction</span><span class="p">,</span>
+                                                              <span class="n">tile_1</span><span class="o">.</span><span class="n">ndim</span><span class="p">))</span>
+</div>
+    <span class="k">return</span> <span class="n">overlap_1</span><span class="p">,</span> <span class="n">overlap_2</span>
+
+
+<div class="viewcode-block" id="calculate_PCM"><a class="viewcode-back" href="../../../API/stitching/pairwisehelper_ref.html#pysmFISH.stitching_package.pairwisehelper.calculate_PCM">[docs]</a><span class="k">def</span> <span class="nf">calculate_PCM</span><span class="p">(</span><span class="n">pic_a</span><span class="p">,</span> <span class="n">pic_b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the phase correlation matrix of pic_a and pic_b.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    pic_a: np.array</span>
+<span class="sd">        First picture</span>
+<span class="sd">    pic_b: np.array</span>
+<span class="sd">        Second picture</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    r: np.array</span>
+<span class="sd">        Normalized PCM matrix</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">        pic_a and pic_b should have the same size</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># From: http://stackoverflow.com/questions/2771021/is-there-an-image-phase-correlation-library-available-for-python</span>
+    <span class="c1"># And: https://github.com/michaelting/Phase_Correlation/blob/master/phase_corr.py</span>
+    <span class="c1"># Calculate phase correlation matrix</span>
+    <span class="c1"># Calculate nD fourier transform of first image</span>
+    <span class="n">G_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftn</span><span class="p">(</span><span class="n">pic_a</span><span class="p">)</span>
+    <span class="c1"># Calculate nD fourier transform of second image</span>
+    <span class="n">G_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftn</span><span class="p">(</span><span class="n">pic_b</span><span class="p">)</span>
+    <span class="n">conj_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">conjugate</span><span class="p">(</span><span class="n">G_b</span><span class="p">)</span>  <span class="c1"># Take the complex conjunggate of G_b</span>
+    <span class="n">R_raw</span> <span class="o">=</span> <span class="n">G_a</span> <span class="o">*</span> <span class="n">conj_b</span>  <span class="c1"># Multiply G_a by the complex conjugate of G_b</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">R_raw</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">absolute</span><span class="p">(</span><span class="n">R_raw</span><span class="p">)</span>  <span class="c1"># Normalize elementwise</span>
+    <span class="c1"># Inverse fourier transform to get correlation, and use only the real part</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifftn</span><span class="p">(</span><span class="n">R</span><span class="p">)</span><span class="o">.</span><span class="n">real</span>
+    <span class="c1"># inout.plot_3D(r)</span>
+    <span class="c1">#plt.figure()</span>
+    <span class="c1">#plt.imshow(r, &#39;gray&#39;, interpolation = &#39;none&#39;)</span>
+    <span class="c1">#plt.show()</span>
+</div>
+    <span class="k">return</span> <span class="n">r</span>
+
+
+<div class="viewcode-block" id="calculate_PCM_method2"><a class="viewcode-back" href="../../../API/stitching/pairwisehelper_ref.html#pysmFISH.stitching_package.pairwisehelper.calculate_PCM_method2">[docs]</a><span class="k">def</span> <span class="nf">calculate_PCM_method2</span><span class="p">(</span><span class="n">pic_a</span><span class="p">,</span> <span class="n">pic_b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the phase correlation matrix of pic_a and pic_b.</span>
+
+<span class="sd">    Method 2 differs from calculate_PCM in that it calculates the PCM</span>
+<span class="sd">    per, layer in the image therefore this function is only applicable</span>
+<span class="sd">    to 3D images/complete z-stacks.</span>
+<span class="sd">    In fact it is only used when in pairwisesingle.py if method ==</span>
+<span class="sd">    &#39;calculate per layer&#39;.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    pic_a: np.array</span>
+<span class="sd">        First picture</span>
+<span class="sd">    pic_b: np.array</span>
+<span class="sd">        Second picture</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    r: np.array</span>
+<span class="sd">        Normalized PCM matrix</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">        pic_a and pic_b should have the same size</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">r</span>       <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">pic_a</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pic_a</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])):</span>
+        <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">calculate_PCM</span><span class="p">(</span><span class="n">pic_a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">pic_b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span></div>
+    <span class="k">return</span> <span class="n">r</span>
+
+
+<div class="viewcode-block" id="calc_translated_pics"><a class="viewcode-back" href="../../../API/stitching/pairwisehelper_ref.html#pysmFISH.stitching_package.pairwisehelper.calc_translated_pics">[docs]</a><span class="k">def</span> <span class="nf">calc_translated_pics</span><span class="p">(</span><span class="n">trans</span><span class="p">,</span> <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span>
+                         <span class="n">round_size</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate wich part of 2 pictures overlap after translation.</span>
+
+<span class="sd">    Translates overlap2 and returns the parts of overlap1 and</span>
+<span class="sd">    overlap2 that overlap after translation. Parts that do not</span>
+<span class="sd">    overlap are cropped. The alternative would be to fill the parts</span>
+<span class="sd">    that do not overlap with zeros, but this seems to mess up the</span>
+<span class="sd">    covariance calculation more than cropping the pictures.</span>
+<span class="sd">    Here, one problem is that we may crop unnecessarily much</span>
+<span class="sd">    because the cropping is done on the overlap and not on the whole</span>
+<span class="sd">    tile.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    trans: np.array</span>
+<span class="sd">        1 by 2 np-array with y and x translation.</span>
+<span class="sd">    overlap1: np.array</span>
+<span class="sd">        Image</span>
+<span class="sd">    overlap2: np.array</span>
+<span class="sd">        Image that is supposed to overlap with overlap1</span>
+<span class="sd">    round_size: bool</span>
+<span class="sd">        If True the final image sizes will be</span>
+<span class="sd">        rounded to the nearest integer before warping the</span>
+<span class="sd">        images. (Default: False)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    shifted_a: np.array</span>
+<span class="sd">        Overlap a shifted and cropped to the same size as shifted_b</span>
+<span class="sd">    shifted_b: np.array</span>
+<span class="sd">        Overlap b shifted and cropped to the same size as shifted_a</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Pass to calc_translated_pics_3D if there are more then 2 dimensions</span>
+    <span class="k">if</span> <span class="n">overlap1</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">calc_translated_pics_3D</span><span class="p">(</span><span class="n">trans</span><span class="p">,</span> <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span>
+                                       <span class="n">round_size</span><span class="o">=</span><span class="n">round_size</span><span class="p">)</span>
+
+    <span class="c1"># Empty transformation matrix</span>
+    <span class="n">trans_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># Size after shift</span>
+    <span class="n">y_size</span><span class="p">,</span> <span class="n">x_size</span> <span class="o">=</span> <span class="n">overlap2</span><span class="o">.</span><span class="n">shape</span>
+    <span class="c1"># Always make new size smaller</span>
+    <span class="n">y_size</span> <span class="o">-=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">x_size</span> <span class="o">-=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">round_size</span><span class="p">:</span>
+        <span class="n">y_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">y_size</span><span class="p">))</span>
+        <span class="n">x_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x_size</span><span class="p">))</span>
+
+    <span class="c1"># Transform a with transform to cut  on left and top</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">trans_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">trans_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="c1"># Or transform a with empty matrix (0,0) to make smaller on right</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;x and y size: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">))</span>
+    <span class="n">shifted_a</span> <span class="o">=</span> <span class="n">smtf</span><span class="o">.</span><span class="n">warp</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">trans_matrix</span><span class="p">,</span>
+                          <span class="n">output_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_size</span><span class="p">,</span> <span class="n">x_size</span><span class="p">))</span>
+    <span class="c1"># Reset transformation matrix</span>
+    <span class="n">trans_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># Set y transformation</span>
+    <span class="k">if</span> <span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">trans_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Set x transformation</span>
+    <span class="k">if</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">trans_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1"># Transform b with empty matrix (0,0) to give it the right size</span>
+    <span class="n">shifted_b</span> <span class="o">=</span> <span class="n">smtf</span><span class="o">.</span><span class="n">warp</span><span class="p">(</span><span class="n">overlap2</span><span class="p">,</span> <span class="n">trans_matrix</span><span class="p">,</span>
+                          <span class="n">output_shape</span><span class="o">=</span><span class="p">(</span><span class="n">y_size</span><span class="p">,</span> <span class="n">x_size</span><span class="p">))</span>
+</div>
+    <span class="k">return</span> <span class="n">shifted_a</span><span class="p">,</span> <span class="n">shifted_b</span>
+
+
+<div class="viewcode-block" id="calc_translated_pics_3D"><a class="viewcode-back" href="../../../API/stitching/pairwisehelper_ref.html#pysmFISH.stitching_package.pairwisehelper.calc_translated_pics_3D">[docs]</a><span class="k">def</span> <span class="nf">calc_translated_pics_3D</span><span class="p">(</span><span class="n">trans</span><span class="p">,</span> <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span>
+                            <span class="n">round_size</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate wich part of two 3D pictures overlap after translation.</span>
+
+<span class="sd">    Translates overlap2 and returns the parts of overlap1 and</span>
+<span class="sd">    overlap2 that overlap after translation.</span>
+<span class="sd">    This function works in 3D but does not translate in z.</span>
+<span class="sd">    Parts that do not overlap are cropped. The alternative would be to</span>
+<span class="sd">    fill the parts that do not overlap with zeros, but this seems to</span>
+<span class="sd">    mess up the covariance calculation more than cropping the pictures.</span>
+<span class="sd">    Here, one problem is that we may crop unnecessarily much</span>
+<span class="sd">    because the cropping is done on the overlap and not on the whole</span>
+<span class="sd">    tile.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    trans: np.array</span>
+<span class="sd">        1 by 2 np-array with y and x translation.</span>
+<span class="sd">    overlap1: np.array</span>
+<span class="sd">        Image</span>
+<span class="sd">    overlap2: np.array</span>
+<span class="sd">        Image that is supposed to overlap with overlap1</span>
+<span class="sd">    round_size: bool</span>
+<span class="sd">        If True the final image sizes will be</span>
+<span class="sd">        rounded to the nearest integer before warping the</span>
+<span class="sd">        images. (Default: False)</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    shifted_a: np.array</span>
+<span class="sd">        Overlap a shifted and cropped to the same size as shifted_b</span>
+<span class="sd">    shifted_b: np.array</span>
+<span class="sd">        Overlap b shifted and cropped to the same size as shifted_a</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trans: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trans</span><span class="p">))</span>
+    <span class="c1"># Size after shift</span>
+    <span class="n">z_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">,</span> <span class="n">x_size</span> <span class="o">=</span> <span class="n">overlap2</span><span class="o">.</span><span class="n">shape</span>
+    <span class="c1"># Always make new size smaller</span>
+    <span class="n">y_size</span> <span class="o">-=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">x_size</span> <span class="o">-=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">round_size</span><span class="p">:</span>
+        <span class="n">y_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">y_size</span><span class="p">))</span>
+        <span class="n">x_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x_size</span><span class="p">))</span>
+
+    <span class="c1"># Do x and y translation for each layer:</span>
+    <span class="c1"># Empty transformation matrix</span>
+    <span class="n">trans_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># Transform a with transform to cut  on left and top</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># y trans</span>
+        <span class="n">trans_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="c1"># x trans</span>
+        <span class="n">trans_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="c1"># Or transform a with empty matrix (0,0) to make smaller on right</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Trans, z, x and y size: </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
+                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trans</span><span class="p">,</span> <span class="n">z_size</span><span class="p">,</span> <span class="n">x_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Matrix: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">trans_matrix</span><span class="p">))</span>
+    <span class="n">shifted_a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">z_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">,</span> <span class="n">x_size</span><span class="p">))</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Shape overlap 1, after z transform: </span><span class="si">{}</span><span class="s2">&quot;</span>
+                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">overlap1</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">shifted_a</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">smtf</span><span class="o">.</span><span class="n">warp</span><span class="p">(</span><span class="n">overlap1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">trans_matrix</span><span class="p">,</span>
+                                       <span class="n">output_shape</span><span class="o">=</span><span class="p">(</span><span class="n">y_size</span><span class="p">,</span> <span class="n">x_size</span><span class="p">))</span>
+        <span class="c1"># plt.figure()</span>
+        <span class="c1"># plt.imshow(shifted_a[i,:,:])</span>
+        <span class="c1"># plt.show()</span>
+
+    <span class="c1"># Do x and y transform in each layer</span>
+    <span class="c1"># Reset transformation matrix</span>
+    <span class="n">trans_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="c1"># Set y transformation</span>
+    <span class="k">if</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">trans_matrix</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Set x transformation</span>
+    <span class="k">if</span> <span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">trans_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">trans</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">shifted_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">z_size</span><span class="p">,</span> <span class="n">y_size</span><span class="p">,</span> <span class="n">x_size</span><span class="p">))</span>
+    <span class="c1"># Transform b with empty matrix (0,0) to give it the right size</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">overlap2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">shifted_b</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">smtf</span><span class="o">.</span><span class="n">warp</span><span class="p">(</span><span class="n">overlap2</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">trans_matrix</span><span class="p">,</span>
+                                       <span class="n">output_shape</span><span class="o">=</span><span class="p">(</span><span class="n">y_size</span><span class="p">,</span> <span class="n">x_size</span><span class="p">))</span></div>
+    <span class="k">return</span> <span class="n">shifted_a</span><span class="p">,</span> <span class="n">shifted_b</span>
+
+
+<div class="viewcode-block" id="xcov_nd"><a class="viewcode-back" href="../../../API/stitching/pairwisehelper_ref.html#pysmFISH.stitching_package.pairwisehelper.xcov_nd">[docs]</a><span class="k">def</span> <span class="nf">xcov_nd</span><span class="p">(</span><span class="n">pic_1</span><span class="p">,</span> <span class="n">pic_2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculate the normalized cross covariance of pic_1 and pic_2.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    pic_1: np.array</span>
+<span class="sd">        Numpy array representing a gray value picture, same size as pic_2</span>
+<span class="sd">    pic_2: np.array </span>
+<span class="sd">        Numpy array representing a gray value picture, same size as pic_1</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    : float</span>
+<span class="sd">         The normalized crosscovariance of pic_1 and pic_2 (coVar / (stDev1 * stDev2))</span>
+<span class="sd">    monocolor: bool   </span>
+<span class="sd">        True if the one or both of the pictures contained only one color.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Converted from Java code used in Preibisch plugin:</span>
+    <span class="c1"># https://github.com/tomka/imglib/blob/master/mpicbg/imglib/algorithm/fft/PhaseCorrelation.java</span>
+    <span class="c1"># Alternative use: scipy.signal.correlate2d</span>
+    <span class="n">monocolor</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">avg1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pic_1</span><span class="p">)</span>
+    <span class="n">avg2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">pic_2</span><span class="p">)</span>
+    <span class="n">dist1M</span> <span class="o">=</span> <span class="n">pic_1</span> <span class="o">-</span> <span class="n">avg1</span>
+    <span class="n">dist2M</span> <span class="o">=</span> <span class="n">pic_2</span> <span class="o">-</span> <span class="n">avg2</span>
+
+    <span class="c1"># Calculate var and co variance for the whole picture, per pixel, elementwise multiplication</span>
+    <span class="n">coVarMatrix</span> <span class="o">=</span> <span class="n">dist1M</span> <span class="o">*</span> <span class="n">dist2M</span>
+    <span class="n">var1Matrix</span> <span class="o">=</span> <span class="n">dist1M</span> <span class="o">*</span> <span class="n">dist1M</span>
+    <span class="n">var2Matrix</span> <span class="o">=</span> <span class="n">dist2M</span> <span class="o">*</span> <span class="n">dist2M</span>
+
+    <span class="c1"># Take the average</span>
+    <span class="n">coVar</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">coVarMatrix</span><span class="p">)</span>
+    <span class="n">var1</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var1Matrix</span><span class="p">)</span>
+    <span class="n">var2</span>    <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">var2Matrix</span><span class="p">)</span>
+
+    <span class="n">stDev1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var1</span><span class="p">)</span>
+    <span class="n">stDev2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var2</span><span class="p">)</span>
+
+    <span class="c1"># All pixels had the same color....</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">stDev1</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">stDev2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">monocolor</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">stDev1</span> <span class="o">==</span> <span class="n">stDev2</span> <span class="ow">and</span> <span class="n">avg1</span> <span class="o">==</span> <span class="n">avg2</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">monocolor</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">monocolor</span><span class="p">)</span>
+
+    <span class="c1"># Compute correlation coeffienct</span></div>
+    <span class="k">return</span> <span class="p">(</span><span class="n">coVar</span> <span class="o">/</span> <span class="p">(</span><span class="n">stDev1</span> <span class="o">*</span> <span class="n">stDev2</span><span class="p">),</span> <span class="n">monocolor</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="display_overlap"><a class="viewcode-back" href="../../../API/stitching/pairwisehelper_ref.html#pysmFISH.stitching_package.pairwisehelper.display_overlap">[docs]</a><span class="k">def</span> <span class="nf">display_overlap</span><span class="p">(</span><span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span> <span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span><span class="p">,</span>
+                    <span class="n">plot_order</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Plot two pictures and show how they overlap.</span>
+
+<span class="sd">    This function will only plot when allow_plot is True and in inout</span>
+<span class="sd">    matplotlib is imported and plot_available is True.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    overlap1: np.array</span>
+<span class="sd">        2d np-array representing an image</span>
+<span class="sd">    overlap2: np.array</span>
+<span class="sd">        2d np-array representing an image</span>
+<span class="sd">    best_trans: np.array</span>
+<span class="sd">        1 by 2 np array with an y and x value for the best transition</span>
+<span class="sd">    best_cov: float</span>
+<span class="sd">        Number indicating the goodness of the overlap between the two pictures</span>
+<span class="sd">    plot_order: list</span>
+<span class="sd">        The order in wich subplots should be placed if when plotting overlap1 </span>
+<span class="sd">        and 2 and overlap rgb</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">allow_plot</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">if</span> <span class="n">allow_plot</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Displaying overlap&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;best trans, cov: </span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">&quot;</span>
+                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span> <span class="n">best_cov</span><span class="p">))</span>
+
+        <span class="n">shifted_a</span><span class="p">,</span> <span class="n">shifted_b</span> <span class="o">=</span> <span class="n">calc_translated_pics</span><span class="p">(</span><span class="n">best_trans</span><span class="p">,</span>
+                                                    <span class="n">overlap1</span><span class="p">,</span> <span class="n">overlap2</span><span class="p">,</span>
+                                                    <span class="n">round_size</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">best_cov</span> <span class="o">=</span> <span class="n">xcov_nd</span><span class="p">(</span><span class="n">shifted_a</span><span class="p">,</span> <span class="n">shifted_b</span><span class="p">)</span>
+
+        <span class="c1"># overlap_rgb         = np.zeros((shifted_a.shape[0], shifted_a.shape[1],  3))</span>
+        <span class="c1"># overlap_rgb[:,:,0]  = smex.rescale_intensity(shifted_a)</span>
+        <span class="c1"># overlap_rgb[:,:,1]  = smex.rescale_intensity(shifted_b)</span>
+
+        <span class="n">title_text</span> <span class="o">=</span> <span class="s2">&quot;Pairwise overlap, cov: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">best_cov</span><span class="p">)</span>
+
+        <span class="c1"># inout.display_tiles([shifted_a,</span>
+        <span class="c1">#                         shifted_b,</span>
+        <span class="c1">#                         overlap_rgb],</span>
+        <span class="c1">#                         plot_order, fig_nr = &quot;overlap check&quot;,</span>
+        <span class="c1">#                         maximize = False, main_title = title_text,</span>
+        <span class="c1">#                         block = True)</span>
+        <span class="n">overlap_sum</span> <span class="o">=</span> <span class="n">shifted_a</span> <span class="o">+</span> <span class="n">shifted_b</span>
+        <span class="n">inout</span><span class="o">.</span><span class="n">display_tiles</span><span class="p">([</span><span class="n">shifted_a</span><span class="p">,</span>
+                             <span class="n">shifted_b</span><span class="p">,</span>
+                             <span class="n">overlap_sum</span><span class="p">],</span>
+                            <span class="n">plot_order</span><span class="p">,</span> <span class="n">fig_nr</span><span class="o">=</span><span class="s2">&quot;overlap check&quot;</span><span class="p">,</span>
+                            <span class="n">maximize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">main_title</span><span class="o">=</span><span class="n">title_text</span><span class="p">,</span>
+                            <span class="n">block</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># if shifted_a.ndim == 3:</span>
+        <span class="c1">#    inout.plot_3D(overlap_sum)</span>
+    <span class="k">else</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="kc">None</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
