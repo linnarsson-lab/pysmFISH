@@ -96,6 +96,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Cluster setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#run-the-process-locally">Run the process locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run-the-process-on-a-cluster">Run the process on a cluster</a></li>
 </ul>
 </li>
 </ul>
@@ -103,13 +104,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../API/index.html">API</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../scripts/index.html">Scripts</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../tutorials/index.html">Tutorials</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../notebooks/index.html">Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline/index.html">Processing pipeline</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../license/index.html">License</a></li>
@@ -196,7 +191,36 @@ remotely on a cluster or a combination of both.</p>
 <div class="section" id="run-the-process-locally">
 <h2>Run the process locally<a class="headerlink" href="#run-the-process-locally" title="Permalink to this headline">¶</a></h2>
 <p>All the scripts that form the pipeline accept a <cite>scheduler</cite> tcp address as input. If not specified the script
-will run locally using  <cite>number of CPUs - 1</cite>.</p>
+will run locally using  <code class="docutils literal notranslate"><span class="pre">number</span> <span class="pre">of</span> <span class="pre">CPUs</span> <span class="pre">-</span> <span class="pre">1</span></code>.</p>
+</div>
+<div class="section" id="run-the-process-on-a-cluster">
+<h2>Run the process on a cluster<a class="headerlink" href="#run-the-process-on-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p><strong>Start scheduler</strong></p>
+<ul class="simple">
+<li>If you want to use the master node as scheduler <code class="docutils literal notranslate"><span class="pre">ssh</span></code> into it in tunneling mode  <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-L</span> <span class="pre">7000:localhost:7000</span> <span class="pre">user&#64;cluster.ext</span></code>.</li>
+<li>If you want to use another node as scheduler ssh into it in tunneling mode <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-L</span> <span class="pre">7002:localhost:7002</span> <span class="pre">user&#64;node.cluster.ext</span></code>.</li>
+<li>From a terminal window start the <code class="docutils literal notranslate"><span class="pre">dask-scheduler</span></code>  (ex. <code class="docutils literal notranslate"><span class="pre">dask-scheduler</span> <span class="pre">--port</span> <span class="pre">7001</span> <span class="pre">--bokeh</span></code> ).</li>
+</ul>
+<p><strong>Start workers</strong></p>
+<ul class="simple">
+<li>For each node ssh into it in tunneling mode: ‘ssh -L 7003:localhost:7003 user&#64;node2.cluster.ext``.</li>
+<li>From a termial window start <code class="docutils literal notranslate"><span class="pre">dask-worker</span></code> (ex. <code class="docutils literal notranslate"><span class="pre">dask-worker</span> <span class="pre">tcp://130.237.132.207:7001</span> <span class="pre">--nprocs</span> <span class="pre">10</span> <span class="pre">--local-directory</span> <span class="pre">/tmp</span> <span class="pre">--memory-limit=220e9</span></code>).</li>
+</ul>
+<p><strong>Start bokeh server</strong></p>
+<p>From a terminal window <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-L</span> <span class="pre">8787:localhost:8787</span> <span class="pre">user&#64;cluster.ext</span></code> (8787 is the port assigned by defalult).</p>
+<div class="admonition tip">
+<p class="first admonition-title">Tip</p>
+<p>It is possible to setup a script for setting up a cluster with specific options:</p>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+USERNAME=someUser
+HOSTS=&quot;node1 node2 node3&quot;
+SCRIPT=&quot;pwd; ls&quot; # edit script with dask code for setting it up
+for HOSTNAME in ${HOSTS} ; do
+    ssh -o StrictHostKeyChecking=no -l ${USERNAME} ${HOSTNAME} &quot;${SCRIPT}&quot;
+done
+</pre></div>
+</div>
+</div>
 </div>
 </div>
 

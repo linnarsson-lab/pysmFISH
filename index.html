@@ -98,13 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="API/index.html">API</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="scripts/index.html">Scripts</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline/index.html">Processing pipeline</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="license/index.html">License</a></li>
@@ -180,7 +174,7 @@
   <div class="section" id="welcome-to-pysmfish">
 <h1>Welcome to pysmFISH!<a class="headerlink" href="#welcome-to-pysmfish" title="Permalink to this headline">¶</a></h1>
 <p>pysmFISH is a library for the analysis of single molecule fluorescence hybridization (smFISH).</p>
-<p>pysmFISH include an <a class="reference internal" href="API/index.html#api"><span class="std std-ref">API</span></a> and a <a class="reference internal" href="scripts/index.html#scripts"><span class="std std-ref">pipeline</span></a> built to analyse large datasets.</p>
+<p>pysmFISH include an <a class="reference internal" href="API/index.html#api"><span class="std std-ref">API</span></a> and a <a class="reference internal" href="pipeline/scripts/index.html#scripts"><span class="std std-ref">pipeline</span></a> built to analyse large datasets.</p>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">the documentation is still not fully complete and changes will be made frequently</p>
@@ -209,6 +203,7 @@
 <li class="toctree-l1"><a class="reference internal" href="cluster/index.html">Cluster setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cluster/index.html#introduction">Introduction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster/index.html#run-the-process-locally">Run the process locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster/index.html#run-the-process-on-a-cluster">Run the process on a cluster</a></li>
 </ul>
 </li>
 </ul>
@@ -242,26 +237,30 @@
 </div>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="scripts/index.html">Scripts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="scripts/configuration/index.html">Configuration files</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="scripts/configuration/index.html#experimental-metadata">Experimental metadata</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scripts/configuration/index.html#filtering-and-raw-counting">Filtering and raw counting</a></li>
-<li class="toctree-l3"><a class="reference internal" href="scripts/configuration/index.html#staining-segmentation">Staining segmentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline/index.html">Processing pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipeline/pipeline_overview.html">Pipeline overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/pipeline_overview.html#dataset-structure">Dataset structure</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/pipeline_overview.html#pipeline-scheme">Pipeline scheme</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="scripts/preprocessing_ref.html">preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline/scripts/index.html">Scripts</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/scripts/add_coords_to_experimental_metadata_ref.html">Add coords to Experimental_metadata.yaml config file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/scripts/process_standalone_experiment_ref.html">Process standalone experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/scripts/preprocessing_script_ref.html">Preprocessing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/scripts/reference_registration_ref.html">Reference channel registration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/scripts/apply_stitching_ref.html">Apply stitching to osmFISH channels</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/scripts/staining_segmentation_ref.html">Staining segmentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/scripts/dots_coords_correction_ref.html">Dots coords correction</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline/configuration/index.html">Configuration files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/configuration/index.html#experimental-metadata">Experimental metadata</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/configuration/index.html#filtering-and-raw-counting">Filtering and raw counting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pipeline/configuration/index.html#staining-segmentation">Staining segmentation</a></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Notebooks</a></li>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -271,7 +270,10 @@
 </div>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="citing/index.html">Author and citations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="citing/index.html">Author and citations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="citing/index.html#cite-pysmfish">Cite pysmFISH</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">

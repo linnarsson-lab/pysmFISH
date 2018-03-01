@@ -98,13 +98,7 @@
 <li class="toctree-l1"><a class="reference internal" href="API/index.html">API</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="scripts/index.html">Scripts</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="tutorials/index.html">Tutorials</a></li>
-</ul>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/index.html">Notebooks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline/index.html">Processing pipeline</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="license/index.html">License</a></li>
@@ -201,6 +195,10 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pipeline/scripts/add_coords_to_experimental_metadata_ref.html#module-add_coords_to_experimental_metadata">add_coords_to_experimental_metadata (module)</a>
+</li>
+      <li><a href="pipeline/scripts/add_coords_to_experimental_metadata_ref.html#add_coords_to_experimental_metadata.add_coords_to_experimental_metadata">add_coords_to_experimental_metadata() (in module add_coords_to_experimental_metadata)</a>
+</li>
       <li><a href="API/utils_ref.html#pysmFISH.utils.add_coords_to_yaml">add_coords_to_yaml() (in module pysmFISH.utils)</a>
 </li>
       <li><a href="API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.align_single_compress_pic">align_single_compress_pic() (in module pysmFISH.stitching_package.pairwisesingle)</a>
@@ -216,6 +214,8 @@
       <li><a href="API/dots_coords_calculations_ref.html#pysmFISH.dots_coords_calculations.all_dots_removal">all_dots_removal() (in module pysmFISH.dots_coords_calculations)</a>
 </li>
       <li><a href="API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.apply_IJ_corners">apply_IJ_corners() (in module pysmFISH.stitching_package.tilejoining)</a>
+</li>
+      <li><a href="pipeline/scripts/apply_stitching_ref.html#module-apply_stitching">apply_stitching (module)</a>
 </li>
       <li><a href="API/stitching/tilejoining_ref.html#pysmFISH.stitching_package.tilejoining.assess_overlap">assess_overlap() (in module pysmFISH.stitching_package.tilejoining)</a>
 </li>
@@ -275,11 +275,15 @@
 </li>
       <li><a href="API/stitching/pairwisehelper_ref.html#pysmFISH.stitching_package.pairwisehelper.display_overlap">display_overlap() (in module pysmFISH.stitching_package.pairwisehelper)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.display_tiles">display_tiles() (in module pysmFISH.stitching_package.inout)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="API/stitching/hdf5preparation_ref.html#pysmFISH.stitching_package.hdf5preparation.divide_final_image">divide_final_image() (in module pysmFISH.stitching_package.hdf5preparation)</a>
+</li>
+      <li><a href="pipeline/scripts/dots_coords_correction_ref.html#module-dots_coords_correction">dots_coords_correction (module)</a>
+</li>
+      <li><a href="pipeline/scripts/dots_coords_correction_ref.html#dots_coords_correction.dots_coords_correction">dots_coords_correction() (in module dots_coords_correction)</a>
 </li>
       <li><a href="API/dots_coords_calculations_ref.html#pysmFISH.dots_coords_calculations.dots_removing">dots_removing() (in module pysmFISH.dots_coords_calculations)</a>
 </li>
@@ -485,18 +489,20 @@
 </li>
       <li><a href="API/stitching/hybregistration_ref.html#pysmFISH.stitching_package.hybregistration.prepare_for_comparing">prepare_for_comparing() (in module pysmFISH.stitching_package.hybregistration)</a>
 </li>
-      <li><a href="scripts/preprocessing_ref.html#module-preprocessing_script">preprocessing_script (module)</a>
+      <li><a href="pipeline/scripts/preprocessing_script_ref.html#module-preprocessing_script">preprocessing_script (module)</a>
 </li>
-      <li><a href="scripts/preprocessing_ref.html#preprocessing_script.preprocessing_script">preprocessing_script() (in module preprocessing_script)</a>
+      <li><a href="pipeline/scripts/preprocessing_script_ref.html#preprocessing_script.preprocessing_script">preprocessing_script() (in module preprocessing_script)</a>
+</li>
+      <li><a href="pipeline/scripts/process_standalone_experiment_ref.html#module-process_standalone_experiment">process_standalone_experiment (module)</a>
 </li>
       <li><a href="API/dots_coords_calculations_ref.html#pysmFISH.dots_coords_calculations.processing_combinations">processing_combinations() (in module pysmFISH.dots_coords_calculations)</a>
 </li>
       <li><a href="API/counting_ref.html#module-pysmFISH.counting">pysmFISH.counting (module)</a>
 </li>
-      <li><a href="API/dots_calling_ref.html#module-pysmFISH.dots_calling">pysmFISH.dots_calling (module)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="API/dots_calling_ref.html#module-pysmFISH.dots_calling">pysmFISH.dots_calling (module)</a>
+</li>
       <li><a href="API/dots_coords_calculations_ref.html#module-pysmFISH.dots_coords_calculations">pysmFISH.dots_coords_calculations (module)</a>
 </li>
       <li><a href="API/filtering_ref.html#module-pysmFISH.filtering">pysmFISH.filtering (module)</a>
@@ -535,12 +541,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="API/stitching/inout_ref.html#pysmFISH.stitching_package.inout.read_IJ_corners">read_IJ_corners() (in module pysmFISH.stitching_package.inout)</a>
 </li>
-      <li><a href="API/stitching/stitching_ref.html#pysmFISH.stitching_package.stitching.refine_pairwise_alignments">refine_pairwise_alignments() (in module pysmFISH.stitching_package.stitching)</a>
+      <li><a href="pipeline/scripts/reference_registration_ref.html#module-reference_registration">reference_registration (module)</a>
 </li>
-      <li><a href="API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.refine_single_pair">refine_single_pair() (in module pysmFISH.stitching_package.pairwisesingle)</a>
+      <li><a href="pipeline/scripts/reference_registration_ref.html#reference_registration.reference_registration">reference_registration() (in module reference_registration)</a>
+</li>
+      <li><a href="API/stitching/stitching_ref.html#pysmFISH.stitching_package.stitching.refine_pairwise_alignments">refine_pairwise_alignments() (in module pysmFISH.stitching_package.stitching)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="API/stitching/pairwisesingle_ref.html#pysmFISH.stitching_package.pairwisesingle.refine_single_pair">refine_single_pair() (in module pysmFISH.stitching_package.pairwisesingle)</a>
+</li>
       <li><a href="API/dots_coords_calculations_ref.html#pysmFISH.dots_coords_calculations.register_dots_coords">register_dots_coords() (in module pysmFISH.dots_coords_calculations)</a>
 </li>
       <li><a href="API/stitching/hybregistration_ref.html#pysmFISH.stitching_package.hybregistration.register_final_images">register_final_images() (in module pysmFISH.stitching_package.hybregistration)</a>

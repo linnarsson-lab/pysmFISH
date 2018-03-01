@@ -1,0 +1,94 @@
+.. _pipeline_description_steps:
+
+Pipeline steps
+==============
+ 
+Image acquisition
+-----------------
+
+The images are acquired using a Nikon epifluorescence miscroscope as 3D stack.
+For each channel in each hybridization and .nd2 file with all ``xy`` positions 
+will be generated.
+
+**Name convention:**``HybNumber_exp_tag_ND2AssignedName_Gene.nd``
+
+
+
+# Directory organization
+
+**Initial processing**  
+All the directory for the experiments are initially (conversion/filtering/raw
+counting) are processed independently in serial mode. Each of them uses parallel
+processing. It is possible to process together hynridizations that belongs to 
+different experiments
+
+## __data_to_process__  
+top level folder that contains all the hybridizations that need to be analyzed.  
+
+### __exp_tag_hybridization_number__  
+(Ex. EXP-17-BP3597_hyb2)  
+Folder containing:
+  - Experimental_metadata.yaml file with the infos
+        of the experiment  
+  - Filtering_raw_counting.config.yaml file with the infos
+        for the filtering and counting for the current experiment
+  - __exp_tag_hybridization_number_raw_data__  folder
+  (Ex. EXP-17-BP3597_hyb2_raw_data)  
+    - contains the .nd2 files that correspond to the genes analyzed in the 
+    current cycle of hybridization  
+
+**Experiment specific processing** 
+
+
+# Steps
+
+## Overview
+- Process each hybridization separately.
+- Register the stitched images
+
+
+## (1) Create required Experimental_metadata.yaml file
+- Copy the template of the Experimental_metadata.yaml file in the hyb folder
+- Add the tiles coordinates saved from the nikon files for the processing 
+  hybridization to the Experimental\_metadata.yaml using the **add_coords_to_experimental_metadata.py** script. 
+
+## (2) Create the Filtering\_raw\_counting.config.yaml
+Create the Filtering\_raw\_counting.config.yaml that contains the parameters
+used for the filtering, the raw counting of the images and the stitching and save
+it in the hyb folder
+
+## (3) Filter/Raw counting/Stitching
+Process the hybs saved in a common folder using the 
+**preprocessing_script.py** The hyb in the processing folder can be from 
+different experiments and will be run sequentially.
+
+## (4) Consolidate experiment
+Transfer all the hyb folders belonging to the same experiment in one single
+folder name with the experiment name (Ex. EXP-17-BP3597). The same name that is
+Experimental\_metadata.yaml file. Copy the Experimental\_metadata.yaml and Filtering\_raw\_counting.config.yaml of the experiment in the folder as well.
+
+## (5) Transfer the stitched files and data
+Transfer/copy the XX.sf.hdf5 and XX_data.pkl files generated for each hyb in a
+folder. The directory name must be stitched\_reference\_files.
+
+## (6) Align the stitched images
+Aligned all the stitched images using the **reference_registration.py** script.
+
+## (7) Create the stitched images for all genes using the registered coords.
+This step is not necessary for the following steps but is useful to visualize 
+the filtered images **apply_stitching.py**.
+
+## (8) Dots coords processing
+The **dots\_coords\_coorection.py** script is used to aggregate the raw counting
+registration_data and to remove the overlapping dots that are counted multiple
+times in the regions of overlapping between the images.
+
+## Additional scripts used for processing that don't need to be run in 
+## sequence
+
+## Staining segmentation
+The **staining_segmentation.py** script can be used to segment IF or polyA
+staining. It returns a dictionary with all the identified objects. The parameters
+used for the segmentation are in a **Staining_segmentation.config.yaml** file.
+To test the parameter and visualize the results is possible to use the
+**Visualization_of_segmentation_results.ipynb** in the notebooks folder.

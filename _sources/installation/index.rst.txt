@@ -50,14 +50,14 @@ Then, run the following commands to complete the installation:
 
 ::
 
-    git clone XXXXXXXXXXXXXX
+    git clone https://github.com/linnarsson-lab/pysmFISH.git
     cd pysmFISH.py
     pip install -e .  # note the trailing dot
 
 You can test whether the installation was successful by running ``pysmFISH --help``.
 
 .. tip::
-    `pysmFISH` |version| is an alpha release, we recommend pulling in the latest bufixes and feature improvements often. Note that adding the ``-e`` flag to the pip command installs the software in `development` mode, when a package is installed this way each change to the source immediatelly reflects to changes in the installed library. This means that you can simply use ``git pull`` to update your installation.
+    ``pysmFISH`` |version| is an alpha release, we recommend pulling in the latest bufixes and feature improvements often. Note that adding the ``-e`` flag to the pip command installs the software in `development` mode, when a package is installed this way each change to the source immediatelly reflects to changes in the installed library. This means that you can simply use ``git pull`` to update your installation.
 
 To get started with ``pysmFISH`` you can follow :ref:`our guide <tutorial>`. 
 

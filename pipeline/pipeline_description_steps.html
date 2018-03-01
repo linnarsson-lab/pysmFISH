@@ -1,0 +1,347 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Pipeline steps &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../index.html"/>
+        <link rel="up" title="Processing pipeline" href="index.html"/>
+        <link rel="next" title="Scripts" href="scripts/index.html"/>
+        <link rel="prev" title="Pipeline overview" href="pipeline_overview.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API/index.html">API</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Processing pipeline</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pipeline_overview.html">Pipeline overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Pipeline steps</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#image-acquisition">Image acquisition</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="scripts/index.html">Scripts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/index.html">Configuration files</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license/index.html">License</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Processing pipeline</a> &raquo;</li>
+        
+      <li>Pipeline steps</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/pipeline/pipeline_description_steps.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="pipeline-steps">
+<span id="pipeline-description-steps"></span><h1>Pipeline steps<a class="headerlink" href="#pipeline-steps" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="image-acquisition">
+<h2>Image acquisition<a class="headerlink" href="#image-acquisition" title="Permalink to this headline">¶</a></h2>
+<p>The images are acquired using a Nikon epifluorescence miscroscope as 3D stack.
+For each channel in each hybridization and .nd2 file with all <code class="docutils literal notranslate"><span class="pre">xy</span></code> positions
+will be generated.</p>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a>Name convention:<a href="#id3"><span class="problematic" id="id4">**</span></a><code class="docutils literal notranslate"><span class="pre">HybNumber_exp_tag_ND2AssignedName_Gene.nd</span></code></p>
+<p># Directory organization</p>
+<p><strong>Initial processing</strong>
+All the directory for the experiments are initially (conversion/filtering/raw
+counting) are processed independently in serial mode. Each of them uses parallel
+processing. It is possible to process together hynridizations that belongs to
+different experiments</p>
+<p>## __data_to_process__
+top level folder that contains all the hybridizations that need to be analyzed.</p>
+<p>### __exp_tag_hybridization_number__
+(Ex. EXP-17-BP3597_hyb2)
+Folder containing:</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="first docutils">
+<dt>Experimental_metadata.yaml file with the infos</dt>
+<dd>of the experiment</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Filtering_raw_counting.config.yaml file with the infos</dt>
+<dd>for the filtering and counting for the current experiment</dd>
+</dl>
+</li>
+<li>__exp_tag_hybridization_number_raw_data__  folder</li>
+</ul>
+<dl class="docutils">
+<dt>(Ex. EXP-17-BP3597_hyb2_raw_data)</dt>
+<dd><ul class="first simple">
+<li>contains the .nd2 files that correspond to the genes analyzed in the</li>
+</ul>
+<p class="last">current cycle of hybridization</p>
+</dd>
+</dl>
+</div></blockquote>
+<p><strong>Experiment specific processing</strong></p>
+<p># Steps</p>
+<p>## Overview
+- Process each hybridization separately.
+- Register the stitched images</p>
+<p>## (1) Create required Experimental_metadata.yaml file
+- Copy the template of the Experimental_metadata.yaml file in the hyb folder
+- Add the tiles coordinates saved from the nikon files for the processing</p>
+<blockquote>
+<div>hybridization to the Experimental_metadata.yaml using the <strong>add_coords_to_experimental_metadata.py</strong> script.</div></blockquote>
+<p>## (2) Create the Filtering_raw_counting.config.yaml
+Create the Filtering_raw_counting.config.yaml that contains the parameters
+used for the filtering, the raw counting of the images and the stitching and save
+it in the hyb folder</p>
+<p>## (3) Filter/Raw counting/Stitching
+Process the hybs saved in a common folder using the
+<strong>preprocessing_script.py</strong> The hyb in the processing folder can be from
+different experiments and will be run sequentially.</p>
+<p>## (4) Consolidate experiment
+Transfer all the hyb folders belonging to the same experiment in one single
+folder name with the experiment name (Ex. EXP-17-BP3597). The same name that is
+Experimental_metadata.yaml file. Copy the Experimental_metadata.yaml and Filtering_raw_counting.config.yaml of the experiment in the folder as well.</p>
+<p>## (5) Transfer the stitched files and data
+Transfer/copy the XX.sf.hdf5 and XX_data.pkl files generated for each hyb in a
+folder. The directory name must be stitched_reference_files.</p>
+<p>## (6) Align the stitched images
+Aligned all the stitched images using the <strong>reference_registration.py</strong> script.</p>
+<p>## (7) Create the stitched images for all genes using the registered coords.
+This step is not necessary for the following steps but is useful to visualize
+the filtered images <strong>apply_stitching.py</strong>.</p>
+<p>## (8) Dots coords processing
+The <strong>dots_coords_coorection.py</strong> script is used to aggregate the raw counting
+registration_data and to remove the overlapping dots that are counted multiple
+times in the regions of overlapping between the images.</p>
+<p>## Additional scripts used for processing that don’t need to be run in
+## sequence</p>
+<p>## Staining segmentation
+The <strong>staining_segmentation.py</strong> script can be used to segment IF or polyA
+staining. It returns a dictionary with all the identified objects. The parameters
+used for the segmentation are in a <strong>Staining_segmentation.config.yaml</strong> file.
+To test the parameter and visualize the results is possible to use the
+<strong>Visualization_of_segmentation_results.ipynb</strong> in the notebooks folder.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scripts/index.html" class="btn btn-neutral float-right" title="Scripts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pipeline_overview.html" class="btn btn-neutral" title="Pipeline overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

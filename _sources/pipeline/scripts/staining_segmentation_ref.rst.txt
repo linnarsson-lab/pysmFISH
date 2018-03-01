@@ -1,0 +1,7 @@
+.. _staining_segmentation:
+
+Staining segmentation
+=====================
+
+.. automodule:: Staining_segmentation
+   :members:

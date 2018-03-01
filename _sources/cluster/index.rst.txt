@@ -5,7 +5,7 @@ Cluster setup
 
 
 Introduction
-------------------
+-------------
 
 Initially the code was designed as a set of disconnected scripts to run on a `HPC <https://www.nsc.liu.se/systems/triolith/>`_ 
 with queue system managed by `slurm <https://slurm.schedmd.com/>`_ and parallel processing by `MPICH <https://www.mpich.org/>`_.
@@ -16,9 +16,39 @@ remotely on a cluster or a combination of both.
 
 
 Run the process locally
------------------------
+------------------------
 All the scripts that form the pipeline accept a `scheduler` tcp address as input. If not specified the script
-will run locally using  `number of CPUs - 1`.
+will run locally using  ``number of CPUs - 1``.
+
+Run the process on a cluster
+----------------------------
+
+**Start scheduler**
+
+- If you want to use the master node as scheduler ``ssh`` into it in tunneling mode  ``ssh -L 7000:localhost:7000 user@cluster.ext``.
+- If you want to use another node as scheduler ssh into it in tunneling mode ``ssh -L 7002:localhost:7002 user@node.cluster.ext``.
+- From a terminal window start the ``dask-scheduler``  (ex. ``dask-scheduler --port 7001 --bokeh`` ).
+
+**Start workers**
+
+- For each node ssh into it in tunneling mode: 'ssh -L 7003:localhost:7003 user@node2.cluster.ext``.
+- From a termial window start ``dask-worker`` (ex. ``dask-worker tcp://130.237.132.207:7001 --nprocs 10 --local-directory /tmp --memory-limit=220e9``).
+
+**Start bokeh server**
+
+From a terminal window ``ssh -L 8787:localhost:8787 user@cluster.ext`` (8787 is the port assigned by defalult).
+
+.. tip::
+    It is possible to setup a script for setting up a cluster with specific options:
+    ::
+        #!/bin/bash  
+        USERNAME=someUser  
+        HOSTS="node1 node2 node3"  
+        SCRIPT="pwd; ls" # edit script with dask code for setting it up  
+        for HOSTNAME in ${HOSTS} ; do  
+            ssh -o StrictHostKeyChecking=no -l ${USERNAME} ${HOSTNAME} "${SCRIPT}"  
+        done
+
 
 
 

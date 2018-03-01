@@ -35,12 +35,15 @@ Content
     API/index
 
 .. toctree::
-    scripts/index
+    pipeline/index
 
 .. toctree::
+    :hidden:
     tutorials/index
+    
 
 .. toctree::
+    :hidden:
     notebooks/index
 
 .. toctree::
