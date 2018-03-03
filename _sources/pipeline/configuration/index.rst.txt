@@ -37,4 +37,12 @@ File description:
 :download:`Staining_segmentation.config.yaml <Staining_segmentation.config.yaml>`
 
 
+Coordinate file:
+----------------
+This file containes the coordinates of the tiles forming the large area images.
+The coords are exported from the raw nikon image files.
 
+File description:
+`Tile Coords <https://github.com/linnarsson-lab/pysmFISH/blob/gh-pages/configuration_files/Coords.txt>`_
+
+:download:`Coords.txt <Coords.txt>`

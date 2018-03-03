@@ -180,24 +180,29 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Script used to add the coords to the Experimental_metadata.yaml file.</span>
 <span class="sd">    In order to work: </span>
+
 <span class="sd">    - The Experimental_metadata.yaml file needs to have the processing hybridization </span>
-<span class="sd">    and the coords at point 0 initialized</span>
-<span class="sd">    TilesPositions:</span>
-<span class="sd">    Hybridization1:</span>
-<span class="sd">        0:</span>
+<span class="sd">    and the coords at point 0 initialized: ex:  </span>
+
+<span class="sd">    TilesPositions:  </span>
+<span class="sd">    Hybridization1:  </span>
+<span class="sd">        0:  </span>
 
 <span class="sd">    - The coords file extracted from the Nikon microscope need to be in a text file</span>
-<span class="sd">    ex. Hyb1_Coords.txt Coords tag is necessary and Hyb is the hybridization_key</span>
+<span class="sd">    ex. Hyb1_Coords.txt. The Coords tag is necessary and Hyb is the hybridization_key</span>
 
-<span class="sd">    Input via argparse:</span>
-<span class="sd">    path      -- string. Exact path to the folder, including</span>
-<span class="sd">                    trailing &quot;/&quot;</span>
-<span class="sd">    hybridization_number      -- str. Hybridization number denoting for which</span>
-<span class="sd">                    hybridization we should read and insert the coordinates</span>
+<span class="sd">    - The input parameters are passed via argparse</span>
 
-<span class="sd">    Optional arguments:</span>
-<span class="sd">    hybridization_key     -- string. Possible values &#39;Hyb&#39; or &#39;Strip&#39;. To add</span>
-<span class="sd">                coordinates for stripping if necessary.</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    hybridization_number: string</span>
+<span class="sd">        Hybridization number (ex. 3) describing the hybridization to process.</span>
+<span class="sd">    </span>
+<span class="sd">    path: string </span>
+<span class="sd">        Exact path to the folder containing the text file with the coordinates.</span>
+<span class="sd">    </span>
+<span class="sd">    hybridization_key: string </span>
+<span class="sd">        Possible values &#39;Hyb&#39; or &#39;Strip&#39;. To add coordinates for stripping if necessary.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 

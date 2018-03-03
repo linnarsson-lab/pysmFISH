@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>staining_segmentation &mdash; pysmFISH 0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="pysmFISH 0 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> pysmFISH
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to pysmFISH!</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../installation/index.html">Installation</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../cluster/index.html">Cluster setup</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../API/index.html">API</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pipeline/index.html">Processing pipeline</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../license/index.html">License</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../citing/index.html">Author and citations</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../ind_tables/index.html">Indices and Tables</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">pysmFISH</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>staining_segmentation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for staining_segmentation</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">filters</span><span class="p">,</span><span class="n">io</span><span class="p">,</span><span class="n">img_as_float</span><span class="p">,</span><span class="n">exposure</span><span class="p">,</span><span class="n">morphology</span><span class="p">,</span><span class="n">segmentation</span><span class="p">,</span><span class="n">measure</span><span class="p">,</span><span class="n">feature</span><span class="p">,</span><span class="n">color</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="k">import</span> <span class="n">ndimage</span> <span class="k">as</span> <span class="n">nd</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+
+<span class="kn">from</span> <span class="nn">pysmFISH</span> <span class="k">import</span> <span class="n">utils</span>
+<span class="kn">from</span> <span class="nn">pysmFISH</span> <span class="k">import</span> <span class="n">object_based_segmentation</span>
+
+<div class="viewcode-block" id="staining_segmentation"><a class="viewcode-back" href="../pipeline/scripts/staining_segmentation_ref.html#staining_segmentation.staining_segmentation">[docs]</a><span class="k">def</span> <span class="nf">staining_segmentation</span><span class="p">():</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This script will segment the selected staining and output the identified </span>
+<span class="sd">    objects.</span>
+
+<span class="sd">    All the parameters are entered via argparse.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+
+<span class="sd">    scheduler: string</span>
+<span class="sd">        tcp address of the dask.distributed scheduler (ex. tcp://192.168.0.4:7003). </span>
+<span class="sd">        default = False. If False the process will run on the local computer using nCPUs-1</span>
+<span class="sd">    path: string</span>
+<span class="sd">        Path to the processing directory</span>
+<span class="sd">    processing_file: string</span>
+<span class="sd">        Path to the hdf5 file with the staning to process</span>
+<span class="sd">    segmentation_staining: string</span>
+<span class="sd">        Staining to be segmented</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Inputs of the function</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Segmentation script&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-scheduler&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;dask scheduler address ex. tcp://192.168.0.4:7003&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;processing directory&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-processing_file&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path to the file with the </span><span class="se">\</span>
+<span class="s1">                        staning to process&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-segmentation_staining&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;staining to be </span><span class="se">\</span>
+<span class="s1">                        segmented&#39;</span><span class="p">)</span>
+    
+    
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    
+    <span class="c1"># Directory to process</span>
+    <span class="n">processing_directory</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">path</span>
+
+    <span class="c1"># File to process</span>
+    <span class="n">processing_file</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">processing_file</span>
+
+    <span class="c1"># staining to segment</span>
+    <span class="n">segmentation_staining</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">segmentation_staining</span>
+
+    <span class="c1"># Dask scheduler address</span>
+    <span class="n">scheduler_address</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">scheduler</span>
+    
+    <span class="k">if</span> <span class="n">scheduler_address</span><span class="p">:</span>
+        <span class="c1"># Start dask client on server or cluster</span>
+        <span class="n">client</span><span class="o">=</span><span class="n">Client</span><span class="p">(</span><span class="n">scheduler_address</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Start dask client on local machine. It will use all the availabe</span>
+        <span class="c1"># cores -1</span>
+
+        <span class="c1"># number of core to use</span>
+        <span class="n">ncores</span> <span class="o">=</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">cluster</span> <span class="o">=</span> <span class="n">LocalCluster</span><span class="p">(</span><span class="n">n_workers</span><span class="o">=</span><span class="n">ncores</span><span class="p">)</span>
+        <span class="n">client</span><span class="o">=</span><span class="n">Client</span><span class="p">(</span><span class="n">cluster</span><span class="p">)</span>
+
+    <span class="c1"># Determine the operating system running the code</span>
+    <span class="n">os_windows</span><span class="p">,</span> <span class="n">add_slash</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">determine_os</span><span class="p">()</span>
+
+    <span class="c1"># Check training slash in the processing directory</span>
+    <span class="n">processing_directory</span><span class="o">=</span><span class="n">utils</span><span class="o">.</span><span class="n">check_trailing_slash</span><span class="p">(</span><span class="n">processing_directory</span><span class="p">,</span><span class="n">os_windows</span><span class="p">)</span>
+
+
+    <span class="n">segmentation_parameters</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">general_yaml_parser</span><span class="p">(</span><span class="n">processing_directory</span><span class="o">+</span><span class="s1">&#39;Staining_segmentation.config.yaml&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Chunking parameters</span>
+    <span class="n">chunk_size</span> <span class="o">=</span> <span class="n">segmentation_parameters</span><span class="p">[</span><span class="n">segmentation_staining</span><span class="p">][</span><span class="s1">&#39;image_chunking_parameters&#39;</span><span class="p">][</span><span class="s1">&#39;chunk_size&#39;</span><span class="p">]</span>
+    <span class="n">percent_padding</span> <span class="o">=</span> <span class="n">segmentation_parameters</span><span class="p">[</span><span class="n">segmentation_staining</span><span class="p">][</span><span class="s1">&#39;image_chunking_parameters&#39;</span><span class="p">][</span><span class="s1">&#39;percent_padding&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Segmentation parameters</span>
+    <span class="n">trimming</span> <span class="o">=</span> <span class="n">segmentation_parameters</span><span class="p">[</span><span class="n">segmentation_staining</span><span class="p">][</span><span class="s1">&#39;segmentation_parameters&#39;</span><span class="p">][</span><span class="s1">&#39;trimming&#39;</span><span class="p">]</span>
+    <span class="n">min_object_size</span> <span class="o">=</span> <span class="n">segmentation_parameters</span><span class="p">[</span><span class="n">segmentation_staining</span><span class="p">][</span><span class="s1">&#39;segmentation_parameters&#39;</span><span class="p">][</span><span class="s1">&#39;min_object_size&#39;</span><span class="p">]</span>
+    <span class="n">disk_radium_rank_filer</span> <span class="o">=</span> <span class="n">segmentation_parameters</span><span class="p">[</span><span class="n">segmentation_staining</span><span class="p">][</span><span class="s1">&#39;segmentation_parameters&#39;</span><span class="p">][</span><span class="s1">&#39;disk_radium_rank_filer&#39;</span><span class="p">]</span>
+    <span class="n">min_distance</span> <span class="o">=</span> <span class="n">segmentation_parameters</span><span class="p">[</span><span class="n">segmentation_staining</span><span class="p">][</span><span class="s1">&#39;segmentation_parameters&#39;</span><span class="p">][</span><span class="s1">&#39;min_distance&#39;</span><span class="p">]</span>   
+    <span class="n">threshold_rel</span> <span class="o">=</span> <span class="n">segmentation_parameters</span><span class="p">[</span><span class="n">segmentation_staining</span><span class="p">][</span><span class="s1">&#39;segmentation_parameters&#39;</span><span class="p">][</span><span class="s1">&#39;threshold_rel&#39;</span><span class="p">]</span>    
+
+    <span class="c1"># Load the image (will be modified after the change to hdf5 input)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">processing_file</span><span class="p">)</span>
+
+    <span class="c1"># Image chunking</span>
+    <span class="n">nr_chunks</span><span class="p">,</span><span class="n">nc_chunks</span><span class="p">,</span><span class="n">Coords_Chunks_list</span><span class="p">,</span> <span class="n">Coords_Padded_Chunks_list</span><span class="p">,</span><span class="n">r_coords_tl_all_padded</span><span class="p">,</span>\
+                <span class="n">c_coords_tl_all_padded</span><span class="p">,</span><span class="n">r_coords_br_all_padded</span><span class="p">,</span><span class="n">c_coords_br_all_padded</span> <span class="o">=</span> \
+                <span class="n">object_based_segmentation</span><span class="o">.</span><span class="n">image_chunking</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">chunk_size</span><span class="p">,</span><span class="n">percent_padding</span><span class="p">)</span>
+            
+            
+    <span class="c1"># Create the chunks idx</span>
+    <span class="n">Chunks_idxs_linear</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Coords_Padded_Chunks_list</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int32&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Distribute the chunks idx and distridute them in an array according to the position</span>
+    <span class="c1"># in the chunked image</span>
+    <span class="n">Chunks_idxs</span><span class="o">=</span><span class="n">Chunks_idxs_linear</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">nr_chunks</span><span class="p">,</span><span class="n">nc_chunks</span><span class="p">)</span>  
+
+    <span class="c1"># Flatten the array for make it easier the creation of the coords combination</span>
+    <span class="n">Chunks_idxs_rows</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">Chunks_idxs</span><span class="p">)</span>
+    <span class="n">Chunks_idxs_cols</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">Chunks_idxs</span><span class="p">,</span><span class="n">order</span><span class="o">=</span><span class="s1">&#39;F&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Calculate coords of the overlapping chunks</span>
+    <span class="n">Overlapping_chunks_coords</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+    <span class="n">counter</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">left_pos</span><span class="o">=</span><span class="n">Chunks_idxs_rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">Chunks_idxs_rows</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="n">nc_chunks</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">Coords_left</span><span class="o">=</span><span class="n">Coords_Padded_Chunks_list</span><span class="p">[</span><span class="n">left_pos</span><span class="p">]</span>
+            <span class="n">Coords_right</span><span class="o">=</span><span class="n">Coords_Padded_Chunks_list</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
+            <span class="n">row_tl</span><span class="o">=</span><span class="n">Coords_left</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">row_br</span><span class="o">=</span><span class="n">Coords_left</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">col_tl</span><span class="o">=</span><span class="n">Coords_right</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">col_br</span><span class="o">=</span><span class="n">Coords_left</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">Overlapping_chunks_coords</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row_tl</span><span class="p">,</span><span class="n">row_br</span><span class="p">,</span><span class="n">col_tl</span><span class="p">,</span><span class="n">col_br</span><span class="p">))</span>
+            <span class="n">left_pos</span><span class="o">=</span><span class="n">el</span>
+            <span class="n">counter</span><span class="o">+=</span><span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">left_pos</span><span class="o">=</span><span class="n">el</span>
+            <span class="n">counter</span><span class="o">=</span><span class="mi">0</span>
+            
+    <span class="n">counter</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">top_pos</span><span class="o">=</span><span class="n">Chunks_idxs_cols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">Chunks_idxs_cols</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+        <span class="k">if</span> <span class="n">counter</span> <span class="o">&lt;</span> <span class="n">nr_chunks</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">Coords_top</span><span class="o">=</span><span class="n">Coords_Padded_Chunks_list</span><span class="p">[</span><span class="n">top_pos</span><span class="p">]</span>
+            <span class="n">Coords_bottom</span><span class="o">=</span><span class="n">Coords_Padded_Chunks_list</span><span class="p">[</span><span class="n">el</span><span class="p">]</span>
+            
+            <span class="n">row_tl</span><span class="o">=</span><span class="n">Coords_bottom</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">row_br</span><span class="o">=</span><span class="n">Coords_top</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">col_tl</span><span class="o">=</span><span class="n">Coords_top</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">col_br</span><span class="o">=</span><span class="n">Coords_top</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">Overlapping_chunks_coords</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">row_tl</span><span class="p">,</span><span class="n">row_br</span><span class="p">,</span><span class="n">col_tl</span><span class="p">,</span><span class="n">col_br</span><span class="p">))</span>
+        
+            <span class="n">counter</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">top_pos</span><span class="o">=</span><span class="n">el</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">top_pos</span><span class="o">=</span><span class="n">el</span>
+            <span class="n">counter</span><span class="o">=</span><span class="mi">0</span>
+
+    <span class="c1"># Now i use this approach for testing. If the image gets to big to fit in RAM</span>
+    <span class="c1"># then save the files and load them separately in each node</span>
+    <span class="n">chunked_image_seq</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">coords</span> <span class="ow">in</span> <span class="n">Coords_Padded_Chunks_list</span><span class="p">:</span>
+        <span class="n">chunked_image_seq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="n">coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">coords</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">coords</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">coords</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+
+    <span class="c1"># Run the segmentation</span>
+    <span class="n">futures_processes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">object_based_segmentation</span><span class="o">.</span><span class="n">polyT_segmentation</span><span class="p">,</span><span class="n">chunked_image_seq</span><span class="p">,</span>
+                                <span class="n">min_object_size</span><span class="o">=</span><span class="n">min_object_size</span><span class="p">,</span>
+                                <span class="n">min_distance</span><span class="o">=</span><span class="n">min_distance</span><span class="p">,</span>
+                                <span class="n">disk_radium_rank_filer</span><span class="o">=</span><span class="n">disk_radium_rank_filer</span><span class="p">,</span>
+                                <span class="n">threshold_rel</span><span class="o">=</span><span class="n">threshold_rel</span><span class="p">,</span>
+                                <span class="n">trimming</span><span class="o">=</span><span class="n">trimming</span><span class="p">)</span>
+
+    <span class="n">Objects_list</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures_processes</span><span class="p">)</span>
+
+    <span class="c1"># Recalculate labels and coords</span>
+
+    <span class="n">processed_images_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="n">max_starting_label</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_data_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">objs_chunk</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Objects_list</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="p">,</span><span class="n">cvalues</span> <span class="ow">in</span> <span class="n">objs_chunk</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">new_label</span><span class="o">=</span><span class="n">max_starting_label</span><span class="o">+</span><span class="mi">1</span>
+                <span class="n">coords</span> <span class="o">=</span> <span class="n">Coords_Padded_Chunks_list</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="mi">0</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">total_data_dict</span><span class="p">[</span><span class="n">new_label</span><span class="p">]</span> <span class="o">=</span> <span class="n">cvalues</span><span class="o">+</span><span class="n">coords</span>
+                <span class="n">max_starting_label</span> <span class="o">=</span> <span class="n">new_label</span>
+
+
+    <span class="c1"># Calculate all the intersecting objects</span>
+    <span class="n">futures_processes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">object_based_segmentation</span><span class="o">.</span><span class="n">OverlappingCouples</span><span class="p">,</span><span class="n">Overlapping_chunks_coords</span><span class="p">,</span>
+                                <span class="n">TotalDataDict</span> <span class="o">=</span> <span class="n">total_data_dict</span><span class="p">)</span>
+        
+
+    <span class="n">All_intersecting</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures_processes</span><span class="p">)</span>
+
+
+    <span class="c1"># Put together the couple with the same label for multiple intersection</span>
+    <span class="c1"># for the labels of objects where there is intersection between multiple regions</span>
+    <span class="c1"># Then scatter all of them and calculate intersection</span>
+
+    <span class="c1"># Combine the results from the parallel processing</span>
+    <span class="n">flatten_couple</span> <span class="o">=</span> <span class="p">[</span><span class="n">el</span> <span class="k">for</span> <span class="n">grp</span> <span class="ow">in</span> <span class="n">All_intersecting</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">grp</span><span class="p">]</span> 
+    <span class="c1"># Remove duplicates</span>
+    <span class="n">flatten_couple</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">flatten_couple</span><span class="p">))</span>
+
+    <span class="c1"># Create a list of the labels (removing the repeats)</span>
+    <span class="n">singles</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+    <span class="p">[</span><span class="n">singles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">cpl</span> <span class="ow">in</span> <span class="n">flatten_couple</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cpl</span><span class="p">]</span>
+    <span class="n">singles</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">singles</span><span class="p">))</span>
+
+    <span class="c1"># Identify the couples containing singles</span>
+    <span class="n">Combined_all_singles</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">singles</span><span class="p">:</span>
+        <span class="n">Combined_single</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">couple</span> <span class="ow">in</span> <span class="n">flatten_couple</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">couple</span><span class="p">:</span>
+                <span class="n">Combined_single</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">couple</span><span class="p">)</span>
+        <span class="n">Combined_all_singles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Combined_single</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">Combined_all_singles</span><span class="p">:</span>
+        <span class="c1"># Combine all the intersecting labeles</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">Combined_all_singles</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">ComparisonList</span><span class="o">=</span><span class="n">Combined_all_singles</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1">#merged=start.copy()</span>
+        <span class="n">merged</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+        <span class="n">SavedCombinations</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+        <span class="n">tmp_list</span><span class="o">=</span><span class="n">ComparisonList</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">KeepGoing</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">Loop</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">while</span> <span class="n">KeepGoing</span><span class="p">:</span>
+            <span class="n">Loop</span><span class="o">+=</span><span class="mi">1</span>
+
+
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">el</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ComparisonList</span><span class="p">):</span>
+
+                <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">start</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">el</span><span class="p">)):</span>
+                    <span class="c1">#merged=list(set(merged)|set(el))</span>
+                    <span class="p">[</span><span class="n">merged</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">el</span><span class="p">]</span>
+                    <span class="n">tmp_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">e</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">tmp_list</span> <span class="k">if</span> <span class="n">e</span> <span class="o">!=</span> <span class="n">el</span><span class="p">]</span>
+
+
+            <span class="n">intersection</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">merged</span><span class="p">),</span><span class="nb">set</span><span class="p">(</span><span class="n">start</span><span class="p">)))</span>  
+            <span class="k">if</span> <span class="n">intersection</span><span class="p">:</span>
+                <span class="n">merged</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">merged</span><span class="p">),</span><span class="nb">set</span><span class="p">(</span><span class="n">start</span><span class="p">)))</span>
+                <span class="c1">#merged=list(set(merged))</span>
+                <span class="n">start</span><span class="o">=</span><span class="n">merged</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">merged</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+                <span class="n">ComparisonList</span><span class="o">=</span><span class="n">tmp_list</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="c1">#tmp_list.append(merged)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">SavedCombinations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+                <span class="n">start</span><span class="o">=</span><span class="n">tmp_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">tmp_list</span><span class="o">=</span><span class="n">tmp_list</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                <span class="n">ComparisonList</span><span class="o">=</span><span class="n">tmp_list</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_list</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span>
+                <span class="p">[</span><span class="n">SavedCombinations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tmp_list</span><span class="p">]</span>
+                <span class="n">KeepGoing</span> <span class="o">=</span><span class="kc">False</span>
+        
+        <span class="c1"># Remove all the duplicated labeled that intersect</span>
+        <span class="c1"># in this case the labeled are merged. It will be nice to run an extra</span>
+        <span class="c1"># segmentation on the merged objects</span>
+        <span class="c1"># If it is too slow this step can be parallelised</span>
+
+        <span class="n">SavedLab_list</span><span class="o">=</span><span class="nb">list</span><span class="p">()</span>
+        <span class="n">CleanedDict</span><span class="o">=</span><span class="n">total_data_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">couple</span> <span class="ow">in</span> <span class="n">SavedCombinations</span><span class="p">:</span>
+            <span class="n">SaveLab</span><span class="p">,</span> <span class="n">RemoveLabs</span><span class="p">,</span><span class="n">NewCoords</span><span class="o">=</span><span class="n">object_based_segmentation</span><span class="o">.</span><span class="n">IntersectionCouples</span><span class="p">(</span><span class="n">couple</span><span class="p">,</span><span class="n">total_data_dict</span><span class="p">)</span>
+            <span class="n">SavedLab_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SaveLab</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="n">RemoveLabs</span><span class="p">:</span>
+                <span class="k">del</span> <span class="n">CleanedDict</span><span class="p">[</span><span class="n">lab</span><span class="p">]</span>
+            <span class="n">CleanedDict</span><span class="p">[</span><span class="n">SaveLab</span><span class="p">]</span><span class="o">=</span><span class="n">NewCoords</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">CleanedDict</span><span class="o">=</span><span class="n">total_data_dict</span> 
+
+
+    <span class="c1"># Calculate all objects properties</span>
+    <span class="n">all_objects_list</span> <span class="o">=</span> <span class="p">[(</span><span class="n">key</span><span class="p">,</span><span class="n">coords</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">coords</span> <span class="ow">in</span> <span class="n">CleanedDict</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+
+    <span class="n">futures_processes</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">object_based_segmentation</span><span class="o">.</span><span class="n">obj_properties_calculator</span><span class="p">,</span><span class="n">all_objects_list</span><span class="p">)</span>
+
+    <span class="n">all_objects_properties_list</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span><span class="n">futures_processes</span><span class="p">)</span>
+
+
+    <span class="c1"># convert the list to a dictionary</span>
+    <span class="n">all_objects_properties_dict</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">all_objects_properties_list</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">}</span>
+
+    <span class="c1"># Save all the objects</span>
+    <span class="n">segmented_objs_fname</span> <span class="o">=</span> <span class="n">processing_directory</span> <span class="o">+</span> <span class="s1">&#39;segmented_&#39;</span> <span class="o">+</span> <span class="n">segmentation_staining</span> <span class="o">+</span> <span class="s1">&#39;_all_objs_properties.pkl&#39;</span></div>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">all_objects_properties_dict</span><span class="p">,</span><span class="nb">open</span><span class="p">(</span><span class="n">segmented_objs_fname</span><span class="p">,</span><span class="s1">&#39;wb&#39;</span><span class="p">))</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">staining_segmentation</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, simone codeluppi.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

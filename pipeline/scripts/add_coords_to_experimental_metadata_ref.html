@@ -198,29 +198,30 @@
 <dt id="add_coords_to_experimental_metadata.add_coords_to_experimental_metadata">
 <code class="descclassname">add_coords_to_experimental_metadata.</code><code class="descname">add_coords_to_experimental_metadata</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/add_coords_to_experimental_metadata.html#add_coords_to_experimental_metadata"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#add_coords_to_experimental_metadata.add_coords_to_experimental_metadata" title="Permalink to this definition">¶</a></dt>
 <dd><p>Script used to add the coords to the Experimental_metadata.yaml file.
-In order to work: 
-- The Experimental_metadata.yaml file needs to have the processing hybridization 
-and the coords at point 0 initialized
-TilesPositions:
+In order to work:</p>
+<ul class="simple">
+<li>The Experimental_metadata.yaml file needs to have the processing hybridization</li>
+</ul>
+<p>and the coords at point 0 initialized: ex:</p>
+<p>TilesPositions:  
 Hybridization1:</p>
 <blockquote>
 <div>0:</div></blockquote>
 <ul class="simple">
 <li>The coords file extracted from the Nikon microscope need to be in a text file</li>
 </ul>
-<p>ex. Hyb1_Coords.txt Coords tag is necessary and Hyb is the hybridization_key</p>
-<p>Input via argparse:
-path      – string. Exact path to the folder, including</p>
-<blockquote>
-<div>trailing “/”</div></blockquote>
+<p>ex. Hyb1_Coords.txt. The Coords tag is necessary and Hyb is the hybridization_key</p>
+<ul class="simple">
+<li>The input parameters are passed via argparse</li>
+</ul>
 <dl class="docutils">
-<dt>hybridization_number      – str. Hybridization number denoting for which</dt>
-<dd>hybridization we should read and insert the coordinates</dd>
+<dt>hybridization_number: string</dt>
+<dd>Hybridization number (ex. 3) describing the hybridization to process.</dd>
+<dt>path: string </dt>
+<dd>Exact path to the folder containing the text file with the coordinates.</dd>
+<dt>hybridization_key: string </dt>
+<dd>Possible values ‘Hyb’ or ‘Strip’. To add coordinates for stripping if necessary.</dd>
 </dl>
-<p>Optional arguments:
-hybridization_key     – string. Possible values ‘Hyb’ or ‘Strip’. To add</p>
-<blockquote>
-<div>coordinates for stripping if necessary.</div></blockquote>
 </dd></dl>
 
 </div>

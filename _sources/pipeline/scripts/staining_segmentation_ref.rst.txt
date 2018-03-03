@@ -3,5 +3,5 @@
 Staining segmentation
 =====================
 
-.. automodule:: Staining_segmentation
+.. automodule:: staining_segmentation
    :members:

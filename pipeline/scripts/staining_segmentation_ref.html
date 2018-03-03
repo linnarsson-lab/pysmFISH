@@ -192,8 +192,27 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="staining-segmentation">
-<span id="id1"></span><h1>Staining segmentation<a class="headerlink" href="#staining-segmentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-staining_segmentation">
+<span id="id1"></span><span id="staining-segmentation"></span><h1>Staining segmentation<a class="headerlink" href="#module-staining_segmentation" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="staining_segmentation.staining_segmentation">
+<code class="descclassname">staining_segmentation.</code><code class="descname">staining_segmentation</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/staining_segmentation.html#staining_segmentation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#staining_segmentation.staining_segmentation" title="Permalink to this definition">¶</a></dt>
+<dd><p>This script will segment the selected staining and output the identified 
+objects.</p>
+<p>All the parameters are entered via argparse.</p>
+<dl class="docutils">
+<dt>scheduler: string</dt>
+<dd>tcp address of the dask.distributed scheduler (ex. <a class="reference external" href="tcp://192.168.0.4:7003">tcp://192.168.0.4:7003</a>). 
+default = False. If False the process will run on the local computer using nCPUs-1</dd>
+<dt>path: string</dt>
+<dd>Path to the processing directory</dd>
+<dt>processing_file: string</dt>
+<dd>Path to the hdf5 file with the staning to process</dd>
+<dt>segmentation_staining: string</dt>
+<dd>Staining to be segmented</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 

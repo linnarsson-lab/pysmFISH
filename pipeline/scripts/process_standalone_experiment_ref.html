@@ -194,6 +194,30 @@
             
   <div class="section" id="module-process_standalone_experiment">
 <span id="process-standalone-experiment"></span><span id="standalone-experiment"></span><h1>Process standalone experiment<a class="headerlink" href="#module-process_standalone_experiment" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="process_standalone_experiment.process_standalone_experiment">
+<code class="descclassname">process_standalone_experiment.</code><code class="descname">process_standalone_experiment</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/process_standalone_experiment.html#process_standalone_experiment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#process_standalone_experiment.process_standalone_experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Script to run conversion, filtering and raw counting on a small set of images.
+The analysis run locally</p>
+<p>All the parameters are entered with argparse</p>
+<dl class="docutils">
+<dt>path: string</dt>
+<dd>Path to the experiment to process</dd>
+<dt>analysis_name: string</dt>
+<dd>Name of the analysis</dd>
+<dt>stringency: int</dt>
+<dd>Value of the stringency to use in the threshold selection. Default=0</dd>
+<dt>min_distance: int</dt>
+<dd>Min distance betwenn to peaks. Default=5</dd>
+<dt>min_plane: int</dt>
+<dd>Min plane for z-stack cropping. Default=None</dd>
+<dt>max_plane: int:</dt>
+<dd>Max plane for z-stack cropping. Default=None</dd>
+<dt>ncores: int</dt>
+<dd>Number of cores to use for the processing. Deafault=1</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 

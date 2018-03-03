@@ -104,6 +104,19 @@
 <li class="toctree-l2"><a class="reference internal" href="pipeline_overview.html">Pipeline overview</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Pipeline steps</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#image-acquisition">Image acquisition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#initial-processing">Initial processing</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#create-directories">Create directories</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-configuration-files">Create configuration files</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#filtering-raw-counting-and-stitching">Filtering, raw counting and Stitching</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#consolidate-experiment">Consolidate experiment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#transfer-the-stitched-files-and-data">Transfer the stitched files and data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#register-the-stitched-images">Register the stitched images</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-the-stitched-images-for-all-genes">Create the stitched images for all genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#dots-coords-processing">Dots coords processing</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#staining-segmentation">Staining segmentation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#counting-dots-in-segmented-regions">Counting dots in segmented regions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="scripts/index.html">Scripts</a></li>
@@ -188,86 +201,95 @@
 <span id="pipeline-description-steps"></span><h1>Pipeline steps<a class="headerlink" href="#pipeline-steps" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="image-acquisition">
 <h2>Image acquisition<a class="headerlink" href="#image-acquisition" title="Permalink to this headline">¶</a></h2>
-<p>The images are acquired using a Nikon epifluorescence miscroscope as 3D stack.
-For each channel in each hybridization and .nd2 file with all <code class="docutils literal notranslate"><span class="pre">xy</span></code> positions
-will be generated.</p>
-<p><a href="#id1"><span class="problematic" id="id2">**</span></a>Name convention:<a href="#id3"><span class="problematic" id="id4">**</span></a><code class="docutils literal notranslate"><span class="pre">HybNumber_exp_tag_ND2AssignedName_Gene.nd</span></code></p>
-<p># Directory organization</p>
-<p><strong>Initial processing</strong>
-All the directory for the experiments are initially (conversion/filtering/raw
-counting) are processed independently in serial mode. Each of them uses parallel
-processing. It is possible to process together hynridizations that belongs to
-different experiments</p>
-<p>## __data_to_process__
-top level folder that contains all the hybridizations that need to be analyzed.</p>
-<p>### __exp_tag_hybridization_number__
-(Ex. EXP-17-BP3597_hyb2)
-Folder containing:</p>
-<blockquote>
-<div><ul class="simple">
-<li><dl class="first docutils">
-<dt>Experimental_metadata.yaml file with the infos</dt>
-<dd>of the experiment</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt>Filtering_raw_counting.config.yaml file with the infos</dt>
-<dd>for the filtering and counting for the current experiment</dd>
-</dl>
-</li>
-<li>__exp_tag_hybridization_number_raw_data__  folder</li>
+<p>The images are acquired using a Nikon epifluorescence miscroscope as 3D stacks.
+For each channel of each hybridization an .nd2 file with all <code class="docutils literal notranslate"><span class="pre">xy</span></code> positions
+is generated.</p>
+<p><strong>File name convention:</strong> <code class="docutils literal notranslate"><span class="pre">HybNumber_exp_tag_Gene.nd</span></code></p>
+</div>
+<div class="section" id="initial-processing">
+<h2>Initial processing<a class="headerlink" href="#initial-processing" title="Permalink to this headline">¶</a></h2>
+<p>This step is experiment agnostic. You can preprocess hybridizations imaged for
+different experiments together. All the directory inside the top level folder
+are preprocessed (conversion/filtering/raw counting and stitching) independently
+in serial mode however each hyb processing make use of parallel processing.</p>
+<div class="section" id="create-directories">
+<h3>Create directories<a class="headerlink" href="#create-directories" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">data_to_process</span></code>: top level folder that contains all the hybridizations that need to be analyzed.</li>
+<li><code class="docutils literal notranslate"><span class="pre">exp_tag_hybridization_number</span></code>: (Ex: <code class="docutils literal notranslate"><span class="pre">EXP-17-BP3597_hyb2</span></code>) subfolder containing:</li>
+<li><code class="docutils literal notranslate"><span class="pre">exp_tag_hybridization_number_raw_data</span></code> (Ex: <code class="docutils literal notranslate"><span class="pre">EXP-17-BP3597_hyb2_raw_data</span></code>) subfolder of the
+<code class="docutils literal notranslate"><span class="pre">exp_tag_hybridization_number</span></code> with the .nd2 files of the genes analyzed in the
+<a href="#id1"><span class="problematic" id="id2">|</span></a>current cycle of hybridization</li>
 </ul>
-<dl class="docutils">
-<dt>(Ex. EXP-17-BP3597_hyb2_raw_data)</dt>
-<dd><ul class="first simple">
-<li>contains the .nd2 files that correspond to the genes analyzed in the</li>
+</div>
+<div class="section" id="create-configuration-files">
+<h3>Create configuration files<a class="headerlink" href="#create-configuration-files" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Copy the template of the <a class="reference internal" href="configuration/index.html#configuration"><span class="std std-ref">Experimental_metadata.yaml</span></a> file in the hyb folder.</li>
+<li>Extract the tiles coords from the raw nikon file and save them as <a class="reference internal" href="configuration/index.html#configuration"><span class="std std-ref">HybX_Coords.txt</span></a></li>
+<li>Enter the coords into the <code class="docutils literal notranslate"><span class="pre">Experimental_metadata.yaml</span></code> file using the <a class="reference internal" href="scripts/add_coords_to_experimental_metadata_ref.html#add-coords-exp-metadata"><span class="std std-ref">add_coords_to_experimental_metadata.py</span></a>.</li>
+<li>Copy the template of the <a class="reference internal" href="configuration/index.html#configuration"><span class="std std-ref">Filtering_raw_counting.config.yaml</span></a> file in the hyb
+<a href="#id3"><span class="problematic" id="id4">|</span></a>folder and edit the paramters.</li>
+<li>Copy the template of the <a class="reference internal" href="configuration/index.html#configuration"><span class="std std-ref">Staining_segmentation.config.yaml</span></a> file in the hyb
+<a href="#id5"><span class="problematic" id="id6">|</span></a>folder and edit the paramters.</li>
 </ul>
-<p class="last">current cycle of hybridization</p>
-</dd>
-</dl>
-</div></blockquote>
-<p><strong>Experiment specific processing</strong></p>
-<p># Steps</p>
-<p>## Overview
-- Process each hybridization separately.
-- Register the stitched images</p>
-<p>## (1) Create required Experimental_metadata.yaml file
-- Copy the template of the Experimental_metadata.yaml file in the hyb folder
-- Add the tiles coordinates saved from the nikon files for the processing</p>
-<blockquote>
-<div>hybridization to the Experimental_metadata.yaml using the <strong>add_coords_to_experimental_metadata.py</strong> script.</div></blockquote>
-<p>## (2) Create the Filtering_raw_counting.config.yaml
-Create the Filtering_raw_counting.config.yaml that contains the parameters
-used for the filtering, the raw counting of the images and the stitching and save
-it in the hyb folder</p>
-<p>## (3) Filter/Raw counting/Stitching
-Process the hybs saved in a common folder using the
-<strong>preprocessing_script.py</strong> The hyb in the processing folder can be from
+</div>
+</div>
+<div class="section" id="filtering-raw-counting-and-stitching">
+<h2>Filtering, raw counting and Stitching<a class="headerlink" href="#filtering-raw-counting-and-stitching" title="Permalink to this headline">¶</a></h2>
+<p>Process the hybs saved in a common folder Ex: <code class="docutils literal notranslate"><span class="pre">data_to_process</span></code> using the
+<a class="reference internal" href="scripts/preprocessing_script_ref.html#preprocessing-script"><span class="std std-ref">preprocessing_script.py</span></a> The hybs in the processing folder can be from
 different experiments and will be run sequentially.</p>
-<p>## (4) Consolidate experiment
-Transfer all the hyb folders belonging to the same experiment in one single
-folder name with the experiment name (Ex. EXP-17-BP3597). The same name that is
-Experimental_metadata.yaml file. Copy the Experimental_metadata.yaml and Filtering_raw_counting.config.yaml of the experiment in the folder as well.</p>
-<p>## (5) Transfer the stitched files and data
-Transfer/copy the XX.sf.hdf5 and XX_data.pkl files generated for each hyb in a
-folder. The directory name must be stitched_reference_files.</p>
-<p>## (6) Align the stitched images
-Aligned all the stitched images using the <strong>reference_registration.py</strong> script.</p>
-<p>## (7) Create the stitched images for all genes using the registered coords.
-This step is not necessary for the following steps but is useful to visualize
-the filtered images <strong>apply_stitching.py</strong>.</p>
-<p>## (8) Dots coords processing
-The <strong>dots_coords_coorection.py</strong> script is used to aggregate the raw counting
-registration_data and to remove the overlapping dots that are counted multiple
-times in the regions of overlapping between the images.</p>
-<p>## Additional scripts used for processing that don’t need to be run in
-## sequence</p>
-<p>## Staining segmentation
-The <strong>staining_segmentation.py</strong> script can be used to segment IF or polyA
+</div>
+<div class="section" id="consolidate-experiment">
+<h2>Consolidate experiment<a class="headerlink" href="#consolidate-experiment" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Transfer all the hyb folders belonging to the same experiment in one single
+folder named with the experiment name (Ex. <code class="docutils literal notranslate"><span class="pre">EXP-17-BP3597</span></code>).
+Use the same name that is in the <code class="docutils literal notranslate"><span class="pre">Experimental_metadata.yaml</span></code> file.</li>
+<li>Copy the <code class="docutils literal notranslate"><span class="pre">Experimental_metadata.yaml</span></code> that contains the coords of all hybridizations in the experiment folder.</li>
+<li>Copy the <code class="docutils literal notranslate"><span class="pre">Filtering_raw_counting.config.yaml</span></code> of the experiment in the experiment folder.</li>
+</ul>
+</div>
+<div class="section" id="transfer-the-stitched-files-and-data">
+<h2>Transfer the stitched files and data<a class="headerlink" href="#transfer-the-stitched-files-and-data" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Create the <code class="docutils literal notranslate"><span class="pre">stitched_reference_files</span></code> subdirecotry in the experimental directory</li>
+<li>Transfer/copy the <code class="docutils literal notranslate"><span class="pre">XX.sf.hdf5</span></code> and <code class="docutils literal notranslate"><span class="pre">XX_data.pkl</span></code> into the <code class="docutils literal notranslate"><span class="pre">stitched_reference_files</span></code>
+subdirectory</li>
+</ul>
+</div>
+<div class="section" id="register-the-stitched-images">
+<h2>Register the stitched images<a class="headerlink" href="#register-the-stitched-images" title="Permalink to this headline">¶</a></h2>
+<p>Register all the stitched images using the <a class="reference internal" href="scripts/reference_registration_ref.html#ref-registration"><span class="std std-ref">reference_registration.py</span></a></p>
+</div>
+<div class="section" id="create-the-stitched-images-for-all-genes">
+<h2>Create the stitched images for all genes<a class="headerlink" href="#create-the-stitched-images-for-all-genes" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>This step uses the registered coords.</li>
+<li>Create all the stitched images using <a class="reference internal" href="scripts/apply_stitching_ref.html#apply-stitching"><span class="std std-ref">apply_stitching.py</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="dots-coords-processing">
+<h2>Dots coords processing<a class="headerlink" href="#dots-coords-processing" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="scripts/dots_coords_correction_ref.html#dots-coords-correction"><span class="std std-ref">dots_coords_coorection.py</span></a>
+script is used to aggregate the raw counting registration_data and to remove
+the overlapping RNA molecules that are counted multiple times in the regions of overlapping between the images.</p>
+</div>
+<div class="section" id="staining-segmentation">
+<h2>Staining segmentation<a class="headerlink" href="#staining-segmentation" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="scripts/staining_segmentation_ref.html#staining-segmentation"><span class="std std-ref">staining_segmentation.py</span></a> script is used to segment IF or polyA
 staining. It returns a dictionary with all the identified objects. The parameters
-used for the segmentation are in a <strong>Staining_segmentation.config.yaml</strong> file.
-To test the parameter and visualize the results is possible to use the
-<strong>Visualization_of_segmentation_results.ipynb</strong> in the notebooks folder.</p>
+used for the segmentation are in the <code class="docutils literal notranslate"><span class="pre">Staining_segmentation.config.yaml</span></code> file.</p>
+</div>
+<div class="section" id="counting-dots-in-segmented-regions">
+<h2>Counting dots in segmented regions<a class="headerlink" href="#counting-dots-in-segmented-regions" title="Permalink to this headline">¶</a></h2>
+<p>Use the <cite>map_counting.py</cite> to count the RNA molecules in each segmented region.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">the <code class="docutils literal notranslate"><span class="pre">map_counting.py</span></code> will be added to the scripts soon. Is currently converted from MPI
+to dask.distributed.</p>
+</div>
 </div>
 </div>
 

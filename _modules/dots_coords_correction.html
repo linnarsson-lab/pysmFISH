@@ -187,17 +187,19 @@
 <span class="sd">    This script is used to collect all the raw countings from the different</span>
 <span class="sd">    hybridization, correct the coords according to the registration of the </span>
 <span class="sd">    reference gene and remove the dots that overlap in the overlapping</span>
-<span class="sd">    regions between the images.</span>
+<span class="sd">    regions between the images. Save the aggregate coords and also the coords after dots processing</span>
 
+<span class="sd">    Input via argparse</span>
 
-<span class="sd">    Input via argparse:</span>
-<span class="sd">        path              -- string. Exact path to the experiment folder</span>
-<span class="sd">        pxl               -- int radius of pixel used to create the nhood</span>
-<span class="sd">                            that is used to define that two pixels are the same</span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
 
-
-<span class="sd">    Returns:</span>
-<span class="sd">    Save the aggregate coords and also the coords after dots processing</span>
+<span class="sd">    path: string. </span>
+<span class="sd">        Exact path to the experiment folder</span>
+<span class="sd">    pxl: int </span>
+<span class="sd">        Radius of pixel used to create the neighbourhood (nhood) used to define </span>
+<span class="sd">        when two dots are the same</span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Inputs of the function</span>

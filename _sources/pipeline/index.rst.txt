@@ -8,7 +8,6 @@ Processing pipeline
 
 .. toctree:: 
     pipeline_description_steps
-    :hidden:
 
 .. toctree:: 
     scripts/index

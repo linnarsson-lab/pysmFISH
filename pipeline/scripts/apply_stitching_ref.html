@@ -194,6 +194,23 @@
             
   <div class="section" id="module-apply_stitching">
 <span id="apply-stitching-to-osmfish-channels"></span><span id="apply-stitching"></span><h1>Apply stitching to osmFISH channels<a class="headerlink" href="#module-apply_stitching" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="apply_stitching.apply_stitching">
+<code class="descclassname">apply_stitching.</code><code class="descname">apply_stitching</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/apply_stitching.html#apply_stitching"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#apply_stitching.apply_stitching" title="Permalink to this definition">¶</a></dt>
+<dd><p>Script to apply the registration to all the osmFISH channels. It will create
+a stitched image in an hdf5 file</p>
+<p>All the parameters are entered via argparse</p>
+<dl class="docutils">
+<dt>experiment_path: string</dt>
+<dd>Path to the folder with the hybridizations</dd>
+<dt>reference_files_path: string</dt>
+<dd>Path to the folder with the _reg_data.pkl files</dd>
+<dt>scheduler: string</dt>
+<dd>tcp address of the dask.distributed scheduler (ex. <a class="reference external" href="tcp://192.168.0.4:7003">tcp://192.168.0.4:7003</a>). 
+default = False. If False the process will run on the local computer using nCPUs-1</dd>
+</dl>
+</dd></dl>
+
 </div>
 
 

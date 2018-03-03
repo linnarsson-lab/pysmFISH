@@ -194,12 +194,18 @@
             
   <div class="section" id="module-preprocessing_script">
 <span id="preprocessing"></span><span id="preprocessing-script"></span><h1>Preprocessing<a class="headerlink" href="#module-preprocessing_script" title="Permalink to this headline">¶</a></h1>
-<p>Preprocessing script that run filtering and raw counting</p>
 <dl class="function">
 <dt id="preprocessing_script.preprocessing_script">
 <code class="descclassname">preprocessing_script.</code><code class="descname">preprocessing_script</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/preprocessing_script.html#preprocessing_script"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#preprocessing_script.preprocessing_script" title="Permalink to this definition">¶</a></dt>
-<dd><p>This script will process all the subfolder that contains the Hyb to be 
-processed.</p>
+<dd><p>This script will process all the hybridization folders combined in a 
+processing folder. The input parameters are passed using arparse</p>
+<dl class="docutils">
+<dt>scheduler: string</dt>
+<dd>tcp address of the dask.distributed scheduler (ex. <a class="reference external" href="tcp://192.168.0.4:7003">tcp://192.168.0.4:7003</a>). 
+default = False. If False the process will run on the local computer using nCPUs-1</dd>
+<dt>path: string</dt>
+<dd>Path to the processing directory</dd>
+</dl>
 </dd></dl>
 
 </div>
