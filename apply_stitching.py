@@ -19,7 +19,25 @@ from pysmFISH import utils
 
 def apply_stitching():
 
+    """
+    Script to apply the registration to all the osmFISH channels. It will create
+    a stitched image in an hdf5 file
 
+    All the parameters are entered via argparse
+
+    Parameters:
+    -----------
+
+    experiment_path: string
+        Path to the folder with the hybridizations
+    reference_files_path: string
+        Path to the folder with the _reg_data.pkl files
+    scheduler: string
+        tcp address of the dask.distributed scheduler (ex. tcp://192.168.0.4:7003). 
+        default = False. If False the process will run on the local computer using nCPUs-1
+
+
+    """
 
     parser = argparse.ArgumentParser(description='Create the stitched images \
                                     after registration')

@@ -6,24 +6,29 @@ def add_coords_to_experimental_metadata():
     """
     Script used to add the coords to the Experimental_metadata.yaml file.
     In order to work: 
+
     - The Experimental_metadata.yaml file needs to have the processing hybridization 
-    and the coords at point 0 initialized
-    TilesPositions:
-    Hybridization1:
-        0:
+    and the coords at point 0 initialized: ex:  
+
+    TilesPositions:  
+    Hybridization1:  
+        0:  
 
     - The coords file extracted from the Nikon microscope need to be in a text file
-    ex. Hyb1_Coords.txt Coords tag is necessary and Hyb is the hybridization_key
+    ex. Hyb1_Coords.txt. The Coords tag is necessary and Hyb is the hybridization_key
 
-    Input via argparse:
-    path      -- string. Exact path to the folder, including
-                    trailing "/"
-    hybridization_number      -- str. Hybridization number denoting for which
-                    hybridization we should read and insert the coordinates
+    - The input parameters are passed via argparse
 
-    Optional arguments:
-    hybridization_key     -- string. Possible values 'Hyb' or 'Strip'. To add
-                coordinates for stripping if necessary.
+    Parameters:
+    -----------
+    hybridization_number: string
+        Hybridization number (ex. 3) describing the hybridization to process.
+    
+    path: string 
+        Exact path to the folder containing the text file with the coordinates.
+    
+    hybridization_key: string 
+        Possible values 'Hyb' or 'Strip'. To add coordinates for stripping if necessary.
 
     """
 

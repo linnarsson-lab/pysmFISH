@@ -1,8 +1,3 @@
-"""
-Preprocessing script that run filtering and raw counting
-
-"""
-#
 # Import dask distributed to monitor the running client
 from distributed import Client,LocalCluster
 from dask import delayed
@@ -32,8 +27,20 @@ from pysmFISH.stitching_package import pairwisesingle
 
 def preprocessing_script():
     """
-    This script will process all the subfolder that contains the Hyb to be 
-    processed.
+    This script will process all the hybridization folders combined in a 
+    processing folder. The input parameters are passed using arparse
+
+    Parameters:
+    -----------
+    
+    scheduler: string
+        tcp address of the dask.distributed scheduler (ex. tcp://192.168.0.4:7003). 
+        default = False. If False the process will run on the local computer using nCPUs-1
+
+    path: string
+        Path to the processing directory
+
+
     """
 
 

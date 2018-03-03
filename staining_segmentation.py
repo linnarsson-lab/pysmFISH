@@ -12,9 +12,26 @@ from pysmFISH import object_based_segmentation
 
 def staining_segmentation():
 
-"""
-    This script will segment the selected staining
-"""
+    """
+    This script will segment the selected staining and output the identified 
+    objects.
+
+    All the parameters are entered via argparse.
+
+    Parameters:
+    -----------
+
+    scheduler: string
+        tcp address of the dask.distributed scheduler (ex. tcp://192.168.0.4:7003). 
+        default = False. If False the process will run on the local computer using nCPUs-1
+    path: string
+        Path to the processing directory
+    processing_file: string
+        Path to the hdf5 file with the staning to process
+    segmentation_staining: string
+        Staining to be segmented
+
+    """
 
     # Inputs of the function
     parser = argparse.ArgumentParser(description='Segmentation script')

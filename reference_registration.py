@@ -13,12 +13,19 @@ def reference_registration():
     The output are pickle files with the recalculated corners according to the 
     registration
 
-    Input via argparse:
-        path              -- string. Exact path to the folder
-        reference_gene    -- string. Reference gene used for stitching
-        fraction          -- float. Fraction of the image to use for the alignment.
-                            Selection start from the center of the image. 
-                            default 0.2
+    The input parameters are entered via argparse
+
+    Parameters:
+    -----------
+
+    path: string. 
+        Exact path to the folder with the stitched .sf.hdf5
+    reference_gene: string. 
+        Reference gene used for stitching
+    fraction: float. 
+        Fraction of the image to use for the registration. 
+        Selection start from the center of the image. 
+        Default 0.2
 
     """
 

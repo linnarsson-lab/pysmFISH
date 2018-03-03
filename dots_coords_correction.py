@@ -13,17 +13,19 @@ def dots_coords_correction():
     This script is used to collect all the raw countings from the different
     hybridization, correct the coords according to the registration of the 
     reference gene and remove the dots that overlap in the overlapping
-    regions between the images.
+    regions between the images. Save the aggregate coords and also the coords after dots processing
 
+    Input via argparse
 
-    Input via argparse:
-        path              -- string. Exact path to the experiment folder
-        pxl               -- int radius of pixel used to create the nhood
-                            that is used to define that two pixels are the same
+    Parameters:
+    -----------
 
-
-    Returns:
-    Save the aggregate coords and also the coords after dots processing
+    path: string. 
+        Exact path to the experiment folder
+    pxl: int 
+        Radius of pixel used to create the neighbourhood (nhood) used to define 
+        when two dots are the same
+    
     """
 
     # Inputs of the function

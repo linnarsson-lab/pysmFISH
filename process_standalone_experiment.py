@@ -15,6 +15,33 @@ from pysmFISH import utils
 
 def process_standalone_experiment():
 
+    """
+    Script to run conversion, filtering and raw counting on a small set of images.
+    The analysis run locally
+
+    All the parameters are entered with argparse
+
+    Parameters:
+    -----------
+
+    path: string
+        Path to the experiment to process
+    analysis_name: string
+        Name of the analysis
+    stringency: int
+        Value of the stringency to use in the threshold selection. Default=0
+    min_distance: int
+        Min distance betwenn to peaks. Default=5
+    min_plane: int
+        Min plane for z-stack cropping. Default=None
+    max_plane: int:
+        Max plane for z-stack cropping. Default=None
+    ncores: int
+        Number of cores to use for the processing. Deafault=1
+
+
+    """
+
     # input to the function
     parser = argparse.ArgumentParser(description='Counting and filtering experiment')
     parser.add_argument('-path', help='path to experiment to analyze')
