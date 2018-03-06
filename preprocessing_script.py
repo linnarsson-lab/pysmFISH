@@ -91,7 +91,7 @@ def preprocessing_script():
     for processing_hyb in processing_hyb_list:
     
         # Determine the hyb number from the name
-        hybridization_number = processing_hyb[-1]
+        hybridization_number = processing_hyb.split('_hyb')[-1]
         hybridization = 'Hybridization' + hybridization_number
         hyb_dir = processing_directory + processing_hyb + add_slash
         
@@ -320,7 +320,7 @@ def preprocessing_script():
 
         # Determine the tiles organization
         tiles, contig_tuples, nr_pixels, z_count, micData = stitching.get_pairwise_input_npy(image_properties,converted_positions, hybridization,
-                                est_overlap = 0.1, y_flip = False, nr_dim = 2)
+                                est_overlap = est_overlap, y_flip = False, nr_dim = 2)
 
 
 
