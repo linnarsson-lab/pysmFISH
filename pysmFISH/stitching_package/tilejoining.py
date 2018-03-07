@@ -1270,9 +1270,14 @@ def generate_blended_tile_npy(corner_ind_coord,stitching_files_dir,
         
         else:
             blended_tile = cur_tile
+        
         # Convert the blended tile to uint16 to be able to save it in the 
         # prefilled hdf5
-        blended_tile = img_as_uint(blended_tile)
+        # if blended_tile.max() >1 :
+        #     blended_tile = blended_tile/blended_tile.max()
+
+        # blended_tile[blended_tile<-0] = 0        
+        # blended_tile = img_as_uint(blended_tile)
 
         # Save the blended tiles
         fname = blended_tiles_directory + analysis_name+'_'+processing_hyb+'_'+reference_gene+'_blended_tile_pos'+tile_number

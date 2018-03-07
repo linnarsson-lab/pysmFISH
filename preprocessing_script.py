@@ -359,10 +359,10 @@ def preprocessing_script():
 
         # Fill the hdf5 containing the stitched image with empty data and
         # create the blending mask
-        stitched_group['final_image'][:]= np.zeros(joining['final_image_shape'],dtype=np.uint16)
+        stitched_group['final_image'][:]= np.zeros(joining['final_image_shape'],dtype=np.float64)
         if blend is not None:
             # make mask
-            stitched_group['blending_mask'][:] = np.zeros(joining['final_image_shape'][-2:],dtype=np.uint16)
+            stitched_group['blending_mask'][:] = np.zeros(joining['final_image_shape'][-2:],dtype=np.float64)
             tilejoining.make_mask(joining, nr_pixels, stitched_group['blending_mask'])
 
             

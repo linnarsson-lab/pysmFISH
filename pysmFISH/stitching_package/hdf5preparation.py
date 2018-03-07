@@ -449,7 +449,7 @@ def create_structures_hdf5_stitched_ref_gene_file_npy(stitching_file, joining, n
     try:
         final_image = stitched_group.require_dataset('final_image',
                                                 joining['final_image_shape'],
-                                                dtype = np.uint16)
+                                                dtype = np.float64)
     except TypeError as err:
         logger.info("Incompatible 'final_image' data set already existed, deleting old dataset.\n {}"
                     .format(err))
@@ -457,7 +457,7 @@ def create_structures_hdf5_stitched_ref_gene_file_npy(stitching_file, joining, n
         inout.free_hdf5_space(stitching_file)
         final_image = stitched_group.require_dataset('final_image',
                                                 joining['final_image_shape'],
-                                                dtype = np.uint16)
+                                                dtype = np.float64)
     
 
     # If blending is required initialize the blending mask in the
@@ -470,7 +470,7 @@ def create_structures_hdf5_stitched_ref_gene_file_npy(stitching_file, joining, n
         try:
             blending_mask = stitched_group.require_dataset('blending_mask',
                                                    joining['final_image_shape'][-2:],
-                                                   dtype = np.uint8)
+                                                   dtype = np.float64)
         except TypeError as err:
             logger.info("Incompatible 'blending_mask' data set already existed, deleting old dataset.\n {}"
                         .format(err))
@@ -478,7 +478,7 @@ def create_structures_hdf5_stitched_ref_gene_file_npy(stitching_file, joining, n
             inout.free_hdf5_space(stitching_file)
             final_image = stitched_group.require_dataset('blending_mask',
                                                    joining['final_image_shape'][-2:],
-                                                   dtype = np.uint8)
+                                                   dtype = np.float64)
 
     # Check type of blending
     if blend == 'non linear':
