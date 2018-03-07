@@ -1,6 +1,6 @@
 Metadata-Version: 1.2
 Name: pysmFISH
-Version: 0.0.3
+Version: 0.0.4
 Summary: Analysis of large spatial transcriptomics data (osmFISH).
 Home-page: https://linnarssonlab.org/osmFISH/
 Author: Simone Codeluppi
