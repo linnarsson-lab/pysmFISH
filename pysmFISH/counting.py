@@ -76,6 +76,10 @@ def filtering_and_counting(fpath_img_to_filter,filtered_png_img_gene_dirs,filter
         counting_dict=thr_calculator(img_filtered,min_distance,stringency)
 
 
+
+    # Non converted img
+    img_filtered_original = img_filtered.copy()
+
     # Convert image to uint16
     # Clip the values above 1
     img_filtered[img_filtered>1] = 1
@@ -99,7 +103,7 @@ def filtering_and_counting(fpath_img_to_filter,filtered_png_img_gene_dirs,filter
     io.imsave(fname_png,img_filtered)
 
     fname_npy = img_saving_dir_npy+experiment_name+'_'+hyb+'_'+gene+'_'+'pos_'+pos+'.npy'
-    np.save(fname_npy,img_filtered,allow_pickle=False)
+    np.save(fname_npy,img_filtered_original,allow_pickle=False)
 
 
     if counting_dict:
@@ -157,7 +161,7 @@ def filtering_and_counting_experiment(fpath_img_to_filter,filtered_dir_path,
     not_counting=['Nuclei','Dapi','DAPI']
     
     # Filtering image according to gene
-    if channel in not_counting or '_IF' in channel or channel == 'polyA':
+    if channel in not_counting or '-IF' in channel or channel == 'polyA':
         # Remove the background from the nuclei
         img_filtered = nuclei_filtering(img_stack)
         counting_dict = None
@@ -264,6 +268,10 @@ def filtering_and_counting_ill_correction(fpath_img_to_filter,illumination_funct
         # Count the dots in the whole image
         counting_dict=thr_calculator(img_filtered,min_distance,stringency)
         
+    
+    # Non converted img
+    img_filtered_original = img_filtered.copy()
+
     # Convert image to uint16
     # Clip the values above 1
     img_filtered[img_filtered>1] = 1
@@ -288,7 +296,7 @@ def filtering_and_counting_ill_correction(fpath_img_to_filter,illumination_funct
     io.imsave(fname_png,img_filtered)
 
     fname_npy = img_saving_dir_npy+experiment_name+'_'+hyb+'_'+gene+'_'+'pos_'+pos+'.npy'
-    np.save(fname_npy,img_filtered,allow_pickle=False)
+    np.save(fname_npy,img_filtered_original,allow_pickle=False)
 
 
     if counting_dict:
@@ -298,3 +306,41 @@ def filtering_and_counting_ill_correction(fpath_img_to_filter,illumination_funct
         pickle.dump(counting_dict,open(fname,'wb'))
            
     return
+
+def counting_only(fpath_img_to_count,counting_gene_dirs, min_distance=5, stringency=0):
+    """
+    Function used to clean the images and to count the smFISH dots.
+    It is designed to process in parallel all the tmp file images
+    stored as numpy arrays after conversion from the microscope format.
+    
+    Parameters:
+    ------------
+
+    fpath_img_to_count: str 
+        path to the file to process
+    counting_gene_dirs: list 
+        list of the paths of the directories where the countings of the filtered
+        images are saved.
+    min_distance: int 
+        minimum distance between dots.
+    stringency: int 
+        stringency use to select the threshold used for counting.
+    """
+    
+    # Get infos from file name
+    fname_split = fpath_img_to_count.split('/')[-1].split('_')
+    experiment_name = fname_split[0]
+    hyb = fname_split[1]
+    gene = fname_split[2]
+    pos = fname_split[4].split('.')[0]
+    
+    
+    # Load the image to process
+    img = np.load(fpath_img_to_count) # image is np.uint16
+    img = img_as_float(img)
+       
+    # Count the dots in the whole image
+    counting_dict=thr_calculator(img,min_distance,stringency)
+    counting_saving_dir=[saving_dir for saving_dir in counting_gene_dirs if gene in saving_dir.split('/')[-2] ][0]
+    fname = counting_saving_dir+experiment_name+'_'+hyb+'_'+gene+'_'+'pos_'+pos+'.pkl'
+    pickle.dump(counting_dict,open(fname,'wb'))
