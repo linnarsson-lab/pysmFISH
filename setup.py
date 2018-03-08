@@ -20,7 +20,7 @@ setup(
         'ruamel.yaml',
         'h5py',
         'dask',
-        'distributed',
+        'distributed==1.18.3',
         'mpi4py'
     ],
     entry_points='''
