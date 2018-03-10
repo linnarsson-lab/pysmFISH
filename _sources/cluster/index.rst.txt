@@ -39,16 +39,52 @@ Run the process on a cluster
 From a terminal window ``ssh -L 8787:localhost:8787 user@cluster.ext`` (8787 is the port assigned by defalult).
 
 .. tip::
-    It is possible to setup a script for setting up a cluster with specific options:
+    It is possible to use a couple of simple scripts to launch/kill a cluster. It works with a small number of nodes.
+    The advantage is that you can start a conda env in all nodes and run dask-distributed without a 
+    worload managing software like SLURM or PBS.
+    For larger cluster look at the `dask-distributed <https://distributed.readthedocs.io/en/latest/>`_ manual.  
+    
+    **Example**
+    We have a cluster with few nodes. The main node is called monod and you need to ssh into it in order to access the
+    nodes called monod01, monod02...etc.
+    in the launching bash script below I will use monod01 as scheduler and monod09 and monod10 as workers.
+
+    **launch_cluster.sh**
     ::
-        #!/bin/bash  
-        USERNAME=someUser  
-        HOSTS="node1 node2 node3"  
-        SCRIPT="pwd; ls" # edit script with dask code for setting it up  
-        for HOSTNAME in ${HOSTS} ; do  
-            ssh -o StrictHostKeyChecking=no -l ${USERNAME} ${HOSTNAME} "${SCRIPT}"  
+        #!/bin/bash
+        CONDAENV="source activate testing_speed" 
+        SCHEDULERON="dask-scheduler"
+        SCHEDULER="monod01"
+        NPROCS="10"
+        NTHREDS="1"
+        MEM="220e9"
+        LOCDIR="/tmp"
+        WORKERON="dask-worker $SCHEDULER:8786 --nprocs $NPROCS --nthreads $NTHREDS --memory-limit $MEM --local-directory $LOCDIR"
+        WORKERS="monod10 monod09"
+
+        ssh $SCHEDULER "$CONDAENV; $SCHEDULERON" & 
+
+        for WORKER in $WORKERS
+        do
+            ssh $WORKER "$CONDAENV; $WORKERON" & 
         done
+        exit   
+    
+    **kill_cluster.sh**
+    ::
+        #!/bin/bash
+        SCHEDULER="monod01"
+        WORKERS="monod10 monod09"
+        KILLSCHEDULER="killall -INT dask-scheduler"
+        KILLWORKER="killall -INT dask-worker"
 
 
+        ssh $SCHEDULER "$KILLSCHEDULER" & 
+
+        for WORKER in $WORKERS
+        do
+            ssh $WORKER "$KILLWORKER" &
+        done
+        exit  
 
 

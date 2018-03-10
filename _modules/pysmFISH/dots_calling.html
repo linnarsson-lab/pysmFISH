@@ -391,6 +391,193 @@
     <span class="n">counting_dict</span><span class="p">[</span><span class="s1">&#39;selected_peaks_int&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_peaks_int</span>
     </div>
     <span class="k">return</span> <span class="n">counting_dict</span>
+
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.ndimage</span> <span class="k">as</span> <span class="nn">ndi</span>
+<span class="kn">from</span> <span class="nn">skimage</span> <span class="k">import</span> <span class="n">filters</span>
+<span class="kn">from</span> <span class="nn">skimage.feature</span> <span class="k">import</span> <span class="n">peak_local_max</span>
+<span class="kn">from</span> <span class="nn">skimage.filters</span> <span class="k">import</span> <span class="n">rank_order</span>
+
+
+<div class="viewcode-block" id="peak_thrs_local_max"><a class="viewcode-back" href="../../API/dots_calling_ref.html#pysmFISH.dots_calling.peak_thrs_local_max">[docs]</a><span class="k">def</span> <span class="nf">peak_thrs_local_max</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">threshold_abs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                        <span class="n">threshold_rel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">exclude_border</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indices</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">num_peaks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function after modification:</span>
+<span class="sd">    returns the coordinates for a range of thresholds</span>
+
+<span class="sd">    Peaks are the local maxima in a region of `2 * min_distance + 1`</span>
+<span class="sd">    (i.e. peaks are separated by at least `min_distance`).</span>
+
+<span class="sd">    If peaks are flat (i.e. multiple adjacent pixels have identical</span>
+<span class="sd">    intensities), the coordinates of all such pixels are returned.</span>
+
+<span class="sd">    If both `threshold_abs` and `threshold_rel` are provided, the maximum</span>
+<span class="sd">    of the two is chosen as the minimum intensity threshold of peaks.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image : ndarray</span>
+<span class="sd">        Input image.</span>
+<span class="sd">    min_distance : int, optional</span>
+<span class="sd">        Minimum number of pixels separating peaks in a region of `2 *</span>
+<span class="sd">        min_distance + 1` (i.e. peaks are separated by at least</span>
+<span class="sd">        `min_distance`).</span>
+<span class="sd">        To find the maximum number of peaks, use `min_distance=1`.</span>
+<span class="sd">    threshold_abs : float, optional</span>
+<span class="sd">        Minimum intensity of peaks. By default, the absolute threshold is</span>
+<span class="sd">        the minimum intensity of the image.</span>
+<span class="sd">    threshold_rel : float, optional</span>
+<span class="sd">        Minimum intensity of peaks, calculated as `max(image) * threshold_rel`.</span>
+<span class="sd">    exclude_border : int, optional</span>
+<span class="sd">        If nonzero, `exclude_border` excludes peaks from</span>
+<span class="sd">        within `exclude_border`-pixels of the border of the image.</span>
+<span class="sd">    indices : bool, optional</span>
+<span class="sd">        If True, the output will be an array representing peak</span>
+<span class="sd">        coordinates.  If False, the output will be a boolean array shaped as</span>
+<span class="sd">        `image.shape` with peaks present at True elements.</span>
+<span class="sd">    num_peaks : int, optional</span>
+<span class="sd">        Maximum number of peaks. When the number of peaks exceeds `num_peaks`,</span>
+<span class="sd">        return `num_peaks` peaks based on highest peak intensity.</span>
+<span class="sd">    footprint : ndarray of bools, optional</span>
+<span class="sd">        If provided, `footprint == 1` represents the local region within which</span>
+<span class="sd">        to search for peaks at every point in `image`.  Overrides</span>
+<span class="sd">        `min_distance` (also for `exclude_border`).</span>
+<span class="sd">    labels : ndarray of ints, optional</span>
+<span class="sd">        If provided, each unique region `labels == value` represents a unique</span>
+<span class="sd">        region to search for peaks. Zero is reserved for background.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    output : ndarray or ndarray of bools</span>
+
+<span class="sd">        * If `indices = True`  : (row, column, ...) coordinates of peaks.</span>
+<span class="sd">        * If `indices = False` : Boolean array shaped like `image`, with peaks</span>
+<span class="sd">          represented by True values.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The peak local maximum function returns the coordinates of local peaks</span>
+<span class="sd">    (maxima) in an image. A maximum filter is used for finding local maxima.</span>
+<span class="sd">    This operation dilates the original image. After comparison of the dilated</span>
+<span class="sd">    and original image, this function returns the coordinates or a mask of the</span>
+<span class="sd">    peaks where the dilated image equals the original image.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; img1 = np.zeros((7, 7))</span>
+<span class="sd">    &gt;&gt;&gt; img1[3, 4] = 1</span>
+<span class="sd">    &gt;&gt;&gt; img1[3, 2] = 1.5</span>
+<span class="sd">    &gt;&gt;&gt; img1</span>
+<span class="sd">    array([[ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="sd">           [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="sd">           [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="sd">           [ 0. ,  0. ,  1.5,  0. ,  1. ,  0. ,  0. ],</span>
+<span class="sd">           [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="sd">           [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="sd">           [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ]])</span>
+
+<span class="sd">    &gt;&gt;&gt; peak_local_max(img1, min_distance=1)</span>
+<span class="sd">    array([[3, 2],</span>
+<span class="sd">           [3, 4]])</span>
+
+<span class="sd">    &gt;&gt;&gt; peak_local_max(img1, min_distance=2)</span>
+<span class="sd">    array([[3, 2]])</span>
+
+<span class="sd">    &gt;&gt;&gt; img2 = np.zeros((20, 20, 20))</span>
+<span class="sd">    &gt;&gt;&gt; img2[10, 10, 10] = 1</span>
+<span class="sd">    &gt;&gt;&gt; peak_local_max(img2, exclude_border=0)</span>
+<span class="sd">    array([[10, 10, 10]])</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">exclude_border</span><span class="p">)</span> <span class="o">==</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">exclude_border</span> <span class="o">=</span> <span class="n">min_distance</span> <span class="k">if</span> <span class="n">exclude_border</span> <span class="k">else</span> <span class="mi">0</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+
+    <span class="c1"># In the case of labels, recursively build and return an output</span>
+    <span class="c1"># operating on each label separately</span>
+    <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">label_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="c1"># Reorder label values to have consecutive integers (no gaps)</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">label_values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">labels</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+            <span class="n">labels</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rank_order</span><span class="p">(</span><span class="n">labels</span><span class="p">[</span><span class="n">mask</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+        <span class="c1"># New values for new ordering</span>
+        <span class="n">label_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">label_values</span><span class="p">[</span><span class="n">label_values</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]:</span>
+            <span class="n">maskim</span> <span class="o">=</span> <span class="p">(</span><span class="n">labels</span> <span class="o">==</span> <span class="n">label</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="n">peak_local_max</span><span class="p">(</span><span class="n">image</span> <span class="o">*</span> <span class="n">maskim</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="n">min_distance</span><span class="p">,</span>
+                                  <span class="n">threshold_abs</span><span class="o">=</span><span class="n">threshold_abs</span><span class="p">,</span>
+                                  <span class="n">threshold_rel</span><span class="o">=</span><span class="n">threshold_rel</span><span class="p">,</span>
+                                  <span class="n">exclude_border</span><span class="o">=</span><span class="n">exclude_border</span><span class="p">,</span>
+                                  <span class="n">indices</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">num_peaks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span>
+                                  <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">indices</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">nonzero</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">image</span> <span class="o">==</span> <span class="n">image</span><span class="o">.</span><span class="n">flat</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">indices</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">out</span>
+
+    <span class="c1"># Non maximum filter</span>
+    <span class="k">if</span> <span class="n">footprint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">image_max</span> <span class="o">=</span> <span class="n">ndi</span><span class="o">.</span><span class="n">maximum_filter</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">footprint</span><span class="o">=</span><span class="n">footprint</span><span class="p">,</span>
+                                       <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">min_distance</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">image_max</span> <span class="o">=</span> <span class="n">ndi</span><span class="o">.</span><span class="n">maximum_filter</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">)</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">image</span> <span class="o">==</span> <span class="n">image_max</span>
+
+    <span class="k">if</span> <span class="n">exclude_border</span><span class="p">:</span>
+        <span class="c1"># zero out the image borders</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">ndim</span><span class="p">):</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">remove</span> <span class="o">=</span> <span class="p">(</span><span class="n">footprint</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">if</span> <span class="n">footprint</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                      <span class="k">else</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">exclude_border</span><span class="p">)</span>
+            <span class="n">mask</span><span class="p">[:</span><span class="n">remove</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="o">-</span><span class="n">remove</span> <span class="o">//</span> <span class="mi">2</span><span class="p">:]</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">swapaxes</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="c1"># find top peak candidates above a threshold</span>
+    <span class="n">thresholds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="n">threshold_abs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">threshold_abs</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">thresholds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">threshold_abs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">threshold_rel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">thresholds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">threshold_rel</span> <span class="o">*</span> <span class="n">image</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">thresholds</span><span class="p">:</span>
+        <span class="n">mask_original</span> <span class="o">=</span> <span class="n">mask</span>  <span class="c1"># save the local maxima&#39;s of the image</span>
+        <span class="n">thrs_coords</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># dictionary holds the coordinates correspond for each threshold</span>
+        <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="n">mask_original</span>
+            <span class="n">mask</span> <span class="o">&amp;=</span> <span class="n">image</span> <span class="o">&gt;</span> <span class="n">threshold</span>
+
+            <span class="c1"># get coordinates of peaks</span>
+            <span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">mask</span><span class="o">.</span><span class="n">nonzero</span><span class="p">())</span>
+
+            <span class="k">if</span> <span class="n">coordinates</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">num_peaks</span><span class="p">:</span>
+                <span class="n">intensities</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">flat</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ravel_multi_index</span><span class="p">(</span><span class="n">coordinates</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span>
+                                                              <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span>
+                <span class="n">idx_maxsort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">intensities</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">coordinates</span> <span class="o">=</span> <span class="n">coordinates</span><span class="p">[</span><span class="n">idx_maxsort</span><span class="p">][:</span><span class="n">num_peaks</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">indices</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+                <span class="n">thrs_coords</span><span class="p">[</span><span class="n">threshold</span><span class="p">]</span> <span class="o">=</span> <span class="n">coordinates</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">nd_indices</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">coordinates</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">nd_indices</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">return</span> <span class="n">out</span>
+    <span class="k">if</span> <span class="n">thresholds</span> <span class="ow">and</span> <span class="n">thrs_coords</span><span class="p">:</span></div>
+        <span class="k">return</span> <span class="n">thrs_coords</span>
 </pre></div>
 
            </div>

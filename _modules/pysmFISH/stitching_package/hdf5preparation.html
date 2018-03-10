@@ -623,7 +623,7 @@
     <span class="k">try</span><span class="p">:</span>
         <span class="n">final_image</span> <span class="o">=</span> <span class="n">stitched_group</span><span class="o">.</span><span class="n">require_dataset</span><span class="p">(</span><span class="s1">&#39;final_image&#39;</span><span class="p">,</span>
                                                 <span class="n">joining</span><span class="p">[</span><span class="s1">&#39;final_image_shape&#39;</span><span class="p">],</span>
-                                                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+                                                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Incompatible &#39;final_image&#39; data set already existed, deleting old dataset.</span><span class="se">\n</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
                     <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
@@ -631,7 +631,7 @@
         <span class="n">inout</span><span class="o">.</span><span class="n">free_hdf5_space</span><span class="p">(</span><span class="n">stitching_file</span><span class="p">)</span>
         <span class="n">final_image</span> <span class="o">=</span> <span class="n">stitched_group</span><span class="o">.</span><span class="n">require_dataset</span><span class="p">(</span><span class="s1">&#39;final_image&#39;</span><span class="p">,</span>
                                                 <span class="n">joining</span><span class="p">[</span><span class="s1">&#39;final_image_shape&#39;</span><span class="p">],</span>
-                                                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+                                                <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
     
 
     <span class="c1"># If blending is required initialize the blending mask in the</span>
@@ -644,7 +644,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">blending_mask</span> <span class="o">=</span> <span class="n">stitched_group</span><span class="o">.</span><span class="n">require_dataset</span><span class="p">(</span><span class="s1">&#39;blending_mask&#39;</span><span class="p">,</span>
                                                    <span class="n">joining</span><span class="p">[</span><span class="s1">&#39;final_image_shape&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span>
-                                                   <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+                                                   <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Incompatible &#39;blending_mask&#39; data set already existed, deleting old dataset.</span><span class="se">\n</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span>
                         <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">err</span><span class="p">))</span>
@@ -652,7 +652,7 @@
             <span class="n">inout</span><span class="o">.</span><span class="n">free_hdf5_space</span><span class="p">(</span><span class="n">stitching_file</span><span class="p">)</span>
             <span class="n">final_image</span> <span class="o">=</span> <span class="n">stitched_group</span><span class="o">.</span><span class="n">require_dataset</span><span class="p">(</span><span class="s1">&#39;blending_mask&#39;</span><span class="p">,</span>
                                                    <span class="n">joining</span><span class="p">[</span><span class="s1">&#39;final_image_shape&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">:],</span>
-                                                   <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+                                                   <span class="n">dtype</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
     <span class="c1"># Check type of blending</span>
     <span class="k">if</span> <span class="n">blend</span> <span class="o">==</span> <span class="s1">&#39;non linear&#39;</span><span class="p">:</span>

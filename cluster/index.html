@@ -210,14 +210,50 @@ will run locally using  <code class="docutils literal notranslate"><span class="
 <p>From a terminal window <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-L</span> <span class="pre">8787:localhost:8787</span> <span class="pre">user&#64;cluster.ext</span></code> (8787 is the port assigned by defalult).</p>
 <div class="admonition tip">
 <p class="first admonition-title">Tip</p>
-<p>It is possible to setup a script for setting up a cluster with specific options:</p>
-<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
-USERNAME=someUser
-HOSTS=&quot;node1 node2 node3&quot;
-SCRIPT=&quot;pwd; ls&quot; # edit script with dask code for setting it up
-for HOSTNAME in ${HOSTS} ; do
-    ssh -o StrictHostKeyChecking=no -l ${USERNAME} ${HOSTNAME} &quot;${SCRIPT}&quot;
+<p>It is possible to use a couple of simple scripts to launch/kill a cluster. It works with a small number of nodes.
+The advantage is that you can start a conda env in all nodes and run dask-distributed without a
+worload managing software like SLURM or PBS.
+For larger cluster look at the <a class="reference external" href="https://distributed.readthedocs.io/en/latest/">dask-distributed</a> manual.</p>
+<p><strong>Example</strong>
+We have a cluster with few nodes. The main node is called monod and you need to ssh into it in order to access the
+nodes called monod01, monod02…etc.
+in the launching bash script below I will use monod01 as scheduler and monod09 and monod10 as workers.</p>
+<p><strong>launch_cluster.sh</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+CONDAENV=&quot;source activate testing_speed&quot;
+SCHEDULERON=&quot;dask-scheduler&quot;
+SCHEDULER=&quot;monod01&quot;
+NPROCS=&quot;10&quot;
+NTHREDS=&quot;1&quot;
+MEM=&quot;220e9&quot;
+LOCDIR=&quot;/tmp&quot;
+WORKERON=&quot;dask-worker $SCHEDULER:8786 --nprocs $NPROCS --nthreads $NTHREDS --memory-limit $MEM --local-directory $LOCDIR&quot;
+WORKERS=&quot;monod10 monod09&quot;
+
+ssh $SCHEDULER &quot;$CONDAENV; $SCHEDULERON&quot; &amp;
+
+for WORKER in $WORKERS
+do
+    ssh $WORKER &quot;$CONDAENV; $WORKERON&quot; &amp;
 done
+exit
+</pre></div>
+</div>
+<p><strong>kill_cluster.sh</strong></p>
+<div class="last highlight-default notranslate"><div class="highlight"><pre><span></span>#!/bin/bash
+SCHEDULER=&quot;monod01&quot;
+WORKERS=&quot;monod10 monod09&quot;
+KILLSCHEDULER=&quot;killall -INT dask-scheduler&quot;
+KILLWORKER=&quot;killall -INT dask-worker&quot;
+
+
+ssh $SCHEDULER &quot;$KILLSCHEDULER&quot; &amp;
+
+for WORKER in $WORKERS
+do
+    ssh $WORKER &quot;$KILLWORKER&quot; &amp;
+done
+exit
 </pre></div>
 </div>
 </div>

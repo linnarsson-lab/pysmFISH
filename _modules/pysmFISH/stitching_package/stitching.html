@@ -1113,7 +1113,7 @@
 
 
 <div class="viewcode-block" id="get_pairwise_input_npy"><a class="viewcode-back" href="../../../API/stitching/stitching_ref.html#pysmFISH.stitching_package.stitching.get_pairwise_input_npy">[docs]</a><span class="k">def</span> <span class="nf">get_pairwise_input_npy</span><span class="p">(</span><span class="n">image_properties</span><span class="p">,</span><span class="n">converted_positions</span><span class="p">,</span> <span class="n">hybridization</span><span class="p">,</span>
-                        <span class="n">est_overlap</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">y_flip</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nr_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
+                        <span class="n">est_overlap</span><span class="p">,</span> <span class="n">y_flip</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">nr_dim</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Get the information necessary to do the pairwise allignment</span>
 <span class="sd">    Modified version of the get_pairwise_input functions that work on .npy </span>
 <span class="sd">    files and not on hdf5</span>
@@ -1212,6 +1212,7 @@
     <span class="c1"># Estimate the overlap in pixels with the overlap that the user</span>
     <span class="c1"># provided, default is 10%</span>
     <span class="n">est_x_tol</span> <span class="o">=</span> <span class="n">nr_pixels</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">est_overlap</span><span class="p">)</span>
+
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Estimating overlap at </span><span class="si">{}</span><span class="s2">%, that is </span><span class="si">{}</span><span class="s2"> pixels&quot;</span>
                 <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">est_overlap</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="n">est_x_tol</span><span class="p">))</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Number of pixels: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">nr_pixels</span><span class="p">))</span>

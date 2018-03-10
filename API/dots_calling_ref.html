@@ -189,6 +189,91 @@
   <div class="section" id="module-pysmFISH.dots_calling">
 <span id="dots-calling"></span><h1>dots_calling<a class="headerlink" href="#module-pysmFISH.dots_calling" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="pysmFISH.dots_calling.peak_thrs_local_max">
+<code class="descclassname">pysmFISH.dots_calling.</code><code class="descname">peak_thrs_local_max</code><span class="sig-paren">(</span><em>image</em>, <em>min_distance=1</em>, <em>threshold_abs=None</em>, <em>threshold_rel=None</em>, <em>exclude_border=True</em>, <em>indices=True</em>, <em>num_peaks=inf</em>, <em>footprint=None</em>, <em>labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysmFISH/dots_calling.html#peak_thrs_local_max"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.dots_calling.peak_thrs_local_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function after modification:
+returns the coordinates for a range of thresholds</p>
+<p>Peaks are the local maxima in a region of <cite>2 * min_distance + 1</cite>
+(i.e. peaks are separated by at least <cite>min_distance</cite>).</p>
+<p>If peaks are flat (i.e. multiple adjacent pixels have identical
+intensities), the coordinates of all such pixels are returned.</p>
+<p>If both <cite>threshold_abs</cite> and <cite>threshold_rel</cite> are provided, the maximum
+of the two is chosen as the minimum intensity threshold of peaks.</p>
+<dl class="docutils">
+<dt>image <span class="classifier-delimiter">:</span> <span class="classifier">ndarray</span></dt>
+<dd>Input image.</dd>
+<dt>min_distance <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd>Minimum number of pixels separating peaks in a region of <cite>2 *
+min_distance + 1</cite> (i.e. peaks are separated by at least
+<cite>min_distance</cite>).
+To find the maximum number of peaks, use <cite>min_distance=1</cite>.</dd>
+<dt>threshold_abs <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Minimum intensity of peaks. By default, the absolute threshold is
+the minimum intensity of the image.</dd>
+<dt>threshold_rel <span class="classifier-delimiter">:</span> <span class="classifier">float, optional</span></dt>
+<dd>Minimum intensity of peaks, calculated as <cite>max(image) * threshold_rel</cite>.</dd>
+<dt>exclude_border <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd>If nonzero, <cite>exclude_border</cite> excludes peaks from
+within <cite>exclude_border</cite>-pixels of the border of the image.</dd>
+<dt>indices <span class="classifier-delimiter">:</span> <span class="classifier">bool, optional</span></dt>
+<dd>If True, the output will be an array representing peak
+coordinates.  If False, the output will be a boolean array shaped as
+<cite>image.shape</cite> with peaks present at True elements.</dd>
+<dt>num_peaks <span class="classifier-delimiter">:</span> <span class="classifier">int, optional</span></dt>
+<dd>Maximum number of peaks. When the number of peaks exceeds <cite>num_peaks</cite>,
+return <cite>num_peaks</cite> peaks based on highest peak intensity.</dd>
+<dt>footprint <span class="classifier-delimiter">:</span> <span class="classifier">ndarray of bools, optional</span></dt>
+<dd>If provided, <cite>footprint == 1</cite> represents the local region within which
+to search for peaks at every point in <cite>image</cite>.  Overrides
+<cite>min_distance</cite> (also for <cite>exclude_border</cite>).</dd>
+<dt>labels <span class="classifier-delimiter">:</span> <span class="classifier">ndarray of ints, optional</span></dt>
+<dd>If provided, each unique region <cite>labels == value</cite> represents a unique
+region to search for peaks. Zero is reserved for background.</dd>
+</dl>
+<p>output : ndarray or ndarray of bools</p>
+<blockquote>
+<div><ul class="simple">
+<li>If <cite>indices = True</cite>  : (row, column, …) coordinates of peaks.</li>
+<li>If <cite>indices = False</cite> : Boolean array shaped like <cite>image</cite>, with peaks
+represented by True values.</li>
+</ul>
+</div></blockquote>
+<p>The peak local maximum function returns the coordinates of local peaks
+(maxima) in an image. A maximum filter is used for finding local maxima.
+This operation dilates the original image. After comparison of the dilated
+and original image, this function returns the coordinates or a mask of the
+peaks where the dilated image equals the original image.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">img1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img1</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img1</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img1</span>
+<span class="go">array([[ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="go">       [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="go">       [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="go">       [ 0. ,  0. ,  1.5,  0. ,  1. ,  0. ,  0. ],</span>
+<span class="go">       [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="go">       [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ],</span>
+<span class="go">       [ 0. ,  0. ,  0. ,  0. ,  0. ,  0. ,  0. ]])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">peak_local_max</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">array([[3, 2],</span>
+<span class="go">       [3, 4]])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">peak_local_max</span><span class="p">(</span><span class="n">img1</span><span class="p">,</span> <span class="n">min_distance</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">array([[3, 2]])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">img2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">img2</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">peak_local_max</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">exclude_border</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">array([[10, 10, 10]])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
 <dt id="pysmFISH.dots_calling.thr_calculator">
 <code class="descclassname">pysmFISH.dots_calling.</code><code class="descname">thr_calculator</code><span class="sig-paren">(</span><em>filtered_img</em>, <em>min_distance=3</em>, <em>stringency=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysmFISH/dots_calling.html#thr_calculator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.dots_calling.thr_calculator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function used to calculate the threshold to use for the dots

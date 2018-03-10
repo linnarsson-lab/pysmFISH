@@ -1444,9 +1444,14 @@
         
         <span class="k">else</span><span class="p">:</span>
             <span class="n">blended_tile</span> <span class="o">=</span> <span class="n">cur_tile</span>
+        
         <span class="c1"># Convert the blended tile to uint16 to be able to save it in the </span>
         <span class="c1"># prefilled hdf5</span>
-        <span class="n">blended_tile</span> <span class="o">=</span> <span class="n">img_as_uint</span><span class="p">(</span><span class="n">blended_tile</span><span class="p">)</span>
+        <span class="c1"># if blended_tile.max() &gt;1 :</span>
+        <span class="c1">#     blended_tile = blended_tile/blended_tile.max()</span>
+
+        <span class="c1"># blended_tile[blended_tile&lt;-0] = 0        </span>
+        <span class="c1"># blended_tile = img_as_uint(blended_tile)</span>
 
         <span class="c1"># Save the blended tiles</span>
         <span class="n">fname</span> <span class="o">=</span> <span class="n">blended_tiles_directory</span> <span class="o">+</span> <span class="n">analysis_name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">processing_hyb</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="n">reference_gene</span><span class="o">+</span><span class="s1">&#39;_blended_tile_pos&#39;</span><span class="o">+</span><span class="n">tile_number</span></div>

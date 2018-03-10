@@ -189,6 +189,25 @@
   <div class="section" id="module-pysmFISH.counting">
 <span id="counting"></span><h1>counting<a class="headerlink" href="#module-pysmFISH.counting" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
+<dt id="pysmFISH.counting.counting_only">
+<code class="descclassname">pysmFISH.counting.</code><code class="descname">counting_only</code><span class="sig-paren">(</span><em>fpath_img_to_count</em>, <em>counting_gene_dirs</em>, <em>min_distance=5</em>, <em>stringency=0</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysmFISH/counting.html#counting_only"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.counting.counting_only" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function used to clean the images and to count the smFISH dots.
+It is designed to process in parallel all the tmp file images
+stored as numpy arrays after conversion from the microscope format.</p>
+<dl class="docutils">
+<dt>fpath_img_to_count: str </dt>
+<dd>path to the file to process</dd>
+<dt>counting_gene_dirs: list </dt>
+<dd>list of the paths of the directories where the countings of the filtered
+images are saved.</dd>
+<dt>min_distance: int </dt>
+<dd>minimum distance between dots.</dd>
+<dt>stringency: int </dt>
+<dd>stringency use to select the threshold used for counting.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="pysmFISH.counting.filtering_and_counting">
 <code class="descclassname">pysmFISH.counting.</code><code class="descname">filtering_and_counting</code><span class="sig-paren">(</span><em>fpath_img_to_filter</em>, <em>filtered_png_img_gene_dirs</em>, <em>filtered_img_gene_dirs</em>, <em>counting_gene_dirs</em>, <em>illumination_correction=False</em>, <em>plane_keep=None</em>, <em>min_distance=5</em>, <em>stringency=0</em>, <em>skip_genes_counting=None</em>, <em>skip_tags_counting=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pysmFISH/counting.html#filtering_and_counting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pysmFISH.counting.filtering_and_counting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function used to clean the images and to count the smFISH dots.

@@ -16,7 +16,7 @@ Run the following command to make sure you have all the dependencies correctly i
 
 ::
 
-    conda install conda install numpy scipy scikit-image scikit-learn matplotlib sympy h5py mpi4py
+    conda install numpy scipy scikit-image scikit-learn matplotlib sympy h5py mpi4py
 
 .. _pypi:
 
