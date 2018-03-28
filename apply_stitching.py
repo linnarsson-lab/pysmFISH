@@ -8,6 +8,7 @@ import multiprocessing
 from distributed import Client,LocalCluster
 import logging
 import re
+import shutil
 
 # Own imports
 from pysmFISH.stitching_package import stitching
@@ -35,7 +36,6 @@ def apply_stitching():
     scheduler: string
         tcp address of the dask.distributed scheduler (ex. tcp://192.168.0.4:7003). 
         default = False. If False the process will run on the local computer using nCPUs-1
-
 
     """
 
@@ -120,14 +120,14 @@ def apply_stitching():
         # Create pointer of the hdf5 file that will store the stitched images
         # for the current hybridization
 
-        tile_file_base_name = flt_rawcnt_config['analysis_name']+'_'+ processing_hyb
+        tile_file_base_name = flt_rawcnt_config['analysis_name']+'_'+experiment_infos['ExperimentName']+'_'+hyb_short
         stitching_file_name = tile_file_base_name + '.reg.sf.hdf5'
 
         data_name = (tile_file_base_name
                             + '_' + reference_gene
                             + '_stitching_data_reg')
 
-        stitching_file= h5py.File(hyb_dir+stitching_file_name,'w',libver='latest')  # replace with 'a' as soon as you fix the error
+        stitching_file= h5py.File(stitched_reference_files_dir+stitching_file_name,'w',libver='latest')  # replace with 'a' as soon as you fix the error
 
         # Determine the tiles organization
         joining, tiles, nr_pixels, z_count, micData = stitching.get_place_tile_input_apply_npy(hyb_dir,stitched_reference_files_dir,data_name,image_properties,nr_dim)
