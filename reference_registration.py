@@ -60,7 +60,7 @@ def reference_registration():
     hr.register_final_images_reg_data_only(processing_directory, gene=reference_gene,
                           sub_pic_frac=fraction, use_MPI=False,
                           apply_to_corners=True, apply_warping = False,
-                          region=None, compare_in_seq=True)
+                          region=None, compare_in_seq=False)
 
 
 
