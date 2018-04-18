@@ -32,15 +32,38 @@ def register_dots_coords(reg_data,hybridization,gene,all_raw_counts):
     """
     
     
+    # tile_set = reg_data['micData'].tile_set.data
+    # tile_set = tile_set.ravel()
+    # for pos in all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene].keys():  
+    #     # control if missing positions (useful if you image multiple ROI in same session)
+    #     res = np.where(tile_set==np.int(pos))[0]
+    #     if res:
+    #         idx = res[0]
+    #         corner_coords = reg_data['joining']['corner_list'][idx][1]
+    #         old_coords = all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene][pos]
+    #         if not np.all(old_coords==0):
+    #             corrected_coords = old_coords + corner_coords
+    #             all_raw_counts['selected_peaks_coords_aligned'][hybridization][gene][pos] = corrected_coords
+
+
     tile_set = reg_data['micData'].tile_set.data
+    tiles = reg_data['micData'].tile_nr
     tile_set = tile_set.ravel()
     for pos in all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene].keys():  
-        idx = np.where(tile_set==np.int(pos))[0][0]
-        corner_coords = reg_data['joining']['corner_list'][idx][1]
-        old_coords = all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene][pos]
-        if not np.all(old_coords==0):
-            corrected_coords = old_coords + corner_coords
-            all_raw_counts['selected_peaks_coords_aligned'][hybridization][gene][pos] = corrected_coords
+        # control if missing positions (useful if you image multiple ROI in same session)
+        tmp_idx = np.where(tiles==np.int(pos))[0]
+        if tmp_idx:
+            tmp_idx=tmp_idx[0]
+            res = np.where(tile_set==tmp_idx)[0]
+            if res:
+                idx = res[0]
+                corner_coords = reg_data['joining']['corner_list'][idx][1]
+                old_coords = all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene][pos]
+                if not np.all(old_coords==0):
+                    corrected_coords = old_coords + corner_coords
+                    all_raw_counts['selected_peaks_coords_aligned'][hybridization][gene][pos] = corrected_coords
+
+
     return all_raw_counts
 
 
@@ -521,46 +544,47 @@ def combine_raw_counting_results(flt_rawcnt_config,hybridizations_infos,
         # Determine the genes to stitch in the processing hybridization
         genes_processing = hybridizations_infos[hybridization].keys()
 
-        # Determine the counting directories
-        counting_gene_dirs_path = hyb_dir+flt_rawcnt_config['analysis_name']+'_'+processing_hyb +'_counting'+add_slash
-        counting_gene_dirs = glob.glob(counting_gene_dirs_path+'*')
-
-        # Load the _reg_data.pkl files with the information about the registration
-        reg_fname = stitched_reference_files_dir + flt_rawcnt_config['analysis_name'] +'_'+ \
-                                            processing_hyb+'_'+reference_gene+'_stitching_data_reg.pkl'
-        reg_data = pickle.load(open(reg_fname,'rb'))
-
-
-        all_raw_counts['registration_data'][hybridization]= reg_data
-
         for gene in genes_processing:
-            if gene not in skip_genes_counting or [tag for tag in skip_tags_counting if tag in gene]:
-                all_raw_counts['selected_peaks_coords_aligned'][hybridization][gene] = dict()
-                all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene] = dict()
-                all_raw_counts['remaining_data'][hybridization][gene]= dict()
+            if gene not in skip_genes_counting:
+                if [tag for tag in skip_tags_counting if tag not in gene]:
+
+                    # Determine the counting directories
+                    counting_gene_dirs_path = hyb_dir+flt_rawcnt_config['analysis_name']+'_'+processing_hyb +'_counting'+add_slash
+                    counting_gene_dirs = glob.glob(counting_gene_dirs_path+'*')
+
+                    # Load the _reg_data.pkl files with the information about the registration
+                    reg_fname = stitched_reference_files_dir + flt_rawcnt_config['analysis_name'] +'_'+ \
+                                                processing_hyb+'_'+reference_gene+'_stitching_data_reg.pkl'
+                    reg_data = pickle.load(open(reg_fname,'rb'))
+
+                    all_raw_counts['registration_data'][hybridization]= reg_data
+
+                    all_raw_counts['selected_peaks_coords_aligned'][hybridization][gene] = dict()
+                    all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene] = dict()
+                    all_raw_counts['remaining_data'][hybridization][gene]= dict()
 
 
-                # Determine the counting directory to process
-                counting_files_dir = [pkl_dir for pkl_dir in counting_gene_dirs if gene in pkl_dir][0]
-                counting_files_dir = counting_files_dir +add_slash
+                    # Determine the counting directory to process
+                    counting_files_dir = [pkl_dir for pkl_dir in counting_gene_dirs if gene in pkl_dir][0]
+                    counting_files_dir = counting_files_dir +add_slash
 
-                # Get list of the files with counts
-                counting_files = glob.glob(counting_files_dir+'*.pkl')
+                    # Get list of the files with counts
+                    counting_files = glob.glob(counting_files_dir+'*.pkl')
 
 
-                # Load the raw counting data and combine them into a dictionary
-                for counting_file in counting_files:
-                    pos = int(counting_file.split('_')[-1].split('.')[0])
-                    data = pickle.load(open(counting_file,'rb'))
+                    # Load the raw counting data and combine them into a dictionary
+                    for counting_file in counting_files:
+                        pos = int(counting_file.split('_')[-1].split('.')[0])
+                        data = pickle.load(open(counting_file,'rb'))
 
-                    all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene][pos] = data['selected_peaks']
-                    all_raw_counts['remaining_data'][hybridization][gene][pos] = dict()
-                    for key in data.keys():
-                        if key != 'selected_peaks':
-                            all_raw_counts['remaining_data'][hybridization][gene][pos][key] = data[key]
+                        all_raw_counts['selected_peaks_coords_not_aligned'][hybridization][gene][pos] = data['selected_peaks']
+                        all_raw_counts['remaining_data'][hybridization][gene][pos] = dict()
+                        for key in data.keys():
+                            if key != 'selected_peaks':
+                                all_raw_counts['remaining_data'][hybridization][gene][pos][key] = data[key]
 
-                # Recalculate the coords but keep position reference
-                all_raw_counts = register_dots_coords(reg_data,hybridization,gene,all_raw_counts)
+                    # Recalculate the coords but keep position reference
+                    all_raw_counts = register_dots_coords(reg_data,hybridization,gene,all_raw_counts)
 
 
     # Save all the data

@@ -939,7 +939,7 @@ def plot_final_image(im_file_name, joining,  hyb_nr = 1,
 
 
 def get_pairwise_input_npy(image_properties,converted_positions, hybridization,
-                        est_overlap = 0.1, y_flip = False, nr_dim = 2):
+                        est_overlap, y_flip = False, nr_dim = 2):
     """Get the information necessary to do the pairwise allignment
     Modified version of the get_pairwise_input functions that work on .npy 
     files and not on hdf5
@@ -1038,6 +1038,7 @@ def get_pairwise_input_npy(image_properties,converted_positions, hybridization,
     # Estimate the overlap in pixels with the overlap that the user
     # provided, default is 10%
     est_x_tol = nr_pixels * (1 - est_overlap)
+
     logger.info("Estimating overlap at {}%, that is {} pixels"
                 .format(est_overlap * 100, est_x_tol))
     logger.debug("Number of pixels: {}".format(nr_pixels))

@@ -1,13 +1,12 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.0.2"
+__version__ = "0.0.0"
 exec(open('pysmFISH/_version.py').read())
 
 setup(
     name="pysmFISH",
     version=__version__,
     packages=find_packages(),
-    python_requires='>3.6',
     install_requires=[
         'numpy',
         'scipy',
@@ -18,10 +17,13 @@ setup(
         'sympy',
         'loompy',
         'ruamel.yaml',
+        'codecs',
         'h5py',
         'dask',
         'distributed==1.18.3',
-        'mpi4py'
+        'mpi4py',
+
+        
     ],
     entry_points='''
         [console_scripts]

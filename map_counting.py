@@ -171,7 +171,7 @@ def map_counting():
 
 
     if use_ram:
-                    # Create a dict that is saved in ram. When full is written on disk
+                    # Create a list that is saved in ram. When full is written on disk
                     # Done to reduce the number of i/o and increase performance
                     size_counter += img_stack.nbytes
                     if size_counter < max_ram:
