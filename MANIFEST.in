@@ -6,4 +6,6 @@ include process_standalone_experiment.py
 include reference_registration.py
 include Run_dots_counting.py
 include staining_segmentation.py
+include run_raw_counting_only.py
+include run_stitching_reference_only.py
 include LICENSE
