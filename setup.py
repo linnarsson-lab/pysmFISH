@@ -17,7 +17,6 @@ setup(
         'sympy',
         'loompy',
         'ruamel.yaml',
-        'codecs',
         'h5py',
         'dask',
         'distributed==1.18.3',
