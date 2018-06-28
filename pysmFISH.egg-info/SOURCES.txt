@@ -8,6 +8,8 @@ dots_coords_correction.py
 preprocessing_script.py
 process_standalone_experiment.py
 reference_registration.py
+run_raw_counting_only.py
+run_stitching_reference_only.py
 setup.py
 staining_segmentation.py
 pysmFISH/__init__.py

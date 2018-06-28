@@ -19,7 +19,7 @@ setup(
         'ruamel.yaml',
         'h5py',
         'dask',
-        'distributed==1.18.3',
+        'distributed',
         'mpi4py',
 
         
