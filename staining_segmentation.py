@@ -6,6 +6,7 @@ from scipy import ndimage as nd
 import itertools
 import pickle
 import multiprocessing
+import argparse
 
 from pysmFISH import utils
 from pysmFISH import object_based_segmentation
