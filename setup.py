@@ -21,9 +21,7 @@ setup(
         'distributed',
         'mpi4py',
         'cython',
-        'loompy'
-
-        
+        'loompy'   
     ],
     entry_points='''
         [console_scripts]
