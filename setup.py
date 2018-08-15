@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-__version__ = "0.0.5"
+__version__ = "0.1.0"
 exec(open('pysmFISH/_version.py').read())
 
 setup(
