@@ -15,7 +15,6 @@ setup(
         'matplotlib',
         'nd2reader==2.1.3',
         'sympy',
-        'loompy',
         'ruamel.yaml',
         'h5py',
         'dask',
