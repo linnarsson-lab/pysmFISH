@@ -21,6 +21,7 @@ setup(
         'dask',
         'distributed',
         'mpi4py',
+        'cython'
 
         
     ],
