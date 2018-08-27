@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 Preprocessing script that run filtering and raw counting
 """

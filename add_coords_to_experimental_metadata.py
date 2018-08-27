@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from pysmFISH import utils
 import argparse
 

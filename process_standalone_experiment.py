@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import argparse
 import pickle
 import numpy as np

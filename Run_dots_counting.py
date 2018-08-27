@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python
 # Check the imports that are not required
 
 # General imports

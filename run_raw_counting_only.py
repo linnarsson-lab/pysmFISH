@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # Import dask distributed to monitor the running client
 from distributed import Client,LocalCluster
 from dask import delayed

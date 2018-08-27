@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 from distributed import Client,LocalCluster
 import multiprocessing
