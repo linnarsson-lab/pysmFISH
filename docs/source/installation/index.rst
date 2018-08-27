@@ -30,7 +30,7 @@ Every new stable version of ``pysmFISH`` gets immediately released on PyPI, so r
 
 ::
 
-    pip install pysmFISH
+    pip install --no-cache-dir pysmFISH
 
 .. tip::
     `pysmFISH` |version| is an alpha release and it is updated often. If you installed with pip make sure you run ``pip install -U --no-deps pysmFISH`` now and then.
