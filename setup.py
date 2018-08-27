@@ -24,6 +24,18 @@ setup(
         'cython',
         'loompy'
         ],
+    scripts=[
+        "add_coords_to_experimental_metadata.py",
+        "apply_stitching.py",
+        "dots_coords_correction.py",
+        "preprocessing_script.py",
+        "process_standalone_experiment.py",
+        "reference_registration.py",
+        "Run_dots_counting.py",
+        "staining_segmentation.py",
+        "run_raw_counting_only.py",
+        "run_stitching_reference_only.py"
+        ],
     author="Simone Codeluppi",
     author_email="simone.codeluppi@gmail.com",
     keywords=["spatial transcriptomics", "singlecell", "bioinformatics", "transcriptomics"],
