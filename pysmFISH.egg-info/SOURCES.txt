@@ -25,7 +25,6 @@ pysmFISH/utils.py
 pysmFISH.egg-info/PKG-INFO
 pysmFISH.egg-info/SOURCES.txt
 pysmFISH.egg-info/dependency_links.txt
-pysmFISH.egg-info/entry_points.txt
 pysmFISH.egg-info/requires.txt
 pysmFISH.egg-info/top_level.txt
 pysmFISH/stitching_package/GlobalOptimization.py
