@@ -9,17 +9,16 @@ Requirements
 ------------
 
 To run pysmFISH you will need python >=3.6 (we have no plans to support python<3.6).
-The code has still some dependencies from MPI (we are currently removing them).
+The code has still some dependencies from MPI (we are currently removing them).  
 Install mpich2 on linux using
 ::
 
     apt-get install -y mpich
 
 or on OSX using
-
 ::
+    
     brew install mpich2
-
 
 
 .. _pypi:
